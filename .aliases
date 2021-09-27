@@ -1,0 +1,14 @@
+alias vim='nvim'
+alias grep='rg'
+alias g='git'
+alias ls='ls --color=auto'
+alias k="kubectl"
+
+alias ignore='vim ~/.config/git/ignore'
+alias brew-unlock='rm -rf /usr/local/var/homebrew/locks'
+alias nvim-log='~/.local/share/nvim/log'
+alias pry-clean="git status | grep 'modified' | awk '{ print \"$2\" }' | xargs gsed -i '/binding.pry/d'"
+
+alias wiki='(cd ~/Insync/bryansmi@umich.edu/Google\ Drive/dev/vimwiki; vim index.md)'
+alias scratch='(cd ~/Insync/bryansmi@umich.edu/Google\ Drive/dev/vimwiki; vim scratch.md)'
+alias todo='(cd ~/Insync/bryansmi@umich.edu/Google\ Drive/dev/vimwiki; vim todo.md)'
