@@ -1,5 +1,6 @@
 " https://afnan.io/posts/2018-04-12-my-neovim-development-setup/
 for f in split(glob('~/.config/nvim/_*.vim'), '\n')
+		echo f
 	exe 'source' f
 endfor
 
