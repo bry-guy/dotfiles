@@ -12,7 +12,6 @@ mkdir $HOME/.config/nvim
 sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 
-
 ## link the things
 ln -s $(pwd)/.zshrc $HOME/.zshrc
 ln -s $(pwd)/.aliases $HOME/.aliases
@@ -20,6 +19,9 @@ ln -s $(pwd)/.config/nvim/init.vim $HOME/.config/nvim/init.vim
 ln -s $(pwd)/.config/nvim/_fzf.vim $HOME/.config/nvim/_fzf.vim
 ln -s $(pwd)/.config/nvim/_plugins.vim $HOME/.config/nvim/_plugins.vim
 ln -s $(pwd)/.config/nvim/_theming.vim $HOME/.config/nvim/_theming.vim
+
+## install plugins
+sh -c 'nvim --headless +PlugInstall +q'
 
 ## neovim
 curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
