@@ -29,6 +29,8 @@ sudo mv squashfs-root /usr/local/
 sudo ln -s /usr/local/squashfs-root/AppRun /usr/bin/nvim
 
 ### install plugins
+unset -x
 sh -c 'nvim --headless +PlugInstall +q'
+set -x
 
 sudo chsh -s "$(which zsh)" "$(whoami)"
