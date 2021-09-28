@@ -4,6 +4,8 @@ exec > >(tee -i $HOME/dotfiles_install.log)
 exec 2>&1
 set -x
 
+sudo chsh -s "$(which zsh)" "$(whoami)"
+
 ## remove codespaces built-ins
 rm -f $HOME/.zshrc
 
@@ -28,5 +30,3 @@ sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.
 
 ### install plugins
 nvim --headless +PlugInstall +q
-
-sudo chsh -s "$(which zsh)" "$(whoami)"
