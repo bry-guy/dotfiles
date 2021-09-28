@@ -10,7 +10,10 @@ rm -f $HOME/.zshrc
 ## link the things
 ln -s $(pwd)/.zshrc $HOME/.zshrc
 ln -s $(pwd)/.aliases $HOME/.aliases
-ln -s $(pwd)/.vim
+ln -s $(pwd)/.config/nvim/init.vim $HOME/.config/nvim/init.vim
+ln -s $(pwd)/.config/nvim/_fzf.vim $HOME/.config/nvim/_fzf.vim
+ln -s $(pwd)/.config/nvim/_plugins.vim $HOME/.config/nvim/_plugins.vim
+ln -s $(pwd)/.config/nvim/_theming.vim $HOME/.config/nvim/_theming.vim
 
 ## neovim
 curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
