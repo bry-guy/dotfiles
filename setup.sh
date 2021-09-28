@@ -7,6 +7,9 @@ set -x
 ## remove codespaces built-ins
 rm -f $HOME/.zshrc
 
+## setup
+mkdir $HOME/.config/nvim
+
 ## link the things
 ln -s $(pwd)/.zshrc $HOME/.zshrc
 ln -s $(pwd)/.aliases $HOME/.aliases
