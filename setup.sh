@@ -20,8 +20,6 @@ ln -s $(pwd)/.config/nvim/_fzf.vim $HOME/.config/nvim/_fzf.vim
 ln -s $(pwd)/.config/nvim/_plugins.vim $HOME/.config/nvim/_plugins.vim
 ln -s $(pwd)/.config/nvim/_theming.vim $HOME/.config/nvim/_theming.vim
 
-## install plugins
-sh -c 'nvim --headless +PlugInstall +q'
 
 ## neovim
 curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
@@ -29,5 +27,8 @@ chmod u+x nvim.appimage
 ./nvim.appimage --appimage-extract
 sudo mv squashfs-root /usr/local/ 
 sudo ln -s /usr/local/squashfs-root/AppRun /usr/bin/nvim
+
+### install plugins
+sh -c 'nvim --headless +PlugInstall +q'
 
 sudo chsh -s "$(which zsh)" "$(whoami)"
