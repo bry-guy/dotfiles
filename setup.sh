@@ -9,6 +9,9 @@ rm -f $HOME/.zshrc
 
 ## setup
 mkdir $HOME/.config/nvim
+sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
+       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+
 
 ## link the things
 ln -s $(pwd)/.zshrc $HOME/.zshrc
@@ -24,7 +27,5 @@ chmod u+x nvim.appimage
 ./nvim.appimage --appimage-extract
 sudo mv squashfs-root /usr/local/ 
 sudo ln -s /usr/local/squashfs-root/AppRun /usr/bin/nvim
-
-
 
 sudo chsh -s "$(which zsh)" "$(whoami)"
