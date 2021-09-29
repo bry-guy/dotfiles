@@ -1,6 +1,26 @@
 call plug#begin('~/.vim/plugged')
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } },
 Plug 'junegunn/fzf.vim'
-Plug 'tpope/vim-vinegar'
+Plug 'junegunn/goyo.vim'
+Plug 'junegunn/limelight.vim'
+
 Plug 'bluz71/vim-moonfly-colors'
+Plug 'bry-guy/vim-bg-colors'
+
+Plug 'itchyny/lightline.vim'
+
+Plug 'tpope/vim-vinegar'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-rhubarb'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-endwise'
+
+Plug 'duggiefresh/vim-easydir'
+
+Plug 'jeffkreeftmeijer/vim-numbertoggle'
+
+Plug 'reedes/vim-pencil'
+
+Plug 'plasticboy/vim-markdown'
 call plug#end()

@@ -7,8 +7,7 @@ endfor
 filetype on 
 filetype plugin on 
 
-set relativenumber
-set nu rnu
+set nu " see vim-numbertoggle
 
 set scrolloff=5
 
@@ -26,4 +25,3 @@ set noswapfile
 " tab settings
 set splitbelow
 set splitright
-
