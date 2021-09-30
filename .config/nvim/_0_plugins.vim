@@ -1,4 +1,7 @@
 call plug#begin('~/.vim/plugged')
+Plug 'vimwiki/vimwiki'
+" Plug 'michal-h21/vim-zettel'
+
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } },
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/goyo.vim'
@@ -15,6 +18,10 @@ Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-endwise'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-rails'
+
+Plug 'vim-test/vim-test'
 
 Plug 'duggiefresh/vim-easydir'
 

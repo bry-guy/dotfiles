@@ -6,6 +6,7 @@ endfor
 " nvim settings
 filetype on 
 filetype plugin on 
+syntax on
 
 set nu " see vim-numbertoggle
 
