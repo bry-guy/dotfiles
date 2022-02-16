@@ -45,7 +45,7 @@ augroup pencil
 augroup END
 
 " goyo
-let g:pencil#textwidth = 74
+let g:goyo_width = 160
 
 " limelight
 let g:limelight_paragraph_span = 1

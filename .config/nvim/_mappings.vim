@@ -8,3 +8,6 @@ vnoremap <A-k> :m '<-2<CR>gv=gv
 
 " switch to previous buffer then delete the new-previous buffer
 nnoremap \x :bp<cr>:bd #<cr>
+
+" exit terminal-mode
+:tnoremap <Esc> <C-\><C-n>

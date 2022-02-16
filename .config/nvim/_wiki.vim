@@ -16,5 +16,8 @@ if !b:exists
 		let b:installed = system('gem install vimwiki_markdown')
 end
 
+nnoremap <Leader>w- <Plug>VimwikiRemoveHeaderLevel
+nnoremap <Leader>w= <Plug>VimwikiAddHeaderLevel
+
 " vim-zettel
 " TODO: Finish vim-zettel config

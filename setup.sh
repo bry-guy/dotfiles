@@ -7,6 +7,9 @@ set -x
 ## remove codespaces built-ins
 rm -f $HOME/.zshrc
 
+## install dependencies
+sudo apt-get --assume-yes install rbenv
+
 ## setup
 mkdir $HOME/.config/nvim
 
