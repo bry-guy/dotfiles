@@ -4,8 +4,6 @@
 	email = bry-guy@github.com
 	user = bry-guy
 	name = Bryan Smith
-[credential]
-	helper = osxkeychain
 [alias]
 	co = checkout
 	br = branch

@@ -14,10 +14,10 @@ sudo apt-get --assume-yes install rbenv
 mkdir $HOME/.config/nvim
 
 ## link the things
-ln -s $(pwd)/.zshrc $HOME/.zshrc
-ln -s $(pwd)/.aliases $HOME/.aliases
-ln -s $(pwd)/.gitconfig $HOME/.gitconfig
-ln -s $(pwd)/.config/nvim/* $HOME/.config/nvim/
+ln -sf $(pwd)/.zshrc $HOME/.zshrc
+ln -sf $(pwd)/.aliases $HOME/.aliases
+ln -sf $(pwd)/.gitconfig $HOME/.gitconfig
+ln -sf $(pwd)/.config/nvim/* $HOME/.config/nvim/
 
 
 ## rbenv
