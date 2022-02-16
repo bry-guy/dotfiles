@@ -8,7 +8,7 @@ set -x
 rm -f $HOME/.zshrc
 
 ## install dependencies
-sudo apt-get --assume-yes install rbenv
+sudo apt install -y rbenv
 
 ## setup
 mkdir $HOME/.config/nvim
@@ -18,7 +18,6 @@ ln -sf $(pwd)/.zshrc $HOME/.zshrc
 ln -sf $(pwd)/.aliases $HOME/.aliases
 ln -sf $(pwd)/.gitconfig $HOME/.gitconfig
 ln -sf $(pwd)/.config/nvim/* $HOME/.config/nvim/
-
 
 ## rbenv
 mkdir -p "$(rbenv root)"/plugins
