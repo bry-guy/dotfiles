@@ -1,0 +1,19 @@
+[pull]
+	ff = only
+[user]
+	email = bry-guy@github.com
+	user = bry-guy
+	name = Bryan Smith
+[credential]
+	helper = osxkeychain
+[alias]
+	co = checkout
+	br = branch
+	ci = commit
+	st = status
+	unstage = reset HEAD --
+	last = log -1 HEAD
+[core]
+	excludesfile = /Users/bry-guy/.config/git/ignore
+[init]
+	defaultBranch = main
