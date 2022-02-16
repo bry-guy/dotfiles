@@ -16,7 +16,9 @@ mkdir $HOME/.config/nvim
 ## link the things
 ln -s $(pwd)/.zshrc $HOME/.zshrc
 ln -s $(pwd)/.aliases $HOME/.aliases
+ln -s $(pwd)/.gitconfig $HOME/.gitconfig
 ln -s $(pwd)/.config/nvim/* $HOME/.config/nvim/
+
 
 ## rbenv
 mkdir -p "$(rbenv root)"/plugins
