@@ -18,6 +18,11 @@ ln -s $(pwd)/.zshrc $HOME/.zshrc
 ln -s $(pwd)/.aliases $HOME/.aliases
 ln -s $(pwd)/.config/nvim/* $HOME/.config/nvim/
 
+## rbenv
+mkdir -p "$(rbenv root)"/plugins
+git clone https://github.com/rbenv/ruby-build.git "$(rbenv root)"/plugins/ruby-build
+rbenv install 3.1.0 &>/dev/null &
+
 ## neovim
 curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
 chmod u+x nvim.appimage
