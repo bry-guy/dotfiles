@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+
+spacebar -m config text_font         "Helvetica Neue:Semibold:14.0"
+spacebar -m config background_color  0xaa202020
+spacebar -m config foreground_color  0xffffffff
+spacebar -m config space_icon_strip  1 2 3 4 5 6 7 8 9
+spacebar -m config clock_format      "%c"
+spacebar -m config icon_font		 "Helvetica Neue:Semibold:14.0"
+

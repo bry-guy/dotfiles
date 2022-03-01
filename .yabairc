@@ -1,0 +1,38 @@
+#!/usr/bin/env sh
+#
+# layout
+yabai -m config layout bsp
+yabai -m config auto_balance off
+yabai -m config split_ratio 0.5
+yabai -m config external_bar all:26:0
+
+# debug
+yabai -m config debug_output on
+
+# Set all padding and gaps to 20pt (default: 0)
+yabai -m config top_padding    16
+yabai -m config bottom_padding 16
+yabai -m config left_padding   16
+yabai -m config right_padding  16
+yabai -m config window_gap    8
+
+# set mouse interaction modifier key (default: fn)
+yabai -m config mouse_modifier fn
+
+# set modifier + left-click drag to resize window (default: move)
+yabai -m config mouse_action1 move
+
+# set modifier + right-click drag to resize window (default: resize)
+yabai -m config mouse_action2 resize
+
+# modify window shadows (default: on, options: on, off, float)
+yabai -m config window_shadow float
+
+# window opacity 
+# yabai -m config window_opacity on
+# yabai -m config normal_window_opacity 0.925
+# yabai -m config window_opacity_duration 0.0
+
+# shadows
+yabai -m config window_shadow off
+

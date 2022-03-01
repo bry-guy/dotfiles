@@ -1,0 +1,66 @@
+# /etc/inputrc - global inputrc for libreadline
+# See readline(3readline) and `info rluserman' for more information.
+
+# Be 8 bit clean.
+set input-meta on
+set output-meta on
+
+# To allow the use of 8bit-characters like the german umlauts, uncomment
+# the line below. However this makes the meta key not work as a meta key,
+# which is annoying to those which don't need to type in 8-bit characters.
+
+# set convert-meta off
+
+# try to enable the application keypad when it is called.  Some systems
+# need this to enable the arrow keys.
+# set enable-keypad on
+
+# see /usr/share/doc/bash/inputrc.arrows for other codes of arrow keys
+
+# do not bell on tab-completion
+# set bell-style none
+# set bell-style visible
+
+#show vi mode in cmd line
+set show-mode-in-prompt off
+
+#vi
+set editing-mode vi
+
+#show all auto-completes immediately
+set show-all-if-ambiguous on
+
+#ignore case
+set completion-ignore-case on
+
+# on menu-complete, first display the common prefix, then cycle through the 
+# # options when hitting TAB
+set menu-complete-display-prefix on
+
+##################################################
+#COMMAND MODE
+set keymap vi-command
+
+#disable v going to editor
+v: ""
+
+## arrow up
+"\e[A":history-search-backward
+## arrow down
+"\e[B":history-search-forward
+
+##################################################
+#INSERT MODE
+set keymap vi-insert
+
+#Pressing tab lists all completions and selectes the first one.
+#Pressing again will cycle through available completions.
+TAB: menu-complete
+
+#Shift-tab goes back
+"\e[Z": menu-complete-backward
+
+## arrow up
+"\e[A":history-search-backward
+## arrow down
+"\e[B":history-search-forward
