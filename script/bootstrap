@@ -53,6 +53,11 @@ if [ -z "$(which nvim)" ]; then
 		nvim --headless +PlugInstall +qa
 fi
 
+## zsh
+if [ -z $(which zsh) ]; then
+		sudo apt install -y zsh
+fi
+
 if [[ $SHELL != *"zsh"* ]]; then
 		echo "Changing shell to zsh."
 		chsh -s "$(which zsh)"
