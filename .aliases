@@ -1,7 +1,7 @@
 alias vim='nvim'
 alias grep='rg'
 alias g='git'
-alias ls='ls --color=auto'
+alias ls='LC_COLLATE=C ls --color=auto'
 alias k="kubectl"
 
 alias ignore='vim ~/.config/git/ignore'
