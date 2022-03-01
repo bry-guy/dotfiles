@@ -1,0 +1,11 @@
+*
+
+!setup.sh
+
+!.gitconfig
+!.gitignore
+
+!.aliases
+!.zshrc
+
+!.config/**/*
