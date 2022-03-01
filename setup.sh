@@ -4,39 +4,56 @@ exec > >(tee -i $HOME/dotfiles_install.log)
 exec 2>&1
 set -x
 
-## remove codespaces built-ins
-rm -f $HOME/.zshrc
+## codespaces-specific
+if ! [ -z $CODESPACES ]; then
+		echo "INFO: Setup for codespaces."
 
-## install dependencies
-sudo apt install -y rbenv
+		## remove codespaces built-ins
+		rm -f $HOME/.zshrc
 
-## setup
-mkdir $HOME/.config/nvim
+		## setup
+		mkdir $HOME/.config/nvim
 
-## link the things
-ln -sf $(pwd)/.zshrc $HOME/.zshrc
-ln -sf $(pwd)/.aliases $HOME/.aliases
-ln -sf $(pwd)/.gitconfig $HOME/.gitconfig
-ln -sf $(pwd)/.config/nvim/* $HOME/.config/nvim/
+		## link the things
+		ln -sf $(pwd)/.zshrc $HOME/.zshrc
+		ln -sf $(pwd)/.aliases $HOME/.aliases
+		ln -sf $(pwd)/.gitconfig $HOME/.gitconfig
+		ln -sf $(pwd)/.config/nvim/* $HOME/.config/nvim/
+
+		## change to zsh
+		sudo chsh -s "$(which zsh)" "$(whoami)"
+fi
 
 ## rbenv
-mkdir -p "$(rbenv root)"/plugins
-git clone https://github.com/rbenv/ruby-build.git "$(rbenv root)"/plugins/ruby-build
-rbenv install 3.1.0 &>/dev/null &
+if [ -z "$(which rbenv)" ]; then
+		echo "INFO: Install rbenv."
+		
+		sudo apt install -y rbenv
+		mkdir -p "$(rbenv root)"/plugins
+		git clone https://github.com/rbenv/ruby-build.git "$(rbenv root)"/plugins/ruby-build
+		rbenv install 3.1.0 &>/dev/null &
+fi
 
 ## neovim
-curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
-chmod u+x nvim.appimage
-./nvim.appimage --appimage-extract
-sudo mv squashfs-root /usr/local/squashfs-nvim
-sudo ln -s /usr/local/squashfs-nvim/AppRun /usr/local/bin/nvim
+if [ -z "$(which nvim)" ]; then
+		echo "INFO: Install neovim."
 
-### install vim-plug
-sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
-       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+		curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
+		chmod u+x nvim.appimage
+		./nvim.appimage --appimage-extract
+		sudo mv squashfs-root /usr/local/squashfs-nvim
+		sudo ln -s /usr/local/squashfs-nvim/AppRun /usr/local/bin/nvim
 
-### install plugins
-nvim --headless +PlugInstall +qa
+		### install vim-plug
+		sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
+				https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 
-sudo chsh -s "$(which zsh)" "$(whoami)"
+		### install plugins
+		nvim --headless +PlugInstall +qa
+fi
+
+if [[ $SHELL != *"zsh"* ]]; then
+		echo "Changing shell to zsh."
+		chsh -s "$(which zsh)"
+fi
 
