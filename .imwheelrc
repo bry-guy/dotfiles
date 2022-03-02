@@ -1,3 +1,7 @@
 ".*"
 None,	Up,	Up,	3
 None,	Down,	Down,	3
+
+"*/slack/*"
+None,	Up,	Up,	6
+None,	Down,	Down,	6
