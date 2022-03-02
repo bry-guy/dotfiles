@@ -14,8 +14,14 @@
 !.tmux.conf
 
 !.config/
+!.config/nvim/
 !.config/nvim/**/*
+!.config/pop-shell/
 !.config/pop-shell/**/*
+!.config/systemd/
+!.config/systemd/user/
+!.config/systemd/user/**/*
+
 
 !script/
 !script/**/*
