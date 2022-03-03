@@ -1,7 +1,5 @@
 *
 
-!setup.sh
-
 !.gitconfig
 !.gitignore
 
@@ -35,4 +33,4 @@
 !script/
 !script/**/*
 
-!todo.txt
+!todo.md

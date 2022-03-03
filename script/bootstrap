@@ -26,6 +26,9 @@ if ! [ -z $CODESPACES ]; then
 		sudo chsh -s "$(which zsh)" "$(whoami)"
 fi
 
+# Link dotfiles to $HOME
+cat .gitignore | grep '^!.*' | grep -v '\*\*' | cut -c 2- | xargs -I % cp -r % $HOME
+
 # Manual installs
 
 ## rbenv
