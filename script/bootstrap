@@ -5,7 +5,8 @@ exec > >(tee -i $HOME/log/dotfiles_install.log)
 exec 2>&1
 set -x
 
-## codespaces-specific
+# Codespaces
+
 if ! [ -z $CODESPACES ]; then
 		echo "INFO: Setup for codespaces."
 
@@ -24,6 +25,8 @@ if ! [ -z $CODESPACES ]; then
 		## change to zsh
 		sudo chsh -s "$(which zsh)" "$(whoami)"
 fi
+
+# Manual installs
 
 ## rbenv
 if [ -z "$(which rbenv)" ]; then
@@ -53,6 +56,140 @@ if [ -z "$(which nvim)" ]; then
 		nvim --headless +PlugInstall +qa
 fi
 
+# Install Debs
+
+## 1Password
+if [ -z "$(which 1password)" ]; then
+		echo "INFO: Install 1password."
+
+		sudo apt install -y 1password
+fi
+
+## alacritty
+if [ -z "$(which alacritty)" ]; then
+		echo "INFO: Install alacritty."
+
+		sudo apt install -y alacritty
+fi
+
+## slack
+if [ -z "$(which slack)" ]; then
+		echo "INFO: Install slack."
+
+		sudo apt install -y slack
+fi
+
+## steam
+if [ -z "$(which steam)" ]; then
+		echo "INFO: Install steam."
+
+		sudo apt install -y steam
+fi
+
+## tmux
+if [ -z "$(which tmux)" ]; then
+		echo "INFO: Install tmux."
+
+		sudo apt install -y tmux
+fi
+
+## rg
+if [ -z "$(which rg)" ]; then
+		echo "INFO: Install rg."
+
+		sudo apt install -y rg
+fi
+
+## fzf
+if [ -z "$(which fzf)" ]; then
+		echo "INFO: Install fzf."
+
+		sudo apt install -y fzf
+fi
+
+## imwheel
+if [ -z "$(which imwheel)" ]; then
+		echo "INFO: Install imwheel."
+
+		sudo apt install -y imwheel
+fi
+
+# Install Flatpaks
+
+## flatpak
+if [ -z "$(which flatpak)" ]; then
+		echo "INFO: Install flatpak."
+
+		sudo apt install -y flatpak
+fi
+
+## discord
+if [ -z "$(which discord)" ]; then
+		echo "INFO: Install discord."
+
+		flatpak install --user --app discord --assumeyes
+fi
+
+## lagrange
+if [ -z "$(which lagrange)" ]; then
+		echo "INFO: Install lagrange."
+
+		flatpak install --user --app lagrange --assumeyes
+fi
+
+## obsidian
+if [ -z "$(which obsidian)" ]; then
+		echo "INFO: Install obsidian."
+
+		flatpak install --user --app obsidian --assumeyes
+fi
+
+## signal
+if [ -z "$(which signal)" ]; then
+		echo "INFO: Install signal."
+
+		flatpak install --user --app signal --assumeyes
+fi
+
+## spotify
+if [ -z "$(which spotify)" ]; then
+		echo "INFO: Install spotify."
+
+		flatpak install --user --app spotify --assumeyes
+fi
+
+## todoist
+if [ -z "$(which todoist)" ]; then
+		echo "INFO: Install todoist."
+
+		flatpak install --user --app todoist --assumeyes
+fi
+
+## zoom
+if [ -z "$(which zoom)" ]; then
+		echo "INFO: Install zoom."
+
+		flatpak install --user --app zoom --assumeyes
+fi
+
+# Install Brews
+
+## brew
+if [ -z "$(which brew)" ]; then
+		echo "INFO: Install brew."
+
+		/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi
+
+## tldr
+if [ -z "$(which tldr)" ]; then
+		echo "INFO: Install tldr."
+
+		brew install tldr
+fi
+
+# zsh!
+
 ## zsh
 if [ -z $(which zsh) ]; then
 		sudo apt install -y zsh
@@ -62,4 +199,5 @@ if [[ $SHELL != *"zsh"* ]]; then
 		echo "Changing shell to zsh."
 		chsh -s "$(which zsh)"
 fi
+
 

@@ -32,7 +32,7 @@
 .config/systemd/user/homebrew*
 .config/systemd/user/multi-user.target.wants
 
-
 !script/
 !script/**/*
 
+!todo.txt
