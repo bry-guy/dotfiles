@@ -3,6 +3,10 @@
     {
       "class": "pop-shell-example",
       "title": "pop-shell-example"
+    },
+    {
+      "class": "Pop!_Shell Keyboard Shortcuts",
+      "title": "Pop!_Shell Keyboard Shortcuts"
     }
   ],
   "skiptaskbarhidden": [],
