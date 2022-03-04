@@ -31,7 +31,7 @@ if ! [ -z $CODESPACES ]; then
 fi
 
 # Link dotfiles to $HOME
-cat .gitignore | grep '^!.*' | grep -v '\*\*' | cut -c 2- | xargs -I % cp -R % $HOME
+cat .gitignore | grep '^!.*' | grep -v '\*\*' | grep -v '\.config/.+' | cut -c 2- | xargs -I % cp -R % $HOME
 
 # Manual installs
 
