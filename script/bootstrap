@@ -28,7 +28,7 @@ if ! [ -z $CODESPACES ]; then
 fi
 
 # Link dotfiles to $HOME
-cat .gitignore | grep '^!.*' | grep -v '\*\*' | cut -c 2- | xargs -I % cp -r % $HOME
+cat .gitignore | grep '^!.*' | grep -v '\*\*' | cut -c 2- | xargs -I % cp -R % $HOME
 
 # Manual installs
 
@@ -234,4 +234,4 @@ if [[ $SHELL != *"zsh"* ]]; then
 		chsh -s "$(which zsh)"
 fi
 
-mv $HOME/dotfiles/.git .
+cp -R $(pwd)/.git $HOME
