@@ -5,7 +5,10 @@ exec > >(tee -i $HOME/log/dotfiles_install.log)
 exec 2>&1
 set -x
 
+WORKING_DIR=$(pwd)
+
 sudo apt update
+
 
 # Codespaces
 if ! [ -z $CODESPACES ]; then
@@ -65,12 +68,13 @@ if [ -z "$(which keyd)" ]; then
 		git clone https://github.com/rvaiya/keyd
 		cd keyd
 		make && sudo make install
-		sudo systemctl enable keyd && sudo systemctl start keyd
 
 		### link config file saved as keyd.conf
 		sudo ln .config/keyd/default.conf /etc/keyd/default.conf
 
-		cd ..
+		sudo systemctl enable keyd && sudo systemctl start keyd
+
+		cd $WORKING_DIR
 fi
 
 # Install Debs
