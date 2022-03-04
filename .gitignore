@@ -24,6 +24,9 @@
 !.config/pop-shell/
 !.config/pop-shell/**/*
 
+!.config/keyd/
+!.config/keyd/**/*
+
 !.config/systemd/
 !.config/systemd/user/
 !.config/systemd/user/**/*

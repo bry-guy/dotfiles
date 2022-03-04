@@ -59,6 +59,19 @@ if [ -z "$(which nvim)" ]; then
 		nvim --headless +PlugInstall +qa
 fi
 
+## keyd
+if [ -z "$(which keyd)" ]; then
+		git clone https://github.com/rvaiya/keyd
+		cd keyd
+		make && sudo make install
+		sudo systemctl enable keyd && sudo systemctl start keyd
+
+		### link config file saved as keyd.conf
+		ln .config/keyd/default.conf /etc/keyd/default.conf
+
+		cd ..
+fi
+
 # Install Debs
 
 ## 1Password
