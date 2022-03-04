@@ -66,7 +66,7 @@ if [ -z "$(which keyd)" ]; then
 		sudo systemctl enable keyd && sudo systemctl start keyd
 
 		### link config file saved as keyd.conf
-		ln .config/keyd/default.conf /etc/keyd/default.conf
+		sudo ln .config/keyd/default.conf /etc/keyd/default.conf
 
 		cd ..
 fi
