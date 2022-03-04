@@ -204,7 +204,10 @@ if [ -z "$(which brew)" ]; then
 		echo "INFO: Install brew."
 
 		/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
 		eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+		which brew
+
 		sudo apt install build-essential
 fi
 
@@ -235,3 +238,6 @@ if [[ $SHELL != *"zsh"* ]]; then
 fi
 
 cp -R $(pwd)/.git $HOME
+
+echo "Run eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)" to finish installing brew."
+
