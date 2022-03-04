@@ -6,7 +6,6 @@ exec 2>&1
 set -x
 
 # Codespaces
-
 if ! [ -z $CODESPACES ]; then
 		echo "INFO: Setup for codespaces."
 
@@ -109,11 +108,11 @@ if [ -z "$(which tmux)" ]; then
 		sudo apt install -y tmux
 fi
 
-## rg
+## ripgrep
 if [ -z "$(which rg)" ]; then
 		echo "INFO: Install rg."
 
-		sudo apt install -y rg
+		sudo apt install -y ripgrep
 fi
 
 ## fzf
@@ -195,6 +194,14 @@ if [ -z "$(which brew)" ]; then
 		echo "INFO: Install brew."
 
 		/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+		sudo apt install build-essential
+fi
+
+## gcc
+if [ -z "$(which gcc)" ]; then
+		echo "INFO: Install gcc."
+
+		brew install gcc
 fi
 
 ## tldr
@@ -216,4 +223,4 @@ if [[ $SHELL != *"zsh"* ]]; then
 		chsh -s "$(which zsh)"
 fi
 
-
+mv $HOME/dotfiles/.git .
