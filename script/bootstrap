@@ -9,7 +9,6 @@ WORKING_DIR=$(pwd)
 
 sudo apt update
 
-
 # Codespaces
 if ! [ -z $CODESPACES ]; then
 		echo "INFO: Setup for codespaces."
@@ -32,6 +31,7 @@ fi
 
 # Link dotfiles to $HOME
 cat .gitignore | grep '^!.*' | grep -v '\*\*' | grep -v '\.config/.+' | cut -c 2- | xargs -I % cp -R % $HOME
+cp -R .git/ $HOME
 
 # Manual installs
 
@@ -240,8 +240,6 @@ if [[ $SHELL != *"zsh"* ]]; then
 		echo "Changing shell to zsh."
 		chsh -s "$(which zsh)"
 fi
-
-cp -R $(pwd)/.git $HOME
 
 echo "Run eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)" to finish installing brew."
 
