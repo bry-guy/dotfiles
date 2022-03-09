@@ -9,25 +9,25 @@ WORKING_DIR=$(pwd)
 
 sudo apt update
 
-# Codespaces
-if ! [ -z $CODESPACES ]; then
-		echo "INFO: Setup for codespaces."
+# # Codespaces
+# if ! [ -z $CODESPACES ]; then
+# 		echo "INFO: Setup for codespaces."
 
-		## remove codespaces built-ins
-		rm -f $HOME/.zshrc
+# 		## remove codespaces built-ins
+# 		rm -f $HOME/.zshrc
 
-		## setup
-		mkdir $HOME/.config/nvim
+# 		## setup
+# 		mkdir $HOME/.config/nvim
 
-		## link the things
-		ln -sf $(pwd)/.zshrc $HOME/.zshrc
-		ln -sf $(pwd)/.aliases $HOME/.aliases
-		ln -sf $(pwd)/.gitconfig $HOME/.gitconfig
-		ln -sf $(pwd)/.config/nvim/* $HOME/.config/nvim/
+# 		## link the things
+# 		ln -sf $(pwd)/.zshrc $HOME/.zshrc
+# 		ln -sf $(pwd)/.aliases $HOME/.aliases
+# 		ln -sf $(pwd)/.gitconfig $HOME/.gitconfig
+# 		ln -sf $(pwd)/.config/nvim/* $HOME/.config/nvim/
 
-		## change to zsh
-		sudo chsh -s "$(which zsh)" "$(whoami)"
-fi
+# 		## change to zsh
+# 		sudo chsh -s "$(which zsh)" "$(whoami)"
+# fi
 
 # Link dotfiles to $HOME
 cat .gitignore | egrep '^!.*' | egrep -v '\*\*|\.config/.+' | cut -c 2- | xargs -I % cp -R % $HOME
