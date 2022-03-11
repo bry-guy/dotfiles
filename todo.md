@@ -1,3 +1,4 @@
-- [ ] longer `history` output (e.g., history | grep <old-command-here> should work)
-- [ ] up-arrow scrolls back through history, but filters based on input (e.g., $ tmux should show old tmux commands)
-- [ ] debug vim slow startup
+- [x] longer `history` output (e.g., history | grep <old-command-here> should work)
+- [x] up-arrow scrolls back through history, but filters based on input (e.g., $ tmux should show old tmux commands)
+- [x] debug vim slow startup
+- [x] fix slow esc from insert-mode in vim (it was tmux)
