@@ -26,3 +26,7 @@ set noswapfile
 " tab settings
 set splitbelow
 set splitright
+
+" key timeouts
+set timeoutlen=1000
+set ttimeoutlen=5
