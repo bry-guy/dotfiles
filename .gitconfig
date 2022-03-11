@@ -15,3 +15,5 @@
 	excludesfile = /Users/bry-guy/.config/git/ignore
 [init]
 	defaultBranch = main
+[credential]
+	helper = osxkeychain

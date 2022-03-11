@@ -1,23 +1,25 @@
 # commands
-alt - return : /usr/bin/login -pfq smith.bryan
+# alt - return : /usr/bin/login -pfq smith.bryan
 
 ## focus window
-alt - o : yabai -m window --focus prev
-alt - p : yabai -m window --focus next
+ctrl - h: yabai -m window --focus west
+ctrl - j: yabai -m window --focus south
+ctrl - k: yabai -m window --focus north
+ctrl - l : yabai -m window --focus east
 
 ## rebalance windows
-alt - t : yabai -m window --toggle split
-alt - b : yabai -m space --balance
+ctrl - o : yabai -m window --toggle split
+ctrl - b : yabai -m space --balance
 
 ## resize spacing
-shift + alt - o : yabai -m window --ratio rel:-0.1
-shift + alt - p : yabai -m window --ratio rel:0.1
+ctrl + alt - h : yabai -m window --ratio rel:-0.1
+ctrl + alt - l : yabai -m window --ratio rel:0.1
 
 ## move window in space
-shift + alt - h : yabai -m window --warp west
-shift + alt - j : yabai -m window --warp south
-shift + alt - k : yabai -m window --warp north
-shift + alt - l : yabai -m window --warp east
+ctrl + shift - h : yabai -m window --warp west
+ctrl + shift - j : yabai -m window --warp south
+ctrl + shift - k : yabai -m window --warp north
+ctrl + shift - l : yabai -m window --warp east
 
 ## move window to space
 shift - f1 : yabai -m window --space 1
@@ -42,12 +44,12 @@ f8 : yabai -m space --focus 8
 # spaces
 ## create new space and move to it 
 
-cmd + alt - n : yabai -m space --create && \
-                   index="$(yabai -m query --spaces --display | jq 'map(select(."native-fullscreen" == 0))[-1].index')" && \
-                   yabai -m space --focus "${index}"
+# cmd + alt - n : yabai -m space --create && \
+#                    index="$(yabai -m query --spaces --display | jq 'map(select(."native-fullscreen" == 0))[-1].index')" && \
+#                    yabai -m space --focus "${index}"
 
-cmd + alt - x : yabai -m space --destroy 
+# cmd + alt - x : yabai -m space --destroy 
 
 ## quake window
 # https://github.com/kovidgoyal/kitty/issues/45#issuecomment-890671721
-default < cmd - 0x32 : $HOME/.quake_helper quake
+# default < cmd - 0x32 : $HOME/.quake_helper quake
