@@ -11,10 +11,10 @@ let g:vimwiki_list = [{'path': '~/vimwiki',
 						\ 'template_ext': '.tpl'}]
 
 
-let b:exists = system('gem list --local | grep vimwiki_markdown | wc -l')
-if !b:exists
-		let b:installed = system('gem install vimwiki_markdown')
-end
+" let b:exists = system('gem list --local | grep vimwiki_markdown | wc -l')
+" if !b:exists
+" 		let b:installed = system('gem install vimwiki_markdown')
+" end
 
 nnoremap <Leader>w- <Plug>VimwikiRemoveHeaderLevel
 nnoremap <Leader>w= <Plug>VimwikiAddHeaderLevel
