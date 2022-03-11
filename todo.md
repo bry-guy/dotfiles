@@ -2,3 +2,5 @@
 - [x] up-arrow scrolls back through history, but filters based on input (e.g., $ tmux should show old tmux commands)
 - [x] debug vim slow startup
 - [x] fix slow esc from insert-mode in vim (it was tmux)
+- [x] fix broken copy/paste in alacritty
+  - this is all fucked up. super c/v are copy/paste in alacritty. ctrl c/v are copy/paste everywhere else. I'll revisit this one day, maybe.

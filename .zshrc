@@ -46,6 +46,9 @@ case ${TERM} in
           ;;
 esac
 
+## cursor
+export VI_MODE_SET_CURSOR=true
+
 ### zsh
 export KEYTIMEOUT=1
 
