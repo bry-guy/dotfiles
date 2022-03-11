@@ -11,3 +11,6 @@ nnoremap \x :bp<cr>:bd #<cr>
 
 " exit terminal-mode
 :tnoremap <Esc> <C-\><C-n>
+
+" vim.fzf search word under cursor
+nnoremap <silent> <Leader>rg :Rg <C-R><C-W><CR>
