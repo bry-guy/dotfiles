@@ -27,6 +27,9 @@
 !.config/keyd/
 !.config/keyd/**/*
 
+!.config/karabiner/
+!.config/karabiner/**/*
+
 !.config/systemd/
 !.config/systemd/user/
 !.config/systemd/user/**/*
