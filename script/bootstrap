@@ -57,38 +57,26 @@ if [ -z "$(which nvim)" ]; then
 fi
 
 ## keyd
-if [ -z "$(which keyd)" ]; then
-		echo "INFO: Install keyd."
+if ! [ -z $CODESPACES]; then
+		if [ -z "$(which keyd)" ]; then
+				echo "INFO: Install keyd."
 
-		cd $HOME/artifacts
+				cd $HOME/artifacts
 
-		git clone https://github.com/rvaiya/keyd
-		cd keyd
-		make && sudo make install
+				git clone https://github.com/rvaiya/keyd
+				cd keyd
+				make && sudo make install
 
-		### link config file saved as keyd.conf
-		sudo ln .config/keyd/default.conf /etc/keyd/default.conf
+				### link config file saved as keyd.conf
+				sudo ln .config/keyd/default.conf /etc/keyd/default.conf
 
-		sudo systemctl enable keyd && sudo systemctl start keyd
+				sudo systemctl enable keyd && sudo systemctl start keyd
 
-		cd $WORKING_DIR
+				cd $WORKING_DIR
+		fi
 fi
 
 # Install Debs
-
-## alacritty
-if [ -z "$(which alacritty)" ]; then
-		echo "INFO: Install alacritty."
-
-		sudo apt install -y alacritty
-fi
-
-## tmux
-if [ -z "$(which tmux)" ]; then
-		echo "INFO: Install tmux."
-
-		sudo apt install -y tmux
-fi
 
 ## ripgrep
 if [ -z "$(which rg)" ]; then
@@ -105,6 +93,20 @@ if [ -z "$(which fzf)" ]; then
 fi
 
 if ! [ -z $CODESPACES]; then
+		## alacritty
+		if [ -z "$(which alacritty)" ]; then
+				echo "INFO: Install alacritty."
+
+				sudo apt install -y alacritty
+		fi
+
+		## tmux
+		if [ -z "$(which tmux)" ]; then
+				echo "INFO: Install tmux."
+
+				sudo apt install -y tmux
+		fi
+
 		## imwheel
 		if [ -z "$(which imwheel)" ]; then
 				echo "INFO: Install imwheel."
