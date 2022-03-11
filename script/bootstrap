@@ -1,33 +1,18 @@
 #!/bin/bash
 
+# Log dotfiles setup
 mkdir $HOME/log
 exec > >(tee -i $HOME/log/dotfiles_install.log)
 exec 2>&1
 set -x
 
+# Setup home directories
+mkdir $HOME/artifacts
+mkdir $HOME/dev
+
 WORKING_DIR=$(pwd)
 
 sudo apt update
-
-# # Codespaces
-# if ! [ -z $CODESPACES ]; then
-# 		echo "INFO: Setup for codespaces."
-
-# 		## remove codespaces built-ins
-# 		rm -f $HOME/.zshrc
-
-# 		## setup
-# 		mkdir $HOME/.config/nvim
-
-# 		## link the things
-# 		ln -sf $(pwd)/.zshrc $HOME/.zshrc
-# 		ln -sf $(pwd)/.aliases $HOME/.aliases
-# 		ln -sf $(pwd)/.gitconfig $HOME/.gitconfig
-# 		ln -sf $(pwd)/.config/nvim/* $HOME/.config/nvim/
-
-# 		## change to zsh
-# 		sudo chsh -s "$(which zsh)" "$(whoami)"
-# fi
 
 # Link dotfiles to $HOME
 cat .gitignore | egrep '^!.*' | egrep -v '\*\*|\.config/.+' | cut -c 2- | xargs -I % cp -R % $HOME
@@ -39,15 +24,21 @@ cp -R .git/ $HOME
 if [ -z "$(which rbenv)" ]; then
 		echo "INFO: Install rbenv."
 		
+		cd $HOME/artifacts
+
 		sudo apt install -y rbenv
 		mkdir -p "$(rbenv root)"/plugins
 		git clone https://github.com/rbenv/ruby-build.git "$(rbenv root)"/plugins/ruby-build
 		rbenv install 3.1.0 &>/dev/null &
+
+		cd $WORKING_DIR
 fi
 
 ## neovim
 if [ -z "$(which nvim)" ]; then
 		echo "INFO: Install neovim."
+
+		cd $HOME/artifacts
 
 		curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
 		chmod u+x nvim.appimage
@@ -61,10 +52,16 @@ if [ -z "$(which nvim)" ]; then
 
 		### install plugins
 		nvim --headless +PlugInstall +qa
+
+		cd $WORKING_DIR
 fi
 
 ## keyd
 if [ -z "$(which keyd)" ]; then
+		echo "INFO: Install keyd."
+
+		cd $HOME/artifacts
+
 		git clone https://github.com/rvaiya/keyd
 		cd keyd
 		make && sudo make install
