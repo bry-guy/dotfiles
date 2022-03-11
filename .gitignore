@@ -28,7 +28,8 @@
 !.config/keyd/**/*
 
 !.config/karabiner/
-!.config/karabiner/**/*
+!.config/karabiner/complex_modifications/*
+!.config/karabiner/karabiner.json
 
 !.config/systemd/
 !.config/systemd/user/
