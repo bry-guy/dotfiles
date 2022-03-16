@@ -15,5 +15,6 @@
 	excludesfile = /Users/bry-guy/.config/git/ignore
 [init]
 	defaultBranch = main
-[credential]
-	helper = osxkeychain
+
+[url "ssh://git@github.com/"]                                                   
+    insteadOf = https://github.com/ 

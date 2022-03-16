@@ -1,4 +1,8 @@
 call plug#begin('~/.vim/plugged')
+Plug 'neovim/nvim-lspconfig'
+
+Plug 'mfussenegger/nvim-jdtls'
+
 Plug 'vimwiki/vimwiki'
 " Plug 'michal-h21/vim-zettel'
 
