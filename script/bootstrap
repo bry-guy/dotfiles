@@ -4,6 +4,7 @@
 mkdir $HOME/log
 exec > >(tee -i $HOME/log/dotfiles_install.log)
 exec 2>&1
+
 set -x
 
 # Setup home directories
@@ -138,15 +139,30 @@ if [ -z $CODESPACES ]; then
 
 		## Java
 		if [ -z "$(which javac)" ]; then
-				echo "INFO: Install openjdk-18-jdk."
+				echo "INFO: Install javac."
 
-				sudo apt install -y openjdk-18-jdk
+				sudo apt install -y openjdk-16-jdk
 		fi
 
 		if [ -z "$(which java)" ]; then
-				echo "INFO: Install openjdk-18-jre."
+				echo "INFO: Install java."
 
-				sudo apt install -y openjdk-18-jre
+				sudo apt install -y openjdk-16-jre
+		fi
+
+		if [ -z "$(which jdtls)" ]; then
+				echo "INFO: Install eclipse.jdt.ls."
+
+				cd artifacts
+
+				rm -rf jdt-language-server
+				mkdir jdt-language-server
+				cd jdt-language-server
+
+				wget https://download.eclipse.org/jdtls/milestones/1.9.0/jdt-language-server-1.9.0-202203031534.tar.gz
+				tar -xzf jdt-language-server-1.9.0-202203031534.tar.gz
+
+				cd $WORKING_DIR
 		fi
 
 fi

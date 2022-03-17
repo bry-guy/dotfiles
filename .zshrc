@@ -117,7 +117,7 @@ export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
 
 ### java
-export JAVA_HOME=$(find /usr/lib/jvm -type d -iname 'java-1*' | head -n 1)
+export JAVA_HOME=$(find /usr/lib/jvm -type d -iname 'java-1*' | head -n 1) # uses latest java
 export PATH="$JAVA_HOME/bin:$PATH" 
 
 ## misc

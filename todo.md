@@ -6,3 +6,6 @@
   - this is all fucked up. super c/v are copy/paste in alacritty. ctrl c/v are copy/paste everywhere else. I'll revisit this one day, maybe.
 - [x] add indication of vim mode in zsh prompt
 - [x] add basename of git repo to zsh prompt
+- [ ] only include set -x output in dotfiles log file
+- [ ] fix ctrl+c prompt
+- [ ] figure out how to use `jdtls` easily and where to install it
