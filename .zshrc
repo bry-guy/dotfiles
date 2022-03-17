@@ -57,12 +57,17 @@ function TRAPINT() {
 
 # Theming
 ## Prompt
-git_branch() {
+function git_branch() {
 	git symbolic-ref --short HEAD 2> /dev/null
 }
 
-git_root() {
-		basename $(git rev-parse --show-toplevel)
+function git_root() {
+		git_root=$([ -d .git ] && echo .git || git rev-parse --show-top-level > /dev/null 2>&1)
+		if [ -d $git_root ]; then
+				return basename $git_root
+		fi
+
+		pwd
 }
 
 setopt prompt_subst
