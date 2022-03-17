@@ -99,7 +99,6 @@ export PATH="/usr/local/Cellar:$PATH"
 # export PATH="/usr/local/opt/mysql@5.7:$PATH"
 export PATH="/usr/local/opt/mysql@5.7/bin:$PATH"
 
-
 ### Neovim
 export EDITOR=/usr/local/bin/nvim
 export VISUAL=/usr/local/bin/nvim
@@ -111,6 +110,11 @@ export FZF_DEFAULT_COMMAND='rg --files --hidden --smart-case'
 export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
 
+### java
+export JAVA_HOME=$(find /usr/lib/jvm -type d -iname 'openjdk-*' | head -n 1)
+export PATH="$JAVA_HOME/bin:$PATH" 
+
 ## misc
 export MANPAGER='nvim +Man!'
+
 
