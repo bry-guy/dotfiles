@@ -9,3 +9,8 @@
 - [ ] only include set -x output in dotfiles log file
 - [ ] fix ctrl+c prompt
 - [ ] figure out how to use `jdtls` easily and where to install it
+- [ ] fix copy/paste 
+  - [ ] - alacritty vim mode? 
+  - [ ] visual mode in tmux (rather than visual line?)
+  - [ ] xclip?
+- [ ] Consider trying `tpope/vim-eunuch`

@@ -44,8 +44,8 @@ if [ -z "$(which nvim)" ]; then
 		curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
 		chmod u+x nvim.appimage
 		./nvim.appimage --appimage-extract
-		sudo mv squashfs-root /usr/local/squashfs-nvim
-		sudo ln -s /usr/local/squashfs-nvim/AppRun /usr/local/bin/nvim
+		sudo mv squashfs-root /usr/local/lib/squashfs-nvim
+		sudo ln -s /usr/local/lib/squashfs-nvim/AppRun /usr/local/bin/nvim
 
 		### install vim-plug
 		sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
@@ -69,7 +69,7 @@ if [ -z $CODESPACES ]; then
 				make && sudo make install
 
 				### link config file saved as keyd.conf
-				sudo ln .config/keyd/default.conf /etc/keyd/default.conf
+				sudo ln -s .config/keyd/default.conf /etc/keyd/default.conf
 
 				sudo systemctl enable keyd && sudo systemctl start keyd
 
@@ -155,12 +155,13 @@ if [ -z $CODESPACES ]; then
 
 				cd artifacts
 
-				rm -rf jdt-language-server
-				mkdir jdt-language-server
-				cd jdt-language-server
-
 				wget https://download.eclipse.org/jdtls/milestones/1.9.0/jdt-language-server-1.9.0-202203031534.tar.gz
-				tar -xzf jdt-language-server-1.9.0-202203031534.tar.gz
+
+				sudo rm -rf /usr/local/lib/jdt-language-server
+				sudo mkdir /usr/local/lib/jdt-language-server
+
+				sudo tar -xzf jdt-language-server-1.9.0-202203031534.tar.gz -C /usr/local/lib/jdt-language-server
+				sudo ln -s /usr/local/lib/jdt-language-server/bin/jdtls /usr/local/bin/jdtls
 
 				cd $WORKING_DIR
 		fi
