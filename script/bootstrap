@@ -57,7 +57,7 @@ if [ -z "$(which nvim)" ]; then
 fi
 
 ## keyd
-if ! [ -z $CODESPACES]; then
+if [ -z $CODESPACES ]; then
 		if [ -z "$(which keyd)" ]; then
 				echo "INFO: Install keyd."
 
@@ -92,7 +92,7 @@ if [ -z "$(which fzf)" ]; then
 		sudo apt install -y fzf
 fi
 
-if ! [ -z $CODESPACES]; then
+if [ -z $CODESPACES ]; then
 		## alacritty
 		if [ -z "$(which alacritty)" ]; then
 				echo "INFO: Install alacritty."
@@ -135,10 +135,24 @@ if ! [ -z $CODESPACES]; then
 				sudo apt update
 				sudo apt install -y 1password
 		fi
+
+		## Java
+		if [ -z "$(which javac)" ]; then
+				echo "INFO: Install openjdk-18-jdk."
+
+				sudo apt install -y openjdk-18-jdk
+		fi
+
+		if [ -z "$(which java)" ]; then
+				echo "INFO: Install openjdk-18-jre."
+
+				sudo apt install -y openjdk-18-jre
+		fi
+
 fi
 
 # Install Flatpaks
-if ! [ -z $CODESPACES ]; then
+if [ -z $CODESPACES ]; then
 		## flatpak
 		if [ -z "$(which flatpak)" ]; then
 				echo "INFO: Install flatpak."
@@ -246,5 +260,5 @@ if [[ $SHELL != *"zsh"* ]]; then
 		chsh -s "$(which zsh)"
 fi
 
-echo "Run eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)" to finish installing brew."
+echo "Run eval '\$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)' to finish installing brew."
 
