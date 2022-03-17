@@ -62,12 +62,13 @@ function git_branch() {
 }
 
 function git_root() {
-		git_root=$([ -d .git ] && echo .git || git rev-parse --show-top-level > /dev/null 2>&1)
-		if [ -d $git_root ]; then
-				return basename $git_root
-		fi
+		git_root=$(git rev-parse --show-toplevel 2>/dev/null)
 
-		pwd
+		if [ -n "${git_root// }" ]; then
+				basename $git_root
+		else
+				basename $(pwd)
+		fi
 }
 
 setopt prompt_subst
@@ -116,7 +117,7 @@ export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
 
 ### java
-export JAVA_HOME=$(find /usr/lib/jvm -type d -iname 'openjdk-*' | head -n 1)
+export JAVA_HOME=$(find /usr/lib/jvm -type d -iname 'java-1*' | head -n 1)
 export PATH="$JAVA_HOME/bin:$PATH" 
 
 ## misc
