@@ -120,7 +120,7 @@ eval "$(rbenv init -)"
 export JAVA_HOME=$(find /usr/lib/jvm -type d -iname 'java-1*' | head -n 1) # uses latest java
 export PATH="$JAVA_HOME/bin:$PATH" 
 
-export GRADLE_HOME="~/.local/lib/gradle/gradle-7.4.1"
+export GRADLE_HOME="$HOME/.local/lib/gradle/gradle-7.4.1"
 export PATH="$GRADLE_HOME/bin:$PATH"
 
 ## misc

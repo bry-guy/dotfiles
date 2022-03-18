@@ -58,6 +58,7 @@ local config = {
   init_options = {
     bundles = {}
   },
+  capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities()),
 }
 -- This starts a new client & server,
 -- or attaches to an existing client & server depending on the `root_dir`.

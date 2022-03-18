@@ -1,6 +1,15 @@
 call plug#begin('~/.vim/plugged')
 Plug 'neovim/nvim-lspconfig'
 
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/cmp-path'
+Plug 'hrsh7th/cmp-cmdline'
+Plug 'hrsh7th/nvim-cmp'
+Plug 'hrsh7th/cmp-vsnip'
+Plug 'hrsh7th/vim-vsnip'
+Plug 'hrsh7th/vim-vsnip-integ'
+
 Plug 'mfussenegger/nvim-jdtls'
 
 Plug 'vimwiki/vimwiki'
@@ -11,8 +20,10 @@ Plug 'junegunn/fzf.vim'
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
 
-Plug 'bluz71/vim-moonfly-colors'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+" Plug 'bluz71/vim-moonfly-colors'
 Plug 'bry-guy/vim-bg-colors'
+" Plug 'tomasiser/vim-code-dark'
 
 Plug 'itchyny/lightline.vim'
 
