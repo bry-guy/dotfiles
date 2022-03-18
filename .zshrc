@@ -106,8 +106,8 @@ export PATH="/usr/local/Cellar:$PATH"
 export PATH="/usr/local/opt/mysql@5.7/bin:$PATH"
 
 ### Neovim
-export EDITOR=/usr/local/bin/nvim
-export VISUAL=/usr/local/bin/nvim
+export EDITOR=~/.local/bin/nvim
+export VISUAL=~/.local/bin/nvim
 
 ### FZF settings (configured for fzf.vim)
 export FZF_DEFAULT_COMMAND='rg --files --hidden --smart-case'
@@ -120,7 +120,12 @@ eval "$(rbenv init -)"
 export JAVA_HOME=$(find /usr/lib/jvm -type d -iname 'java-1*' | head -n 1) # uses latest java
 export PATH="$JAVA_HOME/bin:$PATH" 
 
+export GRADLE_HOME="~/.local/lib/gradle/gradle-7.4.1"
+export PATH="$GRADLE_HOME/bin:$PATH"
+
 ## misc
 export MANPAGER='nvim +Man!'
 
+## local apps
+export PATH="$HOME/.local/bin:$PATH"
 

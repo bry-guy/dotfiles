@@ -14,3 +14,5 @@
   - [ ] visual mode in tmux (rather than visual line?)
   - [ ] xclip?
 - [ ] Consider trying `tpope/vim-eunuch`
+- [ ] Put versions into a `.versions` file and reference that in script/bootstrap + zshrc
+- [ ] Get alacritty/tmux to show current path in title bar

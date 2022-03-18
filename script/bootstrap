@@ -8,7 +8,12 @@ exec 2>&1
 set -x
 
 # Setup home directories
-mkdir $HOME/artifacts
+mkdir $HOME/.local
+mkdir $HOME/.local/lib
+mkdir $HOME/.local/bin
+mkdir $HOME/.local/src
+mkdir $HOME/.local/artifacts
+
 mkdir $HOME/dev
 
 WORKING_DIR=$(pwd)
@@ -25,7 +30,7 @@ cp -R .git/ $HOME
 if [ -z "$(which rbenv)" ]; then
 		echo "INFO: Install rbenv."
 		
-		cd $HOME/artifacts
+		cd $HOME/.local/artifacts
 
 		sudo apt install -y rbenv
 		mkdir -p "$(rbenv root)"/plugins
@@ -39,13 +44,13 @@ fi
 if [ -z "$(which nvim)" ]; then
 		echo "INFO: Install neovim."
 
-		cd $HOME/artifacts
+		cd $HOME/.local/artifacts
 
 		curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
 		chmod u+x nvim.appimage
 		./nvim.appimage --appimage-extract
-		sudo mv squashfs-root /usr/local/lib/squashfs-nvim
-		sudo ln -s /usr/local/lib/squashfs-nvim/AppRun /usr/local/bin/nvim
+		sudo mv squashfs-root $HOME/.local/lib/squashfs-nvim
+		sudo ln -s $HOME/.local/lib/squashfs-nvim/AppRun $HOME/.local/bin/nvim
 
 		### install vim-plug
 		sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
@@ -62,7 +67,7 @@ if [ -z $CODESPACES ]; then
 		if [ -z "$(which keyd)" ]; then
 				echo "INFO: Install keyd."
 
-				cd $HOME/artifacts
+				cd $HOME/.local/artifacts
 
 				git clone https://github.com/rvaiya/keyd
 				cd keyd
@@ -153,17 +158,29 @@ if [ -z $CODESPACES ]; then
 		if [ -z "$(which jdtls)" ]; then
 				echo "INFO: Install eclipse.jdt.ls."
 
-				cd artifacts
+				wget https://download.eclipse.org/jdtls/milestones/1.9.0/jdt-language-server-1.9.0-202203031534.tar.gz \
+						-P $HOME/.local/artifacts
 
-				wget https://download.eclipse.org/jdtls/milestones/1.9.0/jdt-language-server-1.9.0-202203031534.tar.gz
+				sudo rm -rf $HOME/.local/lib/jdt-language-server
+				sudo mkdir $HOME/.local/lib/jdt-language-server
 
-				sudo rm -rf /usr/local/lib/jdt-language-server
-				sudo mkdir /usr/local/lib/jdt-language-server
+				sudo tar -xzf $HOME/.local/artifacts/jdt-language-server-1.9.0-202203031534.tar.gz \
+						-C $HOME/.local/lib/jdt-language-server
 
-				sudo tar -xzf jdt-language-server-1.9.0-202203031534.tar.gz -C /usr/local/lib/jdt-language-server
-				sudo ln -s /usr/local/lib/jdt-language-server/bin/jdtls /usr/local/bin/jdtls
+				sudo ln -s $HOME/.local/lib/jdt-language-server/bin/jdtls $HOME/.local/bin/jdtls
+		fi
 
-				cd $WORKING_DIR
+		if [ -z "$(which gradle)" ]; then
+				echo "INFO: Install gradle."
+
+				wget https://services.gradle.org/distributions/gradle-7.4.1-bin.zip -P $HOME/.local/artifacts
+
+				sudo unzip -d $HOME/.local/lib/gradle $HOME/.local/artifacts/gradle-*.zip
+
+				export GRADLE_HOME=$HOME/.local/lib/gradle-7.4.1
+				export PATH=${GRADLE_HOME}/bin:${PATH}
+
+				sudo ln -s .config/profile.d/gradle.sh /etc/profile.d/gradle.sh
 		fi
 
 fi
@@ -246,7 +263,6 @@ if [ -z "$(which brew)" ]; then
 		/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 		eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-		which brew
 
 		sudo apt install build-essential
 fi
@@ -277,5 +293,5 @@ if [[ $SHELL != *"zsh"* ]]; then
 		chsh -s "$(which zsh)"
 fi
 
-echo "Run eval '\$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)' to finish installing brew."
+echo "Run eval \$(/home/linuxbrew/.linuxbrew/bin/brew shellenv) to finish installing brew."
 
