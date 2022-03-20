@@ -98,6 +98,17 @@ if [ -z "$(which fzf)" ]; then
 		sudo apt install -y fzf
 fi
 
+## nvm / npm
+if [ -z "$(command -v nvm)" ]; then
+		echo "INFO: Install nvm."
+
+		curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+		. ~/.nvm/nvm.sh
+
+		echo "NVM_DIR=$NVM_DIR"
+		nvm install --lts
+fi
+
 if [ -z $CODESPACES ]; then
 		## alacritty
 		if [ -z "$(which alacritty)" ]; then
@@ -146,12 +157,14 @@ if [ -z $CODESPACES ]; then
 		if [ -z "$(which javac)" ]; then
 				echo "INFO: Install javac."
 
+				sudo apt install -y openjdk-11-jdk
 				sudo apt install -y openjdk-16-jdk
 		fi
 
 		if [ -z "$(which java)" ]; then
 				echo "INFO: Install java."
 
+				sudo apt install -y openjdk-11-jre
 				sudo apt install -y openjdk-16-jre
 		fi
 
@@ -176,6 +189,35 @@ if [ -z $CODESPACES ]; then
 				wget https://services.gradle.org/distributions/gradle-7.4.1-bin.zip -P $HOME/.local/artifacts
 
 				unzip -d $HOME/.local/lib/gradle $HOME/.local/artifacts/gradle-*.zip
+		fi
+
+		if [ -z "$(find $HOME/.local/lib/java-debug -type d -name 'com.microsoft.java.debug.core')" ]; then
+				echo "INFO: Install java-debug."
+
+				git clone https://github.com/microsoft/java-debug $HOME/.local/src/java-debug
+
+				cd $HOME/.local/src/java-debug
+				JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64/ ./mvnw clean install
+
+				mkdir $HOME/.local/lib/java-debug
+				mv com.microsoft.java.debug* $HOME/.local/lib/java-debug
+
+				cd $WORKING_DIR
+		fi
+
+		# TODO: Fix this "check if installed" statement
+		if [ -z "$(which vscode-java-test)" ]; then
+				echo "INFO: Install vscode-java-test."
+
+				git clone https://github.com/microsoft/vscode-java-test $HOME/.local/src/vscode-java-test
+
+				cd $HOME/.local/src/vscode-java-test
+
+				npm install
+				npm run build-plugin
+
+				mkdir $HOME/.local/lib/vscode-java-test
+				cp -r $HOME/.local/src/vscode-java-test/java-extension/* $HOME/.local/lib/vscode-java-test
 		fi
 
 fi
