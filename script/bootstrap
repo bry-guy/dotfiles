@@ -217,7 +217,7 @@ if [ -z $CODESPACES ]; then
 				npm run build-plugin
 
 				mkdir $HOME/.local/lib/vscode-java-test
-				cp -r $HOME/.local/src/vscode-java-test/java-extension/* $HOME/.local/lib/vscode-java-test
+				cp -r $HOME/.local/src/vscode-java-test/* $HOME/.local/lib/vscode-java-test
 		fi
 
 fi
