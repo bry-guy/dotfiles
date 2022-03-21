@@ -58,8 +58,23 @@ nnoremap crc <Cmd>lua require('jdtls').extract_constant()<CR>
 vnoremap crc <Esc><Cmd>lua require('jdtls').extract_constant(true)<CR>
 vnoremap crm <Esc><Cmd>lua require('jdtls').extract_method(true)<CR>
 
-" TODO: use `nvim-dap` for java
 " If using nvim-dap
 " This requires java-debug and vscode-java-test bundles, see install steps in this README further below.
-" nnoremap <leader>df <Cmd>lua require'jdtls'.test_class()<CR>
-" nnoremap <leader>dn <Cmd>lua require'jdtls'.test_nearest_method()<CR>
+nnoremap <leader>df <Cmd>lua require'jdtls'.test_class()<CR>
+nnoremap <leader>dn <Cmd>lua require'jdtls'.test_nearest_method()<CR>
+
+" nvim-dap mappings
+nnoremap <silent> <F5> :lua require'dap'.continue()<CR>
+nnoremap <silent> <F10> :lua require'dap'.step_over()<CR>
+nnoremap <silent> <F11> :lua require'dap'.step_into()<CR>
+nnoremap <silent> <F12> :lua require'dap'.step_out()<CR>
+nnoremap <silent> <leader>b :lua require'dap'.toggle_breakpoint()<CR>
+nnoremap <silent> <leader>B :lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>
+nnoremap <silent> <leader>lp :lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>
+nnoremap <silent> <leader>dr :lua require'dap'.repl.open()<CR>
+nnoremap <silent> <leader>dl :lua require'dap'.run_last()<CR>
+
+" nvim-dap-ui mappings
+nnoremap <silent> <leader>do :lua require'dapui'.open()<CR>
+nnoremap <silent> <leader>dc :lua require'dapui'.close()<CR>
+nnoremap <silent> <leader>dt :lua require'dapui'.toggle()<CR>

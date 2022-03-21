@@ -47,7 +47,6 @@ local config = {
     }
   },
 
-  -- TODO: Use `nvim-dap`
   -- Language server `initializationOptions`
   -- You need to extend the `bundles` with paths to jar files
   -- if you want to use additional eclipse.jdt.ls plugins.
@@ -55,11 +54,30 @@ local config = {
   -- See https://github.com/mfussenegger/nvim-jdtls#java-debug-installation
   --
   -- If you don't plan on using the debugger or other eclipse.jdt.ls plugins you can remove this
-  init_options = {
-    bundles = {}
-  },
+  -- init_options = {
+  --   bundles = {
+			-- vim.fn.glob("$HOME/.local/lib/java-debug/com.microsoft.java.debug.plugin/target/com.microsoft.java.debug.plugin-*.jar"),
+			-- vim.split(vim.fn.glob("$HOME/.local/lib/vscode-java-test/server/*.jar"), "\n")
+	-- };
+  -- },
   capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities()),
+  on_attach = {
+		    require('jdtls').setup_dap({ hotcodereplace = 'auto' }),
+			require('jdtls.setup').add_commands()
+  },
 }
+
+-- This bundles definition is the same as in the previous section (java-debug installation)
+local bundles = {
+  vim.fn.glob("$HOME/.local/lib/java-debug/com.microsoft.java.debug.plugin/target/com.microsoft.java.debug.plugin-*.jar"),
+};
+
+-- This is the new part
+vim.list_extend(bundles, vim.split(vim.fn.glob("$HOME/.local/lib/vscode-java-test/server/*.jar"), "\n"))
+config['init_options'] = {
+  bundles = bundles;
+}
+
 -- This starts a new client & server,
 -- or attaches to an existing client & server depending on the `root_dir`.
 require('jdtls').start_or_attach(config)

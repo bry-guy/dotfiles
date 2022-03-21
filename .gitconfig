@@ -12,7 +12,7 @@
 	unstage = reset HEAD --
 	last = log -1 HEAD
 [core]
-	excludesfile = /Users/bry-guy/.config/git/ignore
+	excludesFile = ~/.local/.gitignore
 [init]
 	defaultBranch = main
 

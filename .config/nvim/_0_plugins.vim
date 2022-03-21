@@ -12,6 +12,9 @@ Plug 'hrsh7th/vim-vsnip-integ'
 
 Plug 'mfussenegger/nvim-jdtls'
 
+Plug 'mfussenegger/nvim-dap'
+Plug 'rcarriga/nvim-dap-ui'
+
 Plug 'vimwiki/vimwiki'
 " Plug 'michal-h21/vim-zettel'
 
