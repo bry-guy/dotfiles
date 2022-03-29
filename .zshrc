@@ -1,14 +1,4 @@
 ## plugins
-# export ZPLUG_HOME=/usr/local/opt/zplug
-# source $ZPLUG_HOME/init.zsh
-
-# zplug "jeffreytse/zsh-vi-mode"
-# bindkey -v
-# export ZVM_TERM=xterm-256color
-
-# zplug load --verbose
-
-## auto-generated
 HISTFILE=~/.histfile
 HISTSIZE=10000
 SAVEHIST=10000
@@ -106,8 +96,8 @@ export PATH="/usr/local/Cellar:$PATH"
 export PATH="/usr/local/opt/mysql@5.7/bin:$PATH"
 
 ### Neovim
-export EDITOR=~/.local/bin/nvim
-export VISUAL=~/.local/bin/nvim
+export EDITOR=$HOME/.local/bin/nvim
+export VISUAL=$HOME/.local/bin/nvim
 
 ### FZF settings (configured for fzf.vim)
 export FZF_DEFAULT_COMMAND='rg --files --hidden --smart-case'
