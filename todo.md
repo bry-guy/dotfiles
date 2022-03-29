@@ -7,12 +7,13 @@
 - [x] add indication of vim mode in zsh prompt
 - [x] add basename of git repo to zsh prompt
 - [ ] only include set -x output in dotfiles log file
-- [ ] fix ctrl+c prompt
-- [ ] figure out how to use `jdtls` easily and where to install it
-- [ ] fix copy/paste 
-  - [ ] - alacritty vim mode? 
+- [ ] fix ctrl+c breaking prompt
+- [x] figure out how to use `jdtls` easily and where to install it
+- [ ] fix copy/paste
+  - [ ] alacritty vim mode? 
   - [ ] visual mode in tmux (rather than visual line?)
   - [ ] xclip?
 - [ ] Consider trying `tpope/vim-eunuch`
-- [ ] Put versions into a `.versions` file and reference that in script/bootstrap + zshrc
+- [ ] Use `asdf` to install/track tool versions
 - [ ] Get alacritty/tmux to show current path in title bar
+- [ ] Fix prompt color-changing $ for vim-modes
