@@ -16,7 +16,6 @@ Plug 'mfussenegger/nvim-dap'
 Plug 'rcarriga/nvim-dap-ui'
 
 Plug 'vimwiki/vimwiki'
-" Plug 'michal-h21/vim-zettel'
 
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } },
 Plug 'junegunn/fzf.vim'
@@ -24,9 +23,7 @@ Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
 
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-" Plug 'bluz71/vim-moonfly-colors'
 Plug 'bry-guy/vim-bg-colors'
-" Plug 'tomasiser/vim-code-dark'
 
 Plug 'itchyny/lightline.vim'
 
