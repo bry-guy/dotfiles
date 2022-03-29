@@ -205,8 +205,7 @@ if [ -z $CODESPACES ]; then
 				cd $WORKING_DIR
 		fi
 
-		# TODO: Fix this "check if installed" statement
-		if [ -z "$(which vscode-java-test)" ]; then
+		if [ -z "$(find $HOME/lib -type d -iname '*vscode-java-test*')" ]; then
 				echo "INFO: Install vscode-java-test."
 
 				git clone https://github.com/microsoft/vscode-java-test $HOME/.local/src/vscode-java-test
