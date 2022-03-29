@@ -4,10 +4,16 @@
 mkdir $HOME/log
 exec > >(tee -i $HOME/log/dotfiles_install.log)
 exec 2>&1
+
 set -x
 
 # Setup home directories
-mkdir $HOME/artifacts
+mkdir $HOME/.local
+mkdir $HOME/.local/lib
+mkdir $HOME/.local/bin
+mkdir $HOME/.local/src
+mkdir $HOME/.local/artifacts
+
 mkdir $HOME/dev
 
 WORKING_DIR=$(pwd)
@@ -24,7 +30,7 @@ cp -R .git/ $HOME
 if [ -z "$(which rbenv)" ]; then
 		echo "INFO: Install rbenv."
 		
-		cd $HOME/artifacts
+		cd $HOME/.local/artifacts
 
 		sudo apt install -y rbenv
 		mkdir -p "$(rbenv root)"/plugins
@@ -38,13 +44,13 @@ fi
 if [ -z "$(which nvim)" ]; then
 		echo "INFO: Install neovim."
 
-		cd $HOME/artifacts
+		cd $HOME/.local/artifacts
 
 		curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
 		chmod u+x nvim.appimage
 		./nvim.appimage --appimage-extract
-		sudo mv squashfs-root /usr/local/squashfs-nvim
-		sudo ln -s /usr/local/squashfs-nvim/AppRun /usr/local/bin/nvim
+		mv squashfs-root $HOME/.local/lib/squashfs-nvim
+		ln -s $HOME/.local/lib/squashfs-nvim/AppRun $HOME/.local/bin/nvim
 
 		### install vim-plug
 		sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
@@ -57,18 +63,18 @@ if [ -z "$(which nvim)" ]; then
 fi
 
 ## keyd
-if ! [ -z $CODESPACES]; then
+if [ -z $CODESPACES ]; then
 		if [ -z "$(which keyd)" ]; then
 				echo "INFO: Install keyd."
 
-				cd $HOME/artifacts
+				cd $HOME/.local/artifacts
 
 				git clone https://github.com/rvaiya/keyd
 				cd keyd
 				make && sudo make install
 
 				### link config file saved as keyd.conf
-				sudo ln .config/keyd/default.conf /etc/keyd/default.conf
+				sudo ln -s .config/keyd/default.conf /etc/keyd/default.conf
 
 				sudo systemctl enable keyd && sudo systemctl start keyd
 
@@ -92,7 +98,18 @@ if [ -z "$(which fzf)" ]; then
 		sudo apt install -y fzf
 fi
 
-if ! [ -z $CODESPACES]; then
+## nvm / npm
+if [ -z "$(command -v nvm)" ]; then
+		echo "INFO: Install nvm."
+
+		curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+		. ~/.nvm/nvm.sh
+
+		echo "NVM_DIR=$NVM_DIR"
+		nvm install --lts
+fi
+
+if [ -z $CODESPACES ]; then
 		## alacritty
 		if [ -z "$(which alacritty)" ]; then
 				echo "INFO: Install alacritty."
@@ -135,10 +152,77 @@ if ! [ -z $CODESPACES]; then
 				sudo apt update
 				sudo apt install -y 1password
 		fi
+
+		## Java
+		if [ -z "$(which javac)" ]; then
+				echo "INFO: Install javac."
+
+				sudo apt install -y openjdk-11-jdk
+				sudo apt install -y openjdk-16-jdk
+		fi
+
+		if [ -z "$(which java)" ]; then
+				echo "INFO: Install java."
+
+				sudo apt install -y openjdk-11-jre
+				sudo apt install -y openjdk-16-jre
+		fi
+
+		if [ -z "$(which jdtls)" ]; then
+				echo "INFO: Install eclipse.jdt.ls."
+
+				wget https://download.eclipse.org/jdtls/milestones/1.9.0/jdt-language-server-1.9.0-202203031534.tar.gz \
+						-P $HOME/.local/artifacts
+
+				rm -rf $HOME/.local/lib/jdt-language-server
+				mkdir $HOME/.local/lib/jdt-language-server
+
+				tar -xzf $HOME/.local/artifacts/jdt-language-server-1.9.0-202203031534.tar.gz \
+						-C $HOME/.local/lib/jdt-language-server
+
+				ln -s $HOME/.local/lib/jdt-language-server/bin/jdtls $HOME/.local/bin/jdtls
+		fi
+
+		if [ -z "$(which gradle)" ]; then
+				echo "INFO: Install gradle."
+
+				wget https://services.gradle.org/distributions/gradle-7.4.1-bin.zip -P $HOME/.local/artifacts
+
+				unzip -d $HOME/.local/lib/gradle $HOME/.local/artifacts/gradle-*.zip
+		fi
+
+		if [ -z "$(find $HOME/.local/lib/java-debug -type d -name 'com.microsoft.java.debug.core')" ]; then
+				echo "INFO: Install java-debug."
+
+				git clone https://github.com/microsoft/java-debug $HOME/.local/src/java-debug
+
+				cd $HOME/.local/src/java-debug
+				JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64/ ./mvnw clean install
+
+				mkdir $HOME/.local/lib/java-debug
+				mv com.microsoft.java.debug* $HOME/.local/lib/java-debug
+
+				cd $WORKING_DIR
+		fi
+
+		if [ -z "$(find $HOME/lib -type d -iname '*vscode-java-test*')" ]; then
+				echo "INFO: Install vscode-java-test."
+
+				git clone https://github.com/microsoft/vscode-java-test $HOME/.local/src/vscode-java-test
+
+				cd $HOME/.local/src/vscode-java-test
+
+				npm install
+				npm run build-plugin
+
+				mkdir $HOME/.local/lib/vscode-java-test
+				cp -r $HOME/.local/src/vscode-java-test/* $HOME/.local/lib/vscode-java-test
+		fi
+
 fi
 
 # Install Flatpaks
-if ! [ -z $CODESPACES ]; then
+if [ -z $CODESPACES ]; then
 		## flatpak
 		if [ -z "$(which flatpak)" ]; then
 				echo "INFO: Install flatpak."
@@ -215,7 +299,6 @@ if [ -z "$(which brew)" ]; then
 		/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 		eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-		which brew
 
 		sudo apt install build-essential
 fi
@@ -246,5 +329,5 @@ if [[ $SHELL != *"zsh"* ]]; then
 		chsh -s "$(which zsh)"
 fi
 
-echo "Run eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)" to finish installing brew."
+echo "Run eval \$(/home/linuxbrew/.linuxbrew/bin/brew shellenv) to finish installing brew."
 

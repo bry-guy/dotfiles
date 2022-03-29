@@ -1,14 +1,4 @@
 ## plugins
-# export ZPLUG_HOME=/usr/local/opt/zplug
-# source $ZPLUG_HOME/init.zsh
-
-# zplug "jeffreytse/zsh-vi-mode"
-# bindkey -v
-# export ZVM_TERM=xterm-256color
-
-# zplug load --verbose
-
-## auto-generated
 HISTFILE=~/.histfile
 HISTSIZE=10000
 SAVEHIST=10000
@@ -57,12 +47,18 @@ function TRAPINT() {
 
 # Theming
 ## Prompt
-git_branch() {
+function git_branch() {
 	git symbolic-ref --short HEAD 2> /dev/null
 }
 
-git_root() {
-		basename $(git rev-parse --show-toplevel)
+function git_root() {
+		git_root=$(git rev-parse --show-toplevel 2>/dev/null)
+
+		if [ -n "${git_root// }" ]; then
+				basename $git_root
+		else
+				basename $(pwd)
+		fi
 }
 
 setopt prompt_subst
@@ -99,10 +95,9 @@ export PATH="/usr/local/Cellar:$PATH"
 # export PATH="/usr/local/opt/mysql@5.7:$PATH"
 export PATH="/usr/local/opt/mysql@5.7/bin:$PATH"
 
-
 ### Neovim
-export EDITOR=/usr/local/bin/nvim
-export VISUAL=/usr/local/bin/nvim
+export EDITOR=$HOME/.local/bin/nvim
+export VISUAL=$HOME/.local/bin/nvim
 
 ### FZF settings (configured for fzf.vim)
 export FZF_DEFAULT_COMMAND='rg --files --hidden --smart-case'
@@ -111,6 +106,21 @@ export FZF_DEFAULT_COMMAND='rg --files --hidden --smart-case'
 export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
 
+### java
+export JAVA_HOME=$(find /usr/lib/jvm -type d -iname 'java-1*' | head -n 1) # uses latest java
+export PATH="$JAVA_HOME/bin:$PATH" 
+
+export GRADLE_HOME="$HOME/.local/lib/gradle/gradle-7.4.1"
+export PATH="$GRADLE_HOME/bin:$PATH"
+
+### nvm/npm
+export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
 ## misc
 export MANPAGER='nvim +Man!'
+
+## local apps
+export PATH="$HOME/.local/bin:$PATH"
 

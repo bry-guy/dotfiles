@@ -6,3 +6,14 @@
   - this is all fucked up. super c/v are copy/paste in alacritty. ctrl c/v are copy/paste everywhere else. I'll revisit this one day, maybe.
 - [x] add indication of vim mode in zsh prompt
 - [x] add basename of git repo to zsh prompt
+- [ ] only include set -x output in dotfiles log file
+- [ ] fix ctrl+c breaking prompt
+- [x] figure out how to use `jdtls` easily and where to install it
+- [ ] fix copy/paste
+  - [ ] alacritty vim mode? 
+  - [ ] visual mode in tmux (rather than visual line?)
+  - [ ] xclip?
+- [ ] Consider trying `tpope/vim-eunuch`
+- [ ] Use `asdf` to install/track tool versions
+- [ ] Get alacritty/tmux to show current path in title bar
+- [ ] Fix prompt color-changing $ for vim-modes

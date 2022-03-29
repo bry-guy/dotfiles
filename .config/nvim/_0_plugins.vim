@@ -1,13 +1,28 @@
 call plug#begin('~/.vim/plugged')
+Plug 'neovim/nvim-lspconfig'
+
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/cmp-path'
+Plug 'hrsh7th/cmp-cmdline'
+Plug 'hrsh7th/nvim-cmp'
+Plug 'hrsh7th/cmp-vsnip'
+Plug 'hrsh7th/vim-vsnip'
+Plug 'hrsh7th/vim-vsnip-integ'
+
+Plug 'mfussenegger/nvim-jdtls'
+
+Plug 'mfussenegger/nvim-dap'
+Plug 'rcarriga/nvim-dap-ui'
+
 Plug 'vimwiki/vimwiki'
-" Plug 'michal-h21/vim-zettel'
 
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } },
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
 
-Plug 'bluz71/vim-moonfly-colors'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'bry-guy/vim-bg-colors'
 
 Plug 'itchyny/lightline.vim'

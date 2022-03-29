@@ -7,6 +7,3 @@ let g:bgCursorColor = 1
 let g:bgVertSplits = 0
 
 colorscheme bg
-
-" this is what I used to use and liked, but was not treesitter-compatible
-" colorscheme equinusocio_material
