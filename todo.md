@@ -17,3 +17,9 @@
 - [ ] Use `asdf` to install/track tool versions
 - [ ] Get alacritty/tmux to show current path in title bar
 - [ ] Fix prompt color-changing $ for vim-modes
+- [ ] Fix indenting per filetype
+
+## macos
+- [ ] use ctrl in laptop mode
+- [ ] detect macos vs. linux
+- [ ] install everything on macos

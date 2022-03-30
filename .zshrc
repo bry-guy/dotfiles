@@ -9,6 +9,9 @@ autoload -Uz compinit promptinit
 compinit
 promptinit
 
+## detect OS
+[ -f $HOME/.os_detect ] && source $HOME/.os_detect
+
 ## config files
 [ -f $HOME/.secrets ] && . $HOME/.secrets
 [ -f $HOME/.aliases ] && . $HOME/.aliases
@@ -92,7 +95,6 @@ export PATH="/usr/local/bin:$PATH"
 export PATH="/usr/local/Cellar:$PATH"
 
 ### mysql
-# export PATH="/usr/local/opt/mysql@5.7:$PATH"
 export PATH="/usr/local/opt/mysql@5.7/bin:$PATH"
 
 ### Neovim
@@ -107,7 +109,14 @@ export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
 
 ### java
-export JAVA_HOME=$(find /usr/lib/jvm -type d -iname 'java-1*' | head -n 1) # uses latest java
+if [ -n "$OS_MAC" ]; then
+		export JAVA_11_HOME="/Library/Java/JavaVirtualMachines/openjdk-11.jdk/Contents/Home" 
+		export JAVA_HOME="$(find /Library/Java/JavaVirtualMachines -iname 'openjdk-*' 2>/dev/null | sort --reverse | head -n 1)/Contents/Home" 
+elif [ -n "$OS_LINUX" ]; then
+		export JAVA_11_HOME="/usr/lib/jvm/java-11-openjdk-amd64"
+		export JAVA_HOME=$(find /usr/lib/jvm -type d -iname 'java-1*' 2>/dev/null | sort --reverse | head -n 1) 
+fi
+
 export PATH="$JAVA_HOME/bin:$PATH" 
 
 export GRADLE_HOME="$HOME/.local/lib/gradle/gradle-7.4.1"

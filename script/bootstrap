@@ -7,6 +7,9 @@ exec 2>&1
 
 set -x
 
+## detect OS
+[ -f $HOME/.os_detect ] && source $HOME/.os_detect
+
 # Setup home directories
 mkdir $HOME/.local
 mkdir $HOME/.local/lib
@@ -18,11 +21,21 @@ mkdir $HOME/dev
 
 WORKING_DIR=$(pwd)
 
-sudo apt update
-
 # Link dotfiles to $HOME
 cat .gitignore | egrep '^!.*' | egrep -v '\*\*|\.config/.+' | cut -c 2- | xargs -I % cp -R % $HOME
 cp -R .git/ $HOME
+
+# Install Brew for macOS
+if [ -n "$OS_MAC" ]; then
+		/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi
+
+# Update packager
+if [ -n "$OS_LINUX" ]; then
+		sudo apt update
+elif [ -n "$OS_MAC" ]; then
+		brew update
+fi
 
 # Manual installs
 
@@ -32,7 +45,12 @@ if [ -z "$(which rbenv)" ]; then
 		
 		cd $HOME/.local/artifacts
 
-		sudo apt install -y rbenv
+		if [ -n "$OS_LINUX" ]; then
+				sudo apt install -y rbenv
+		elif [ -n "$OS_MAC" ]; then
+				brew install rbenv
+		fi
+
 		mkdir -p "$(rbenv root)"/plugins
 		git clone https://github.com/rbenv/ruby-build.git "$(rbenv root)"/plugins/ruby-build
 		rbenv install 3.1.0 &>/dev/null &
@@ -44,26 +62,30 @@ fi
 if [ -z "$(which nvim)" ]; then
 		echo "INFO: Install neovim."
 
-		cd $HOME/.local/artifacts
+		if [ -n "$OS_LINUX" ]; then
+				cd $HOME/.local/artifacts
 
-		curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
-		chmod u+x nvim.appimage
-		./nvim.appimage --appimage-extract
-		mv squashfs-root $HOME/.local/lib/squashfs-nvim
-		ln -s $HOME/.local/lib/squashfs-nvim/AppRun $HOME/.local/bin/nvim
+				curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
+				chmod u+x nvim.appimage
+				./nvim.appimage --appimage-extract
+				mv squashfs-root $HOME/.local/lib/squashfs-nvim
+				ln -s $HOME/.local/lib/squashfs-nvim/AppRun $HOME/.local/bin/nvim
 
-		### install vim-plug
-		sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
-				https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+				### install vim-plug
+				sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
+						https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 
-		### install plugins
-		nvim --headless +PlugInstall +qa
+				### install plugins
+				nvim --headless +PlugInstall +qa
 
-		cd $WORKING_DIR
+				cd $WORKING_DIR
+		elif [ -n "$OS_MAC" ]; then
+				brew install nvim
+		fi
 fi
 
 ## keyd
-if [ -z $CODESPACES ]; then
+if [ -z $CODESPACES ] && [ -n "$OS_LINUX"]; then
 		if [ -z "$(which keyd)" ]; then
 				echo "INFO: Install keyd."
 
@@ -82,20 +104,28 @@ if [ -z $CODESPACES ]; then
 		fi
 fi
 
-# Install Debs
+# Install TUI apps
 
 ## ripgrep
 if [ -z "$(which rg)" ]; then
 		echo "INFO: Install rg."
 
-		sudo apt install -y ripgrep
+		if [ -n "$OS_LINUX" ]; then
+				sudo apt install -y ripgrep
+		elif [ -n "$OS_MAC" ]; then
+				brew install ripgrep
+		fi
 fi
 
 ## fzf
 if [ -z "$(which fzf)" ]; then
 		echo "INFO: Install fzf."
 
-		sudo apt install -y fzf
+		if [ -n "$OS_LINUX" ]; then
+				sudo apt install -y fzf
+		elif [ -n "$OS_MAC" ]; then
+				brew install fzf
+		fi
 fi
 
 ## nvm / npm
@@ -114,58 +144,64 @@ if [ -z $CODESPACES ]; then
 		if [ -z "$(which alacritty)" ]; then
 				echo "INFO: Install alacritty."
 
-				sudo apt install -y alacritty
+				if [ -n "$OS_LINUX" ]; then
+						sudo apt install -y alacritty
+				elif [ -n "$OS_MAC" ]; then
+						brew install alacritty
+				fi
 		fi
 
 		## tmux
 		if [ -z "$(which tmux)" ]; then
 				echo "INFO: Install tmux."
 
-				sudo apt install -y tmux
+				if [ -n "$OS_LINUX" ]; then
+						sudo apt install -y tmux
+				elif [ -n "$OS_MAC" ]; then
+						brew install tmux
+				fi
 		fi
 
 		## imwheel
 		if [ -z "$(which imwheel)" ]; then
 				echo "INFO: Install imwheel."
 
-				sudo apt install -y imwheel
-		fi
-
-		## steam
-		if [ -z "$(which steam)" ]; then
-				echo "INFO: Install steam."
-
-				sudo apt install -y steam
+				if [ -n "$OS_LINUX" ]; then
+						sudo apt install -y imwheel
+				fi
 		fi
 
 		## 1Password
 		if [ -z "$(which 1password)" ]; then
 				echo "INFO: Install 1password."
 
-				 curl -sS https://downloads.1password.com/linux/keys/1password.asc | sudo gpg --dearmor --output /usr/share/keyrings/1password-archive-keyring.gpg
-				 echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/amd64 stable main' | sudo tee /etc/apt/sources.list.d/1password.list
-				 sudo mkdir -p /etc/debsig/policies/AC2D62742012EA22/
-				 curl -sS https://downloads.1password.com/linux/debian/debsig/1password.pol | sudo tee /etc/debsig/policies/AC2D62742012EA22/1password.pol
-				 sudo mkdir -p /usr/share/debsig/keyrings/AC2D62742012EA22
-				 curl -sS https://downloads.1password.com/linux/keys/1password.asc | sudo gpg --dearmor --output /usr/share/debsig/keyrings/AC2D62742012EA22/debsig.gpg
+				if [ -n "$OS_LINUX" ]; then
+						curl -sS https://downloads.1password.com/linux/keys/1password.asc | sudo gpg --dearmor --output /usr/share/keyrings/1password-archive-keyring.gpg
+						echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/amd64 stable main' \
+								| sudo tee /etc/apt/sources.list.d/1password.list
+						sudo mkdir -p /etc/debsig/policies/AC2D62742012EA22/
+						curl -sS https://downloads.1password.com/linux/debian/debsig/1password.pol | sudo tee /etc/debsig/policies/AC2D62742012EA22/1password.pol
+						sudo mkdir -p /usr/share/debsig/keyrings/AC2D62742012EA22
+						curl -sS https://downloads.1password.com/linux/keys/1password.asc | sudo gpg --dearmor --output /usr/share/debsig/keyrings/AC2D62742012EA22/debsig.gpg
 
-				sudo apt update
-				sudo apt install -y 1password
+						sudo apt update
+						sudo apt install -y 1password
+				elif [ -n "$OS_MAC" ]; then
+						brew install 1password
+				fi
 		fi
 
 		## Java
 		if [ -z "$(which javac)" ]; then
 				echo "INFO: Install javac."
 
-				sudo apt install -y openjdk-11-jdk
-				sudo apt install -y openjdk-16-jdk
-		fi
-
-		if [ -z "$(which java)" ]; then
-				echo "INFO: Install java."
-
-				sudo apt install -y openjdk-11-jre
-				sudo apt install -y openjdk-16-jre
+				if [ -n "$OS_LINUX" ]; then
+						sudo apt install -y openjdk-11-jdk
+						sudo apt install -y openjdk-16-jdk
+				elif [ -n "$OS_MAC" ]; then
+						brew install openjdk@11
+						brew install openjdk@17
+				fi
 		fi
 
 		if [ -z "$(which jdtls)" ]; then
@@ -197,7 +233,11 @@ if [ -z $CODESPACES ]; then
 				git clone https://github.com/microsoft/java-debug $HOME/.local/src/java-debug
 
 				cd $HOME/.local/src/java-debug
-				JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64/ ./mvnw clean install
+				if [ -n $OS_LINUX ]; then
+						JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64/ ./mvnw clean install
+				elif [ -n $OS_MAC ]; then
+						JAVA_HOME=/Library/Java/JavaVirtualMachines/openjdk-11.jdk ./mvnw clean install
+				fi
 
 				mkdir $HOME/.local/lib/java-debug
 				mv com.microsoft.java.debug* $HOME/.local/lib/java-debug
@@ -221,10 +261,11 @@ if [ -z $CODESPACES ]; then
 
 fi
 
-# Install Flatpaks
+# Install GUI apps
 if [ -z $CODESPACES ]; then
+
 		## flatpak
-		if [ -z "$(which flatpak)" ]; then
+		if [ -n "$OS_LINUX" ] && [ -z "$(which flatpak)" ]; then
 				echo "INFO: Install flatpak."
 
 				sudo apt install -y flatpak
@@ -234,7 +275,11 @@ if [ -z $CODESPACES ]; then
 		if [ -z "$(which slack)" ]; then
 				echo "INFO: Install slack."
 
-				flatpak --user install -y slack
+				if [ -n "$OS_LINUX" ]; then
+						flatpak --user --app slack --assumeyes
+				elif [ -n "$OS_MAC" ]; then
+						brew install slack
+				fi
 		fi
 
 
@@ -242,49 +287,77 @@ if [ -z $CODESPACES ]; then
 		if [ -z "$(which discord)" ]; then
 				echo "INFO: Install discord."
 
-				flatpak install --user --app discord --assumeyes
+				if [ -n "$OS_LINUX" ]; then
+						flatpak install --user --app discord --assumeyes
+				elif [ -n "$OS_MAC" ]; then
+						brew install discord
+				fi
 		fi
 
 		## lagrange
 		if [ -z "$(which lagrange)" ]; then
 				echo "INFO: Install lagrange."
 
-				flatpak install --user --app lagrange --assumeyes
+				if [ -n "$OS_LINUX" ]; then
+						flatpak install --user --app lagrange --assumeyes
+				elif [ -n "$OS_MAC" ]; then
+						brew install lagrange
+				fi
 		fi
 
 		## obsidian
 		if [ -z "$(which obsidian)" ]; then
 				echo "INFO: Install obsidian."
 
-				flatpak install --user --app obsidian --assumeyes
+				if [ -n "$OS_LINUX" ]; then
+						flatpak install --user --app obsidian --assumeyes
+				elif [ -n "$OS_MAC" ]; then
+						brew install obsidian
+				fi
 		fi
 
 		## signal
 		if [ -z "$(which signal)" ]; then
 				echo "INFO: Install signal."
 
-				flatpak install --user --app signal --assumeyes
+				if [ -n "$OS_LINUX" ]; then
+						flatpak install --user --app signal --assumeyes
+				elif [ -n "$OS_MAC" ]; then
+						brew install signal
+				fi
 		fi
 
 		## spotify
 		if [ -z "$(which spotify)" ]; then
 				echo "INFO: Install spotify."
 
-				flatpak install --user --app spotify --assumeyes
+				if [ -n "$OS_LINUX" ]; then
+						flatpak install --user --app spotify --assumeyes
+				elif [ -n "$OS_MAC" ]; then
+						brew install spotify
+				fi
 		fi
 
 		## todoist
 		if [ -z "$(which todoist)" ]; then
 				echo "INFO: Install todoist."
 
-				flatpak install --user --app todoist --assumeyes
+				if [ -n "$OS_LINUX" ]; then
+						flatpak install --user --app todoist --assumeyes
+				elif [ -n "$OS_MAC" ]; then
+						brew install todoist
+				fi
 		fi
 
 		## zoom
 		if [ -z "$(which zoom)" ]; then
 				echo "INFO: Install zoom."
 
-				flatpak install --user --app zoom --assumeyes
+				if [ -n "$OS_LINUX" ]; then
+						flatpak install --user --app zoom --assumeyes
+				elif [ -n "$OS_MAC" ]; then
+						brew install zoom
+				fi
 		fi
 
 fi
@@ -292,22 +365,25 @@ fi
 
 # Install Brews
 
-## brew
-if [ -z "$(which brew)" ]; then
-		echo "INFO: Install brew."
+if [ -n "$OS_LINUX" ]; then
 
-		/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+		## brew
+		if [ -z "$(which brew)" ]; then
+				echo "INFO: Install brew."
 
-		eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+				/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-		sudo apt install build-essential
-fi
+				eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
-## gcc
-if [ -z "$(which gcc)" ]; then
-		echo "INFO: Install gcc."
+				sudo apt install build-essential
+		fi
 
-		brew install gcc
+		## gcc
+		if [ -z "$(which gcc)" ]; then
+				echo "INFO: Install gcc."
+
+				brew install gcc
+		fi
 fi
 
 ## tldr
@@ -321,7 +397,12 @@ fi
 
 ## zsh
 if [ -z $(which zsh) ]; then
-		sudo apt install -y zsh
+
+		if [ -n "$OS_LINUX" ]; then
+				sudo apt install -y zsh
+		elif [ -n "$OS_MAC" ]; then
+				brew install zsh
+		fi
 fi
 
 if [[ $SHELL != *"zsh"* ]]; then
@@ -329,5 +410,5 @@ if [[ $SHELL != *"zsh"* ]]; then
 		chsh -s "$(which zsh)"
 fi
 
-echo "Run eval \$(/home/linuxbrew/.linuxbrew/bin/brew shellenv) to finish installing brew."
+[ -n "$OS_LINUX" ] && echo "Run eval \$(/home/linuxbrew/.linuxbrew/bin/brew shellenv) to finish installing brew."
 
