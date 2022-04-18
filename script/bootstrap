@@ -10,8 +10,7 @@ set -x
 ## detect OS
 [ -f $HOME/.os_detect ] && source $HOME/.os_detect
 
-# Setup home directories
-mkdir $HOME/.local
+# Setup home directories mkdir $HOME/.local
 mkdir $HOME/.local/lib
 mkdir $HOME/.local/bin
 mkdir $HOME/.local/src
@@ -81,6 +80,13 @@ if [ -z "$(which nvim)" ]; then
 				cd $WORKING_DIR
 		elif [ -n "$OS_MAC" ]; then
 				brew install nvim
+
+				### install vim-plug
+				sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
+						https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+
+				### install plugins
+				nvim --headless +PlugInstall +qa
 		fi
 fi
 
