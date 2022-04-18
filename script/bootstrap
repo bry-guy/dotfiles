@@ -106,6 +106,48 @@ fi
 
 # Install TUI apps
 
+## font-hack-nerd-font TODO: locate properly, install properly
+if [ -z "$(?? font-hack-nerd-font)" ]; then
+		echo "INFO: Install font-hack-nerd-font."
+
+		if [ -n "$OS_LINUX" ]; then
+				# TODO: sudo apt install -y awscli
+		elif [ -n "$OS_MAC" ]; then
+				brew install font-hack-nerd-font
+		fi
+fi
+
+## awscli
+if [ -z "$(which aws)" ]; then
+		echo "INFO: Install aws."
+
+		if [ -n "$OS_LINUX" ]; then
+				sudo apt install -y awscli
+		elif [ -n "$OS_MAC" ]; then
+				brew install awscli
+		fi
+fi
+
+## coreutils
+if [ -z "$(which coreutils)" ]; then
+		echo "INFO: Install coreutils."
+
+		if [ -n "$OS_MAC" ]; then
+				brew install coreutils
+		fi
+fi
+
+## marp-cli
+if [ -z "$(which marp-cli)" ]; then
+		echo "INFO: Install marp-cli."
+
+		if [ -n "$OS_LINUX" ]; then
+				# TODO: sudo apt install -y marp-cli
+		elif [ -n "$OS_MAC" ]; then
+				brew install marp-cli
+		fi
+fi
+
 ## ripgrep
 if [ -z "$(which rg)" ]; then
 		echo "INFO: Install rg."
@@ -140,6 +182,7 @@ if [ -z "$(command -v nvm)" ]; then
 fi
 
 if [ -z $CODESPACES ]; then
+
 		## alacritty
 		if [ -z "$(which alacritty)" ]; then
 				echo "INFO: Install alacritty."
@@ -357,6 +400,68 @@ if [ -z $CODESPACES ]; then
 						flatpak install --user --app zoom --assumeyes
 				elif [ -n "$OS_MAC" ]; then
 						brew install zoom
+				fi
+		fi
+
+		## dash
+		if [ -z "$(which dash)" ]; then
+				echo "INFO: Install dash."
+
+				if [ -n "$OS_LINUX" ]; then
+						flatpak install --user --app dash --assumeyes
+				elif [ -n "$OS_MAC" ]; then
+						brew install dash
+				fi
+		fi
+
+		## docker
+		if [ -z "$(which docker)" ]; then
+				echo "INFO: Install docker."
+
+				if [ -n "$OS_LINUX" ]; then
+						sudo apt install -y docker
+				elif [ -n "$OS_MAC" ]; then
+						brew install docker
+				fi
+		fi
+
+		## chrome
+		if [ -z "$(which chrome)" ]; then
+				echo "INFO: Install chrome."
+
+				if [ -n "$OS_LINUX" ]; then
+						sudo apt install -y chrome
+				elif [ -n "$OS_MAC" ]; then
+						brew install chrome
+				fi
+		fi
+
+		# macOS-specific
+
+		## firefox
+		if [ -z "$(which firefox)" ]; then
+				echo "INFO: Install firefox."
+
+				if [ -n "$OS_MAC" ]; then
+						brew install firefox
+				fi
+		fi
+
+		## amethyst
+		if [ -z "$(which amethyst)" ]; then
+				echo "INFO: Install amethyst."
+
+				if [ -n "$OS_MAC" ]; then
+						brew install amethyst
+				fi
+		fi
+
+		## karabiner-elements
+		if [ -z "$(which karabiner-elements)" ]; then
+				echo "INFO: Install amethyst."
+
+				if [ -n "$OS_MAC" ]; then
+						brew install karabiner-elements
 				fi
 		fi
 
