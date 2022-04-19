@@ -21,8 +21,10 @@ mkdir $HOME/dev
 WORKING_DIR=$(pwd)
 
 # Link dotfiles to $HOME
-cat .gitignore | egrep '^!.*' | egrep -v '\*\*|\.config/.+' | cut -c 2- | xargs -I % cp -R % $HOME
-cp -R .git/ $HOME
+cp -R .git/ $HOME/.git
+cp -R .config/ $HOME/.config
+
+ln -s .config/amethyst/* ~/Library/Preferences/
 
 # Install Brew for macOS
 if [ -n "$OS_MAC" ]; then
@@ -91,7 +93,7 @@ if [ -z "$(which nvim)" ]; then
 fi
 
 ## keyd
-if [ -z $CODESPACES ] && [ -n "$OS_LINUX"]; then
+if [ -z $CODESPACES ] && [ -n "$OS_LINUX" ]; then
 		if [ -z "$(which keyd)" ]; then
 				echo "INFO: Install keyd."
 
@@ -306,6 +308,8 @@ if [ -z $CODESPACES ]; then
 
 				mkdir $HOME/.local/lib/vscode-java-test
 				cp -r $HOME/.local/src/vscode-java-test/* $HOME/.local/lib/vscode-java-test
+
+				cd $WORKING_DIR
 		fi
 
 fi
