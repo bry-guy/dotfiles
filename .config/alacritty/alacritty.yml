@@ -42,7 +42,7 @@ colors:
 
 font:
     family: "Hack"
-    size: 12.0
+    size: 16.0
 
 key_bindings:
   - { key: N,              mods: Command,            action: SpawnNewInstance }
@@ -180,8 +180,8 @@ key_bindings:
   # - { key: Y,         mods: Command|Shift,       chars: "\x79"                       }
   # - { key: Z,         mods: Command|Shift,       chars: "\x7a"                       }
 
-  # ## Disable quit hotkey
-  # - { key: W,              mods: Command,                    action: None }
+  ## Disable quit hotkey
+  - { key: W,              mods: Command,                    action: None }
   # - { key: K,              mods: Control, mode: ~Vi|~Search, chars: "\x0c"                 }
   # - { key: K,              mods: Control, mode: ~Vi|~Search, action: ClearHistory          }
   # - { key: Key0,           mods: Control,                    action: ResetFontSize         }

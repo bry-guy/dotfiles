@@ -110,10 +110,10 @@ eval "$(rbenv init -)"
 
 ### java
 if [ -n "$OS_MAC" ]; then
-		export JAVA_11_HOME="/Library/Java/JavaVirtualMachines/openjdk-11.jdk/Contents/Home" 
-		export JAVA_HOME="$(find /Library/Java/JavaVirtualMachines -iname 'openjdk-*' 2>/dev/null | sort --reverse | head -n 1)/Contents/Home" 
+		export JAVA_11_HOME="$(brew --prefix openjdk@11)/libexec/openjdk.jdk/Contents/Home"
+		export JAVA_HOME="$(brew --prefix openjdk)/libexec/openjdk.jdk/Contents/Home"
 elif [ -n "$OS_LINUX" ]; then
-		export JAVA_11_HOME="/usr/lib/jvm/java-11-openjdk-amd64"
+		# export JAVA_11_HOME="/usr/lib/jvm/java-11-openjdk-amd64"
 		export JAVA_HOME=$(find /usr/lib/jvm -type d -iname 'java-1*' 2>/dev/null | sort --reverse | head -n 1) 
 fi
 

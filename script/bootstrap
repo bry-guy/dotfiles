@@ -24,11 +24,13 @@ WORKING_DIR=$(pwd)
 cp -R .git/ $HOME/.git
 cp -R .config/ $HOME/.config
 
-ln -s .config/amethyst/* ~/Library/Preferences/
+ln -sf .config/amethyst/* ~/Library/Preferences/
 
 # Install Brew for macOS
 if [ -n "$OS_MAC" ]; then
-		/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+		if [ -z "$(which brew)" ]; then
+				/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+		fi
 fi
 
 # Update packager
@@ -39,6 +41,17 @@ elif [ -n "$OS_MAC" ]; then
 fi
 
 # Manual installs
+
+if [ -z "$(which wget)" ]; then
+		echo "INFO: Install wget."
+
+		if [ -n "$OS_LINUX" ]; then
+				sudo apt install -y wget
+		elif [ -n "$OS_MAC" ]; then
+				brew install wget
+		fi
+
+fi
 
 ## rbenv
 if [ -z "$(which rbenv)" ]; then
@@ -70,7 +83,7 @@ if [ -z "$(which nvim)" ]; then
 				chmod u+x nvim.appimage
 				./nvim.appimage --appimage-extract
 				mv squashfs-root $HOME/.local/lib/squashfs-nvim
-				ln -s $HOME/.local/lib/squashfs-nvim/AppRun $HOME/.local/bin/nvim
+				ln -sf $HOME/.local/lib/squashfs-nvim/AppRun $HOME/.local/bin/nvim
 
 				### install vim-plug
 				sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
@@ -104,7 +117,7 @@ if [ -z $CODESPACES ] && [ -n "$OS_LINUX" ]; then
 				make && sudo make install
 
 				### link config file saved as keyd.conf
-				sudo ln -s .config/keyd/default.conf /etc/keyd/default.conf
+				sudo ln -sf .config/keyd/default.conf /etc/keyd/default.conf
 
 				sudo systemctl enable keyd && sudo systemctl start keyd
 
@@ -119,6 +132,7 @@ if [ -z "$(brew list | grep font-hack-nerd-font)" ]; then
 		echo "INFO: Install font-hack-nerd-font."
 
 		if [ -n "$OS_LINUX" ]; then
+				echo "nada"
 				# TODO: sudo apt install -y awscli
 		elif [ -n "$OS_MAC" ]; then
 				brew install font-hack-nerd-font
@@ -146,10 +160,11 @@ if [ -z "$(which coreutils)" ]; then
 fi
 
 ## marp-cli
-if [ -z "$(which marp-cli)" ]; then
+if [ -z "$(which marp)" ]; then
 		echo "INFO: Install marp-cli."
 
 		if [ -n "$OS_LINUX" ]; then
+				echo "nada"
 				# TODO: sudo apt install -y marp-cli
 		elif [ -n "$OS_MAC" ]; then
 				brew install marp-cli
@@ -222,26 +237,6 @@ if [ -z $CODESPACES ]; then
 				fi
 		fi
 
-		## 1Password
-		if [ -z "$(which 1password)" ]; then
-				echo "INFO: Install 1password."
-
-				if [ -n "$OS_LINUX" ]; then
-						curl -sS https://downloads.1password.com/linux/keys/1password.asc | sudo gpg --dearmor --output /usr/share/keyrings/1password-archive-keyring.gpg
-						echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/amd64 stable main' \
-								| sudo tee /etc/apt/sources.list.d/1password.list
-						sudo mkdir -p /etc/debsig/policies/AC2D62742012EA22/
-						curl -sS https://downloads.1password.com/linux/debian/debsig/1password.pol | sudo tee /etc/debsig/policies/AC2D62742012EA22/1password.pol
-						sudo mkdir -p /usr/share/debsig/keyrings/AC2D62742012EA22
-						curl -sS https://downloads.1password.com/linux/keys/1password.asc | sudo gpg --dearmor --output /usr/share/debsig/keyrings/AC2D62742012EA22/debsig.gpg
-
-						sudo apt update
-						sudo apt install -y 1password
-				elif [ -n "$OS_MAC" ]; then
-						brew install 1password
-				fi
-		fi
-
 		## Java
 		if [ -z "$(which javac)" ]; then
 				echo "INFO: Install javac."
@@ -251,7 +246,7 @@ if [ -z $CODESPACES ]; then
 						sudo apt install -y openjdk-16-jdk
 				elif [ -n "$OS_MAC" ]; then
 						brew install openjdk@11
-						brew install openjdk@17
+						brew install openjdk
 				fi
 		fi
 
@@ -267,7 +262,7 @@ if [ -z $CODESPACES ]; then
 				tar -xzf $HOME/.local/artifacts/jdt-language-server-1.9.0-202203031534.tar.gz \
 						-C $HOME/.local/lib/jdt-language-server
 
-				ln -s $HOME/.local/lib/jdt-language-server/bin/jdtls $HOME/.local/bin/jdtls
+				ln -sf $HOME/.local/lib/jdt-language-server/bin/jdtls $HOME/.local/bin/jdtls
 		fi
 
 		if [ -z "$(which gradle)" ]; then
@@ -285,9 +280,9 @@ if [ -z $CODESPACES ]; then
 
 				cd $HOME/.local/src/java-debug
 				if [ -n $OS_LINUX ]; then
-						JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64/ ./mvnw clean install
+						JAVA_HOME=$(echo JAVA_11_HOME) ./mvnw clean install
 				elif [ -n $OS_MAC ]; then
-						JAVA_HOME=/Library/Java/JavaVirtualMachines/openjdk-11.jdk ./mvnw clean install
+						JAVA_HOME=$(echo JAVA_11_HOME) ./mvnw clean install
 				fi
 
 				mkdir $HOME/.local/lib/java-debug
@@ -296,7 +291,7 @@ if [ -z $CODESPACES ]; then
 				cd $WORKING_DIR
 		fi
 
-		if [ -z "$(find $HOME/lib -type d -iname '*vscode-java-test*')" ]; then
+		if [ -z "$(find $HOME/.local/lib -type d -iname '*vscode-java-test*')" ]; then
 				echo "INFO: Install vscode-java-test."
 
 				git clone https://github.com/microsoft/vscode-java-test $HOME/.local/src/vscode-java-test
@@ -325,7 +320,7 @@ if [ -z $CODESPACES ]; then
 		fi
 
 		## slack
-		if [ -z "$(which slack)" ]; then
+		if [ -z "$(which slack)" ] && [ -z "$(mdfind "kMDItemKind == 'Application'" | grep Slack)" ]; then
 				echo "INFO: Install slack."
 
 				if [ -n "$OS_LINUX" ]; then
@@ -335,9 +330,29 @@ if [ -z $CODESPACES ]; then
 				fi
 		fi
 
+		## 1Password
+		if [ -z "$(which 1password)" ] && [ -z "$(mdfind "kMDItemKind == 'Application'" | grep 1password)" ]; then
+				echo "INFO: Install 1password."
+
+				if [ -n "$OS_LINUX" ]; then
+						curl -sS https://downloads.1password.com/linux/keys/1password.asc | sudo gpg --dearmor --output /usr/share/keyrings/1password-archive-keyring.gpg
+						echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/amd64 stable main' \
+								| sudo tee /etc/apt/sources.list.d/1password.list
+						sudo mkdir -p /etc/debsig/policies/AC2D62742012EA22/
+						curl -sS https://downloads.1password.com/linux/debian/debsig/1password.pol | sudo tee /etc/debsig/policies/AC2D62742012EA22/1password.pol
+						sudo mkdir -p /usr/share/debsig/keyrings/AC2D62742012EA22
+						curl -sS https://downloads.1password.com/linux/keys/1password.asc | sudo gpg --dearmor --output /usr/share/debsig/keyrings/AC2D62742012EA22/debsig.gpg
+
+						sudo apt update
+						sudo apt install -y 1password
+				elif [ -n "$OS_MAC" ]; then
+						brew install 1password
+				fi
+		fi
+
 
 		## discord
-		if [ -z "$(which discord)" ]; then
+		if [ -z "$(which discord)" ] && [ -z "$(mdfind "kMDItemKind == 'Application'" | grep Discord)" ]; then
 				echo "INFO: Install discord."
 
 				if [ -n "$OS_LINUX" ]; then
@@ -347,8 +362,27 @@ if [ -z $CODESPACES ]; then
 				fi
 		fi
 
+		## amethyst
+		if [ -z "$(which amethyst)" ] && [ -z "$(mdfind "kMDItemKind == 'Application'" | grep Amethyst)" ]; then
+				echo "INFO: Install amethyst."
+
+				if [ -n "$OS_MAC" ]; then
+						brew install amethyst
+				fi
+		fi
+
+		## karabiner-elements
+		if [ -z "$(which karabiner-elements)" ] && [ -z "$(mdfind "kMDItemKind == 'Application'" | grep Karabiner)" ]; then
+				echo "INFO: Install amethyst."
+
+				if [ -n "$OS_MAC" ]; then
+						brew install karabiner-elements
+				fi
+		fi
+
+
 		## lagrange
-		if [ -z "$(which lagrange)" ]; then
+		if [ -z "$(which lagrange)" ] && [ -z "$(mdfind "kMDItemKind == 'Application'" | grep Lagrange)" ]; then
 				echo "INFO: Install lagrange."
 
 				if [ -n "$OS_LINUX" ]; then
@@ -359,7 +393,7 @@ if [ -z $CODESPACES ]; then
 		fi
 
 		## obsidian
-		if [ -z "$(which obsidian)" ]; then
+		if [ -z "$(which obsidian)" ] && [ -z "$(mdfind "kMDItemKind == 'Application'" | grep Obsidian)" ]; then
 				echo "INFO: Install obsidian."
 
 				if [ -n "$OS_LINUX" ]; then
@@ -370,7 +404,7 @@ if [ -z $CODESPACES ]; then
 		fi
 
 		## signal
-		if [ -z "$(which signal)" ]; then
+		if [ -z "$(which signal)" ] && [ -z "$(mdfind "kMDItemKind == 'Application'" | grep Signal)" ]; then
 				echo "INFO: Install signal."
 
 				if [ -n "$OS_LINUX" ]; then
@@ -381,7 +415,7 @@ if [ -z $CODESPACES ]; then
 		fi
 
 		## spotify
-		if [ -z "$(which spotify)" ]; then
+		if [ -z "$(which spotify)" ] && [ -z "$(mdfind "kMDItemKind == 'Application'" | grep Spotify)" ]; then
 				echo "INFO: Install spotify."
 
 				if [ -n "$OS_LINUX" ]; then
@@ -392,7 +426,7 @@ if [ -z $CODESPACES ]; then
 		fi
 
 		## todoist
-		if [ -z "$(which todoist)" ]; then
+		if [ -z "$(which todoist)" ] && [ -z "$(mdfind "kMDItemKind == 'Application'" | grep Todoist)" ]; then
 				echo "INFO: Install todoist."
 
 				if [ -n "$OS_LINUX" ]; then
@@ -403,7 +437,7 @@ if [ -z $CODESPACES ]; then
 		fi
 
 		## zoom
-		if [ -z "$(which zoom)" ]; then
+		if [ -z "$(which zoom)" ] && [ -z "$(mdfind "kMDItemKind == 'Application'" | grep Zoom)" ]; then
 				echo "INFO: Install zoom."
 
 				if [ -n "$OS_LINUX" ]; then
@@ -414,7 +448,7 @@ if [ -z $CODESPACES ]; then
 		fi
 
 		## dash
-		if [ -z "$(which dash)" ]; then
+		if [ -z "$(which dash)" ] && [ -z "$(mdfind "kMDItemKind == 'Application'" | grep Dash)" ]; then
 				echo "INFO: Install dash."
 
 				if [ -n "$OS_LINUX" ]; then
@@ -425,7 +459,7 @@ if [ -z $CODESPACES ]; then
 		fi
 
 		## docker
-		if [ -z "$(which docker)" ]; then
+		if [ -z "$(which docker)" ] && [ -z "$(mdfind "kMDItemKind == 'Application'" | grep Docker)" ]; then
 				echo "INFO: Install docker."
 
 				if [ -n "$OS_LINUX" ]; then
@@ -436,7 +470,7 @@ if [ -z $CODESPACES ]; then
 		fi
 
 		## chrome
-		if [ -z "$(which chrome)" ]; then
+		if [ -z "$(which chrome)" ] && [ -z "$(mdfind "kMDItemKind == 'Application'" | grep Chrome)" ]; then
 				echo "INFO: Install chrome."
 
 				if [ -n "$OS_LINUX" ]; then
@@ -449,29 +483,11 @@ if [ -z $CODESPACES ]; then
 		# macOS-specific
 
 		## firefox
-		if [ -z "$(which firefox)" ]; then
+		if [ -z "$(which firefox)" ] && [ -z "$(mdfind "kMDItemKind == 'Application'" | grep Firefox)" ]; then
 				echo "INFO: Install firefox."
 
 				if [ -n "$OS_MAC" ]; then
 						brew install firefox
-				fi
-		fi
-
-		## amethyst
-		if [ -z "$(which amethyst)" ]; then
-				echo "INFO: Install amethyst."
-
-				if [ -n "$OS_MAC" ]; then
-						brew install amethyst
-				fi
-		fi
-
-		## karabiner-elements
-		if [ -z "$(which karabiner-elements)" ]; then
-				echo "INFO: Install amethyst."
-
-				if [ -n "$OS_MAC" ]; then
-						brew install karabiner-elements
 				fi
 		fi
 
