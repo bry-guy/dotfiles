@@ -24,7 +24,7 @@ WORKING_DIR=$(pwd)
 cp -R .git/ $HOME/.git
 cp -R .config/ $HOME/.config
 
-ln -sf .config/amethyst/* ~/Library/Preferences/
+ln -f .config/amethyst/* ~/Library/Preferences/
 
 # Install Brew for macOS
 if [ -n "$OS_MAC" ]; then
@@ -373,7 +373,7 @@ if [ -z $CODESPACES ]; then
 
 		## karabiner-elements
 		if [ -z "$(which karabiner-elements)" ] && [ -z "$(mdfind "kMDItemKind == 'Application'" | grep Karabiner)" ]; then
-				echo "INFO: Install amethyst."
+				echo "INFO: Install karabiner-elements."
 
 				if [ -n "$OS_MAC" ]; then
 						brew install karabiner-elements

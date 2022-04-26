@@ -1,5 +1,5 @@
 local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h:t')
-local workspace_dir = '$HOME/dev/' .. project_name
+local workspace_dir = vim.env.HOME .. '/dev/' .. project_name
 
 local config = {
   cmd = {
@@ -13,8 +13,8 @@ local config = {
     '--add-modules=ALL-SYSTEM',
     '--add-opens', 'java.base/java.util=ALL-UNNAMED',
     '--add-opens', 'java.base/java.lang=ALL-UNNAMED',
-    '-jar', '$HOME/.local/lib/jdt-language-server/plugins/org.eclipse.equinox.launcher_1.6.400.v20210924-0641.jar',
-    '-configuration', '$HOME/.local/lib/jdt-language-server/config_linux',
+    '-jar', vim.env.HOME .. '/.local/lib/jdt-language-server/plugins/org.eclipse.equinox.launcher_1.6.400.v20210924-0641.jar',
+    '-configuration', vim.env.HOME .. '/.local/lib/jdt-language-server/config_linux',
     '-data', workspace_dir
   },
 
