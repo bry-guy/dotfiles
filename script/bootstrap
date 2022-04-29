@@ -127,6 +127,15 @@ fi
 
 # Install TUI apps
 
+# TODO: Fix these
+if [ -z "$(which asdf)" ]; then
+		echo "INFO: Install asdf."
+
+		if [ -n "$OS_LINUX" ]; then
+				git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.10.0
+		fi
+fi
+
 ## font-hack-nerd-font TODO: locate properly, install properly
 if [ -z "$(brew list | grep font-hack-nerd-font)" ]; then
 		echo "INFO: Install font-hack-nerd-font."
@@ -138,6 +147,8 @@ if [ -z "$(brew list | grep font-hack-nerd-font)" ]; then
 				brew install font-hack-nerd-font
 		fi
 fi
+
+#ENDTODO
 
 ## awscli
 if [ -z "$(which aws)" ]; then

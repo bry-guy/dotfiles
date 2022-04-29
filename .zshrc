@@ -5,6 +5,9 @@ SAVEHIST=10000
 unsetopt beep
 zstyle :compinstall filename '/home/brain/.zshrc'
 
+## asdf for compinit
+fpath=(${ASDF_DIR}/completions $fpath)
+
 autoload -Uz compinit promptinit
 compinit
 promptinit
@@ -133,3 +136,5 @@ export MANPAGER='nvim +Man!'
 ## local apps
 export PATH="$HOME/.local/bin:$PATH"
 
+## asdf
+. $HOME/.asdf/asdf.sh
