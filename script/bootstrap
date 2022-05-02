@@ -5,7 +5,7 @@ mkdir $HOME/log
 exec > >(tee -i $HOME/log/dotfiles_install.log)
 exec 2>&1
 
-set -x
+# set -x
 
 ## detect OS
 [ -f $HOME/.os_detect ] && source $HOME/.os_detect
@@ -131,9 +131,7 @@ fi
 if [ -z "$(which asdf)" ]; then
 		echo "INFO: Install asdf."
 
-		if [ -n "$OS_LINUX" ]; then
-				git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.10.0
-		fi
+		git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.10.0
 fi
 
 ## font-hack-nerd-font TODO: locate properly, install properly
@@ -205,15 +203,16 @@ if [ -z "$(which fzf)" ]; then
 fi
 
 ## nvm / npm
-if [ -z "$(command -v nvm)" ]; then
-		echo "INFO: Install nvm."
+# TODO: Fix this via `asdf`
+# if [ -z "$(command -v nvm)" ]; then
+# 		echo "INFO: Install nvm."
 
-		curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
-		. ~/.nvm/nvm.sh
+# 		curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+# 		. ~/.nvm/nvm.sh
 
-		echo "NVM_DIR=$NVM_DIR"
-		nvm install --lts
-fi
+# 		echo "NVM_DIR=$NVM_DIR"
+# 		nvm install --lts
+# fi
 
 if [ -z $CODESPACES ]; then
 
