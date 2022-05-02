@@ -15,6 +15,9 @@
 !.os_detect
 !.tool-versions
 
+!.local/
+!.local/.gitignore
+
 !.config/
 
 !.config/alacritty/

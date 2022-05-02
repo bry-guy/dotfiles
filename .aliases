@@ -2,8 +2,9 @@ alias vim='nvim'
 alias grep='rg'
 alias g='git'
 alias ls='LC_COLLATE=C ls --color=auto'
-alias k="kubectl"
-alias hg="history -1 | grep"
+alias k='kubectl'
+alias hg='history -1 | grep'
+alias python='python3'
 
 alias ignore='vim ~/.config/git/ignore'
 alias brew-unlock='rm -rf /usr/local/var/homebrew/locks'
