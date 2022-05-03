@@ -108,8 +108,7 @@ export VISUAL=$HOME/.local/bin/nvim
 export FZF_DEFAULT_COMMAND='rg --files --hidden --smart-case'
 
 ### ruby
-export PATH="$HOME/.rbenv/bin:$PATH"
-eval "$(rbenv init -)"
+export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@1.1)"
 
 ### java
 if [ -n "$OS_MAC" ]; then
@@ -130,6 +129,8 @@ export MANPAGER='nvim +Man!'
 
 ## local apps
 export PATH="$HOME/.local/bin:$PATH"
+
+#
 
 ## asdf
 . $HOME/.asdf/asdf.sh
