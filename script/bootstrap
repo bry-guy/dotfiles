@@ -26,14 +26,37 @@ cp -R .config/ $HOME/.config
 
 ln -f .config/amethyst/* ~/Library/Preferences/
 
-# Install Brew for macOS
+# Install Brew
+
 if [ -n "$OS_MAC" ]; then
 		if [ -z "$(which brew)" ]; then
 				/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 		fi
 fi
 
+if [ -n "$OS_LINUX" ]; then
+
+		## brew
+		if [ -z "$(which brew)" ]; then
+				echo "INFO: Install brew."
+
+				/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+				eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+				sudo apt install build-essential
+		fi
+
+		## gcc
+		if [ -z "$(which gcc)" ]; then
+				echo "INFO: Install gcc."
+
+				brew install gcc
+		fi
+fi
+
 # Update packager
+
 if [ -n "$OS_LINUX" ]; then
 		sudo apt update
 elif [ -n "$OS_MAC" ]; then
@@ -127,26 +150,49 @@ fi
 
 # Install TUI apps
 
-# TODO: Fix these
+## coreutils (golang dep)
+if [ -z "$(which coreutils)" ]; then
+		echo "INFO: Install coreutils."
+
+		if [ -n "$OS_MAC" ]; then
+				brew install coreutils
+		fi
+fi
+
+
 if [ -z "$(which asdf)" ]; then
 		echo "INFO: Install asdf."
 
 		git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.10.0
+
+		source . $HOME/.asdf/asdf.sh
+
+		## Install langs
+
+		## node
+		brew install gpg gawk
+		asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
+
+		asdf install nodejs latest
+
+		## go
+		asdf plugin-add golang https://github.com/kennyp/asdf-golang.git
+		asdf install golang latest
+
+		## TODO: python https://github.com/danhper/asdf-python
+		## TODO: ruby https://github.com/asdf-vm/asdf-ruby
+		## TODO: java https://github.com/halcyon/asdf-java
 fi
 
-## font-hack-nerd-font TODO: locate properly, install properly
+
+brew tap homebrew/cask-fonts
+
+## font-hack-nerd-font 
 if [ -z "$(brew list | grep font-hack-nerd-font)" ]; then
 		echo "INFO: Install font-hack-nerd-font."
 
-		if [ -n "$OS_LINUX" ]; then
-				echo "nada"
-				# TODO: sudo apt install -y awscli
-		elif [ -n "$OS_MAC" ]; then
-				brew install font-hack-nerd-font
-		fi
+		brew install font-hack-nerd-font
 fi
-
-#ENDTODO
 
 ## awscli
 if [ -z "$(which aws)" ]; then
@@ -159,22 +205,13 @@ if [ -z "$(which aws)" ]; then
 		fi
 fi
 
-## coreutils
-if [ -z "$(which coreutils)" ]; then
-		echo "INFO: Install coreutils."
-
-		if [ -n "$OS_MAC" ]; then
-				brew install coreutils
-		fi
-fi
-
 ## marp-cli
 if [ -z "$(which marp)" ]; then
 		echo "INFO: Install marp-cli."
 
 		if [ -n "$OS_LINUX" ]; then
-				echo "nada"
-				# TODO: sudo apt install -y marp-cli
+				echo "INFO: No installation available from package managers for marp. \
+						install via Docker if you want this on Linux."
 		elif [ -n "$OS_MAC" ]; then
 				brew install marp-cli
 		fi
@@ -202,18 +239,6 @@ if [ -z "$(which fzf)" ]; then
 		fi
 fi
 
-## nvm / npm
-# TODO: Fix this via `asdf`
-# if [ -z "$(command -v nvm)" ]; then
-# 		echo "INFO: Install nvm."
-
-# 		curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
-# 		. ~/.nvm/nvm.sh
-
-# 		echo "NVM_DIR=$NVM_DIR"
-# 		nvm install --lts
-# fi
-
 if [ -z $CODESPACES ]; then
 
 		## alacritty
@@ -239,12 +264,10 @@ if [ -z $CODESPACES ]; then
 		fi
 
 		## imwheel
-		if [ -z "$(which imwheel)" ]; then
+		if [ -z "$(which imwheel)" ] && [ -n "$OS_LINUX" ]; then
 				echo "INFO: Install imwheel."
 
-				if [ -n "$OS_LINUX" ]; then
-						sudo apt install -y imwheel
-				fi
+				sudo apt install -y imwheel
 		fi
 
 		## Java
@@ -341,7 +364,7 @@ if [ -z $CODESPACES ]; then
 		fi
 
 		## 1Password
-		if [ -z "$(which 1password)" ] && [ -z "$(mdfind "kMDItemKind == 'Application'" | grep 1password)" ]; then
+		if [ -z "$(which 1password)" ] && [ -z "$(mdfind "kMDItemKind == 'Application'" | grep 1Password)" ]; then
 				echo "INFO: Install 1password."
 
 				if [ -n "$OS_LINUX" ]; then
@@ -505,27 +528,6 @@ fi
 
 
 # Install Brews
-
-if [ -n "$OS_LINUX" ]; then
-
-		## brew
-		if [ -z "$(which brew)" ]; then
-				echo "INFO: Install brew."
-
-				/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-				eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-
-				sudo apt install build-essential
-		fi
-
-		## gcc
-		if [ -z "$(which gcc)" ]; then
-				echo "INFO: Install gcc."
-
-				brew install gcc
-		fi
-fi
 
 ## tldr
 if [ -z "$(which tldr)" ]; then
