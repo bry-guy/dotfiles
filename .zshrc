@@ -2,15 +2,18 @@
 HISTFILE=~/.histfile
 HISTSIZE=10000
 SAVEHIST=10000
+setopt append_history
+setopt share_history
 unsetopt beep
 zstyle :compinstall filename '/home/brain/.zshrc'
 
 ## asdf for compinit
 fpath=(${ASDF_DIR}/completions $fpath)
 
-autoload -Uz compinit promptinit
+autoload -Uz compinit promptinit colors
 compinit
 promptinit
+colors
 
 ## detect OS
 [ -f $HOME/.os_detect ] && source $HOME/.os_detect
@@ -29,27 +32,27 @@ bindkey "^[[B" history-beginning-search-forward
 ## Match case-insensitive 
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 
 
-## vim cursor
-vim_ins_mode="%{$fg[magenta]%}\$%{$reset_color%}"
-vim_cmd_mode="%{$fg[yellow]%}\$%{$reset_color%}"
+bindkey -v
+vim_ins_mode="%{$fg[green]%}$%{$reset_color%}"
+vim_cmd_mode="%{$fg[magenta]%}$%{$reset_color%}"
 vim_mode=$vim_ins_mode
 
 function zle-keymap-select {
-  vim_mode="${${KEYMAP/vicmd/${vim_cmd_mode}}/(main|viins)/${vim_ins_mode}}"
-  zle reset-prompt
+    vim_mode="${${KEYMAP/vicmd/${vim_cmd_mode}}/(main|viins)/${vim_ins_mode}}"
+    zle reset-prompt
 }
 zle -N zle-keymap-select
 
 function zle-line-finish {
-  vim_mode=$vim_ins_mode
+    vim_mode=$vim_ins_mode
 }
 zle -N zle-line-finish
 
-function TRAPINT() {
-  vim_mode=$vim_ins_mode
-  return $(( 128 + $1 ))
-} 
-
+# I needed this at one point and I'm not sure why
+# function TRAPINT() {
+#   vim_mode=$vim_ins_mode
+#   return $(( 128 + $1 ))
+# } 
 
 # Theming
 ## Prompt
@@ -57,18 +60,9 @@ function git_branch() {
 	git symbolic-ref --short HEAD 2> /dev/null
 }
 
-function git_root() {
-		git_root=$(git rev-parse --show-toplevel 2>/dev/null)
-
-		if [ -n "${git_root// }" ]; then
-				basename $git_root
-		else
-				basename $(pwd)
-		fi
-}
-
 setopt prompt_subst
-PROMPT='%{%F{cyan}%}$(git_root)%{%F{none}%} %{%F{green}%}$(git_branch)%{%F{none}%} ${vim_mode} '
+RPROMPT='%{%F{cyan}%}$(pwd)%{%F{none}%} %{%F{green}%}$(git_branch)%{%F{none}%}'
+PROMPT='${vim_mode} '
 
 ## Title Bar
 case ${TERM} in
