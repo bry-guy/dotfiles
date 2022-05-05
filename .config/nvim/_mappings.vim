@@ -33,6 +33,7 @@ lua << EOF
 
 	  -- Mappings.
 	  -- See `:help vim.lsp.*` for documentation on any of the below functions
+	  -- NOTE: These are de-normalized in java.lua for java, dealwithit.jpg
 	  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
 	  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
 	  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)

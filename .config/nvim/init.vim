@@ -5,7 +5,7 @@ endfor
 
 " nvim settings
 filetype on 
-filetype plugin on 
+filetype indent plugin on 
 syntax on
 
 set nu " see vim-numbertoggle
@@ -30,3 +30,6 @@ set splitright
 " key timeouts
 set timeoutlen=1000
 set ttimeoutlen=5
+
+" yank to unnamed register always (clipboard)
+set clipboard=unnamedplus
