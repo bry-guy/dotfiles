@@ -28,6 +28,7 @@ export LANG="en_US.UTF-8"
 ## History search using text behind cursor
 bindkey "^[[A" history-beginning-search-backward
 bindkey "^[[B" history-beginning-search-forward
+bindkey "^R" history-incremental-search-backward
 
 ## Match case-insensitive 
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 
@@ -95,8 +96,8 @@ export PATH="/usr/local/Cellar:$PATH"
 export PATH="/usr/local/opt/mysql@5.7/bin:$PATH"
 
 ### Neovim
-export EDITOR=$HOME/.local/bin/nvim
-export VISUAL=$HOME/.local/bin/nvim
+export EDITOR=nvim
+export VISUAL=nvim
 
 ### FZF settings (configured for fzf.vim)
 export FZF_DEFAULT_COMMAND='rg --files --hidden --smart-case'
@@ -124,7 +125,8 @@ export MANPAGER='nvim +Man!'
 ## local apps
 export PATH="$HOME/.local/bin:$PATH"
 
-#
+# postgres
+export PG_HOME="$(brew --prefix)/var/postgres"
 
 ## asdf
 . $HOME/.asdf/asdf.sh
