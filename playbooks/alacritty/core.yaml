@@ -3,6 +3,7 @@
   connection: local
 
   tasks:
-    homebrew:
-      name: alacritty
-      state: present
+    - name: Install Alacritty
+      community.general.homebrew:
+        name: alacritty
+        state: present

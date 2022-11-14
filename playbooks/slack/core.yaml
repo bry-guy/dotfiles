@@ -3,6 +3,7 @@
   connection: local
 
   tasks:
-    homebrew:
-      name: slack
-      state: present
+    - name: Install slack
+      community.general.homebrew:
+        name: slack
+        state: present
