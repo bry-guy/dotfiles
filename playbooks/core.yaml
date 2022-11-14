@@ -33,9 +33,11 @@
       - "../.*"
 
     - name: Update brew
+      command: mv ~/.gitconfig ~/.gitconfig.bak
       community.general.homebrew: 
         update_homebrew: true
         upgrade_all: true
+      command: mv ~/.gitconfig.bak ~/.gitconfig
      
     # - name: Link amethyst preferences
 
