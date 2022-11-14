@@ -36,7 +36,7 @@
 
     - name: Login to 1password and enable SSH Agent
       ansible.builtin.pause:
-        prompt: "Login to 1Password and enable SSH Agent."
+        prompt: "1Password > Sign-in > Preferences > Developer"
 
     - name: Unpack dotfiles 
       copy:
@@ -46,6 +46,15 @@
         directory_mode: yes
       with_fileglob:
       - "../.*"
+
+    - name: Unpack dotfile directories 
+      copy:
+        src: "{{ item }}"
+        dest: "~"
+        mode: 0700
+        directory_mode: yes
+      with_fileglob:
+      - "../.*/*"
 
     # - name: Link amethyst preferences
     
