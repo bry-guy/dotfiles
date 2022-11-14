@@ -3,6 +3,7 @@
   connection: local
 
   tasks:
-    community.general.homebrew:
-      name: homebrew/cask/docker
-      state: present
+    - name: Install Docker
+      community.general.homebrew_cask:
+        name: docker
+        state: present
