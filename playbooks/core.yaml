@@ -25,14 +25,14 @@
 
 
     - name: Install 1password
-      community.general.homebrew: 
+      community.general.homebrew_cask: 
         name: 1password
-        state: installed
+        state: latest
 
     - name: Install 1password-cli
-      community.general.homebrew: 
+      community.general.homebrew_cask: 
         name: 1password-cli
-        state: installed
+        state: latest
 
     - name: Login to 1password and enable SSH Agent
       ansible.builtin.pause:
