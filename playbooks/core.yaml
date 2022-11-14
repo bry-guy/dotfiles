@@ -50,15 +50,15 @@
 
     - name: Unpack dotfile directories
       copy:
-        src: "{{ item }}"
-        dest: "~"
+        src: "../{{ item }}"
+        dest: "~/{{ item }}"
         mode: 0700
         directory_mode: yes
       loop:
-        - ../.config/
-        - ../.git/
-        - ../.local/
-        - ../.ssh/
+        - .config/
+        - .git/
+        - .local/
+        - .ssh/
 
     # - name: Link amethyst preferences
     
