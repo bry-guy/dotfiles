@@ -51,4 +51,7 @@
 !playbooks/
 !playbooks/**/*
 
+!.ssh/
+!.ssh/**/*
+
 !todo.md

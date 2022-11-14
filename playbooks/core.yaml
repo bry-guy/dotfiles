@@ -1,3 +1,4 @@
+# TODO: Use async packages in many places to speed things up!
 - name: Core OS packages
   hosts: 127.0.0.1
   connection: local
@@ -6,7 +7,6 @@
     # distribution_fallback:
     #   'Pop!_OS': 'Ubuntu'
     # distribution: "{{ distribution_fallback[ansible_distribution] | default(ansible_distribution) }}"
-    # is_ubu_22_04_or_newer: "{{ distribution == 'Ubuntu' and (ansible_distribution_major_version | int) >= 22 }}"
 
   tasks:
     - name: Create home directories
