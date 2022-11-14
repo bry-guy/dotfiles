@@ -4,6 +4,6 @@
 
   tasks:
     - name: Install slack
-      community.general.homebrew:
+      community.general.homebrew_cask:
         name: slack
         state: present
