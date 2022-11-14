@@ -22,11 +22,6 @@
         - ~/.local/src
         - ~/.local/artifacts
         - ~/.config
-        - ~/.config/alacritty
-        - ~/.config/nvim
-        - ~/.config/karabiner
-        - ~/.config/karabiner/complex_modiications
-        - ~/.config
         - ~/.git
         - ~/.ssh
         - ~/dev
@@ -54,6 +49,7 @@
         directory_mode: yes
       with_fileglob:
       - "../.*"
+      become: yes
 
     - name: Unpack dotfile directories
       copy:
@@ -67,6 +63,7 @@
         - .git/
         - .local/
         - .ssh/
+      become: yes
 
     # - name: Link amethyst preferences
     
