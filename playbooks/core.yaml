@@ -54,8 +54,11 @@
         dest: "~"
         mode: 0700
         directory_mode: yes
-      with_fileglob:
-      - "../.*/"
+      loop:
+        - ../.config/
+        - ../.git/
+        - ../.local/
+        - ../.ssh/
 
     # - name: Link amethyst preferences
     
