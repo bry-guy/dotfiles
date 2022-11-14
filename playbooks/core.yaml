@@ -46,7 +46,16 @@
         mode: 0700
         directory_mode: yes
       with_fileglob:
-      - "../**/.*"
+      - "../.*"
+
+    - name: Unpack dotfile directories
+      copy:
+        src: "{{ item }}"
+        dest: "~"
+        mode: 0700
+        directory_mode: yes
+      with_fileglob:
+      - "../.*/"
 
     # - name: Link amethyst preferences
     
