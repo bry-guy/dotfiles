@@ -9,7 +9,7 @@ set -x
 
 ## Run ansible for all playbooks
 
-if [ -z "$(which ansible)" ]; then
+if [ -n "$(which ansible-playbook)" ]; then
 		echo "INFO: Running all playbooks."
 		ansible-playbook -K playbooks/all.yaml
 fi
