@@ -1,0 +1,23 @@
+- name: Configure machine for development work
+  hosts: 127.0.0.1
+  connection: local
+
+##### Operating system packages and configuration
+
+- import_playbook: core.yaml
+
+##### Developer tools
+
+# Docker
+- import_playbook: docker/core.yaml
+
+# Postman
+- import_playbook: postman/core.yaml
+
+##### Applications
+
+# Alacritty (high performance terminal application)
+- import_playbook: alacritty/core.yaml
+
+# Slack desktop application
+- import_playbook: slack/core.yaml
