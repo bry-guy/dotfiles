@@ -32,10 +32,10 @@
       with_fileglob:
       - "../.*"
 
-    # - name: Link amethyst preferences
-
     - name: Update brew
       community.general.homebrew: update_homebrew
+     
+    # - name: Link amethyst preferences
 
     # - name: Add ~/.local/bin to PATH
     #   lineinfile:
