@@ -54,12 +54,12 @@
         mode: 0700
         directory_mode: yes
       with_fileglob:
-      - "../.*/*"
+      - "../.*/**/*"
 
     # - name: Link amethyst preferences
     
     - name: Link 1password ssh key
-      ansible.builtin.shell: mkdir -p ~/.1password && ln -s ~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock ~/.1password/agent.sock
+      ansible.builtin.shell: mkdir -p ~/.1password && ln -sf ~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock ~/.1password/agent.sock
 
     - name: Update brew
       community.general.homebrew: 
