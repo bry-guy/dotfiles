@@ -9,6 +9,12 @@ set -x
 
 ## Run ansible for all playbooks
 
+if [ -n "$(which ansible-galaxy)" ]; then
+		ansible-galaxy collection install community.general
+fi
+
+## Run ansible for all playbooks
+
 if [ -n "$(which ansible-playbook)" ]; then
 		echo "INFO: Running all playbooks."
 		ansible-playbook -K playbooks/all.yaml
