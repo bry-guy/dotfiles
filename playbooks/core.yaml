@@ -13,7 +13,7 @@
       file:
         path: "{{ dir }}"
         state: directory
-        mode: 0777
+        mode: 0700
       loop:
         - ~/.local
         - ~/.local/lib
@@ -23,10 +23,16 @@
         - ~/.config
         - ~/dev
 
-    # - name: Copy/link/unpack dotfiles to ~
+    - name: Unpack dotfiles 
+      copy:
+        src: "{{ item }}"
+        dest: "~"
+        mode: 0700
+        directory_mode: yes
+      with_fileglob:
+      - "../\.*"
+
     # - name: Link amethyst preferences
-    - name: Update xcode
-      ansible.builtin.shell: xcode-select --install
 
     - name: Update brew
       community.general.homebrew: update_homebrew

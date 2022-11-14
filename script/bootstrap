@@ -39,6 +39,16 @@ case $(uname -m) in
 	;;
 esac
 
+## Install Xcode tools
+
+if [ -n "$OS_MAC" ]; then
+		if [ -z "$(xcode-select -p)" ]; then
+				echo "INFO: Install developer tools."
+
+				xcode-select --install
+		fi
+fi
+
 ## Install Brew
 
 echo "INFO: Install brew."
