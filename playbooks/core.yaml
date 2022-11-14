@@ -21,8 +21,9 @@
         - ~/.local/src
         - ~/.local/artifacts
         - ~/.config
+        - ~/.git
+        - ~/.ssh
         - ~/dev
-
 
     - name: Install 1password
       community.general.homebrew_cask: 
@@ -45,16 +46,7 @@
         mode: 0700
         directory_mode: yes
       with_fileglob:
-      - "../.*"
-
-    - name: Unpack dotfile directories 
-      copy:
-        src: "{{ item }}"
-        dest: "~"
-        mode: 0700
-        directory_mode: yes
-      with_fileglob:
-      - "../.*/**/*"
+      - "../**/.*"
 
     # - name: Link amethyst preferences
     
