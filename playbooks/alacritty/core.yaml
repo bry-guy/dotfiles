@@ -4,6 +4,6 @@
 
   tasks:
     - name: Install Alacritty
-      community.general.homebrew:
+      community.general.homebrew_cask:
         name: alacritty
-        state: present
+        state: latest
