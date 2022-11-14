@@ -23,6 +23,21 @@
         - ~/.config
         - ~/dev
 
+
+    - name: Install 1password
+      community.general.homebrew: 
+        name: 1password
+        state: present
+
+    - name: Install 1password-cli
+      community.general.homebrew: 
+        name: 1password-cli
+        state: present
+
+    - name: Login to 1password and enable SSH Agent
+      ansible.builtin.pause:
+        prompt: "Login to 1Password and enable SSH Agent."
+
     - name: Unpack dotfiles 
       copy:
         src: "{{ item }}"
@@ -32,14 +47,17 @@
       with_fileglob:
       - "../.*"
 
+    # - name: Link amethyst preferences
+    
+    - name: Link 1password ssh key
+      ansible.builtin.shell: mkdir -p ~/.1password && ln -s ~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock ~/.1password/agent.sock
+
     - name: Update brew
-      command: mv ~/.gitconfig ~/.gitconfig.bak
       community.general.homebrew: 
         update_homebrew: true
         upgrade_all: true
-      command: mv ~/.gitconfig.bak ~/.gitconfig
+
      
-    # - name: Link amethyst preferences
 
     # - name: Add ~/.local/bin to PATH
     #   lineinfile:
