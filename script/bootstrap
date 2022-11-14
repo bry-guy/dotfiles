@@ -8,9 +8,10 @@ exec 2>&1
 # set -x
 
 ## detect OS
-[ -f $HOME/.os_detect ] && source $HOME/.os_detect
+source .os_detect
 
 # Setup home directories mkdir $HOME/.local
+mkdir $HOME/.local
 mkdir $HOME/.local/lib
 mkdir $HOME/.local/bin
 mkdir $HOME/.local/src
@@ -21,16 +22,19 @@ mkdir $HOME/dev
 WORKING_DIR=$(pwd)
 
 # Link dotfiles to $HOME
-cp -R .git/ $HOME/.git
-cp -R .config/ $HOME/.config
+cp -R \.* $HOME
+# cp -R .git/ $HOME/.git
+# cp -R .config/ $HOME/.config
 
 ln -f .config/amethyst/* ~/Library/Preferences/
 
 # Update xcode
 if [ -n "$OS_MAC" ]; then
+		"INFO: Updating xcode tools..."
 		xcode-select --install
 fi
 
+# TODO: Keep as part of bootstrap
 # Install Brew
 
 if [ -n "$OS_MAC" ]; then
@@ -332,22 +336,22 @@ if [ -z $CODESPACES ]; then
 				cd $WORKING_DIR
 		fi
 
-		if [ -z "$(find $HOME/.local/lib -type d -iname '*vscode-java-test*')" ]; then
-				echo "INFO: Install vscode-java-test."
+		# if [ -z "$(find $HOME/.local/lib -type d -iname '*vscode-java-test*')" ]; then
+		# 		echo "INFO: Install vscode-java-test."
 
-				git clone https://github.com/microsoft/vscode-java-test $HOME/.local/src/vscode-java-test
+		# 		git clone https://github.com/microsoft/vscode-java-test $HOME/.local/src/vscode-java-test
 
-				cd $HOME/.local/src/vscode-java-test
+		# 		cd $HOME/.local/src/vscode-java-test
 
-				npm install
-				JAVA_HOME=$JAVA_11_HOME npm run build-plugin
+		# 		npm install
+		# 		JAVA_HOME=$JAVA_11_HOME npm run build-plugin
 
-				rm -rf $HOME/.local/lib/vscode-java-test
-				mkdir $HOME/.local/lib/vscode-java-test
-				cp -r $HOME/.local/src/vscode-java-test/* $HOME/.local/lib/vscode-java-test
+		# 		rm -rf $HOME/.local/lib/vscode-java-test
+		# 		mkdir $HOME/.local/lib/vscode-java-test
+		# 		cp -r $HOME/.local/src/vscode-java-test/* $HOME/.local/lib/vscode-java-test
 
-				cd $WORKING_DIR
-		fi
+		# 		cd $WORKING_DIR
+		# fi
 
 fi
 

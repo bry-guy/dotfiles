@@ -45,4 +45,6 @@ Plug 'jeffkreeftmeijer/vim-numbertoggle'
 Plug 'reedes/vim-pencil'
 
 Plug 'plasticboy/vim-markdown'
+
+Plug 'editorconfig/editorconfig-vim'
 call plug#end()
