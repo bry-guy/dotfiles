@@ -44,6 +44,7 @@
         src: "{{ item }}"
         dest: "~"
         mode: 0700
+        owner: "{{ ansible_user_id }}"
         directory_mode: yes
       with_fileglob:
       - "../.*"
@@ -53,6 +54,7 @@
         src: "../{{ item }}"
         dest: "~/{{ item }}"
         mode: 0700
+        owner: "{{ ansible_user_id }}"
         directory_mode: yes
       loop:
         - .config/
