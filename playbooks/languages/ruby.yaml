@@ -1,16 +1,15 @@
-  tasks:
-    - name: Install Ruby dependencies
-      community.general.homebrew:
-        name: "{{ item }}"
-        state: latest
-        loop: 
-          - coreutils
-          - openssl@3
-          - readline
-          - libyaml
-          - gmp
-          - bison
-          - ruby-build
+- name: Install Ruby dependencies
+  community.general.homebrew:
+    name: "{{ item }}"
+    state: latest
+    loop: 
+      - coreutils
+      - openssl@3
+      - readline
+      - libyaml
+      - gmp
+      - bison
+      - ruby-build
 
-    - name: Add Ruby asdf plugin
-      ansible.builtin.shell: asdf plugin add ruby https://github.com/asdf-vm/asdf-ruby.git
+- name: Add Ruby asdf plugin
+  ansible.builtin.shell: asdf plugin add ruby https://github.com/asdf-vm/asdf-ruby.git
