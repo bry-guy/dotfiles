@@ -12,4 +12,6 @@
     - ruby-build
 
 - name: Add Ruby asdf plugin
-  ansible.builtin.shell: asdf plugin add ruby https://github.com/asdf-vm/asdf-ruby.git
+  ansible.builtin.shell: 
+    cmd: asdf plugin add ruby https://github.com/asdf-vm/asdf-ruby.git
+    creates: ~/.asdf/plugins/ruby/
