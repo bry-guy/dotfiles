@@ -134,16 +134,6 @@ fi
 
 # # Install TUI apps
 
-# if [ -z "$(which asdf)" ]; then
-# 		echo "INFO: Install asdf."
-
-# 		git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.10.0
-
-# 		source . $HOME/.asdf/asdf.sh
-# fi
-
-
-# ## TODO: python https://github.com/danhper/asdf-python
 # ## TODO: java https://github.com/halcyon/asdf-java
 
 # brew tap homebrew/cask-fonts
@@ -169,18 +159,6 @@ fi
 
 
 # if [ -z $CODESPACES ]; then
-
-# 		## alacritty
-# 		if [ -z "$(which alacritty)" ]; then
-# 				echo "INFO: Install alacritty."
-
-# 				if [ -n "$OS_LINUX" ]; then
-# 						sudo apt install -y alacritty
-# 				elif [ -n "$OS_MAC" ]; then
-# 						brew install alacritty
-# 				fi
-# 		fi
-
 
 # 		## imwheel
 # 		if [ -z "$(which imwheel)" ] && [ -n "$OS_LINUX" ]; then

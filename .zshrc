@@ -106,18 +106,20 @@ export FZF_DEFAULT_COMMAND='rg --files --hidden --smart-case'
 export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@1.1)"
 
 ### java
-if [ -n "$OS_MAC" ]; then
-		export JAVA_11_HOME="$(brew --prefix openjdk@11)/libexec/openjdk.jdk/Contents/Home"
-		export JAVA_HOME="$(brew --prefix openjdk)/libexec/openjdk.jdk/Contents/Home"
-elif [ -n "$OS_LINUX" ]; then
-		# export JAVA_11_HOME="/usr/lib/jvm/java-11-openjdk-amd64"
-		export JAVA_HOME="$(find /usr/lib/jvm -type d -iname 'java-1*' 2>/dev/null | sort --reverse | head -n 1)"
-fi
+. ~/.asdf/plugins/java/set-java-home.zsh
 
-export PATH="$JAVA_HOME/bin:$PATH" 
+# if [ -n "$OS_MAC" ]; then
+# 		export JAVA_11_HOME="$(brew --prefix openjdk@11)/libexec/openjdk.jdk/Contents/Home"
+# 		export JAVA_HOME="$(brew --prefix openjdk)/libexec/openjdk.jdk/Contents/Home"
+# elif [ -n "$OS_LINUX" ]; then
+# 		# export JAVA_11_HOME="/usr/lib/jvm/java-11-openjdk-amd64"
+# 		export JAVA_HOME="$(find /usr/lib/jvm -type d -iname 'java-1*' 2>/dev/null | sort --reverse | head -n 1)"
+# fi
 
-export GRADLE_HOME="$HOME/.local/lib/gradle/gradle-7.4.1"
-export PATH="$GRADLE_HOME/bin:$PATH"
+# export PATH="$JAVA_HOME/bin:$PATH" 
+
+# export GRADLE_HOME="$HOME/.local/lib/gradle/gradle-7.4.1"
+# export PATH="$GRADLE_HOME/bin:$PATH"
 
 ## misc
 export MANPAGER='nvim +Man!'
@@ -133,3 +135,4 @@ export PG_HOME="$(brew --prefix)/var/postgres"
 
 ## brew
 export PATH="/usr/local/sbin:$PATH"
+

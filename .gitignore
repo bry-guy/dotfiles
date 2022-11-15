@@ -4,6 +4,7 @@
 !.gitignore
 
 !.aliases
+!.asdfrc
 !.zprofile
 !.tmux.conf
 !.zshrc

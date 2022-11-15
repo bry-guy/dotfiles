@@ -1,0 +1,11 @@
+- name: Install Java dependencies
+  community.general.homebrew:
+    name: "{{ item }}"
+    state: latest
+  loop: 
+    - jq
+
+- name: Add Java asdf plugin
+  ansible.builtin.shell: 
+    cmd: asdf plugin-add java https://github.com/halcyon/asdf-java.git
+    creates: ~/.asdf/plugins/java/
