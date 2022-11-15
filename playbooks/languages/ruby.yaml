@@ -5,7 +5,7 @@
   tasks:
     - name: Install Ruby dependencies
       community.general.homebrew:
-        name: {{ item }}
+        name: "{{ item }}"
         state: latest
         loop: 
           - coreutils
