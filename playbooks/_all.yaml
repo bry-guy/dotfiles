@@ -2,18 +2,7 @@
   hosts: 127.0.0.1
   connection: local
 
-#### Operating system packages and configuration
-
 - import_playbook: core.yaml
-
-#### Developer tools
-
 - import_playbook: languages/core.yaml
-- import_playbook: fonts.yaml
-- import_playbook: docker.yaml
-- import_playbook: postman.yaml
-
-#### Applications
-
-- import_playbook: alacritty.yaml
-- import_playbook: slack.yaml
+- import_playbook: developer/core.yaml
+- import_playbook: apps/core.yaml
