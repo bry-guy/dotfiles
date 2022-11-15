@@ -7,6 +7,7 @@
     - import_tasks: python.yaml
     - import_tasks: nodejs.yaml
     - import_tasks: golang.yaml
+    - import_tasks: java.yaml
 
     - name: Install asdf languages via .tool-versions
       ansible.builtin.shell: 

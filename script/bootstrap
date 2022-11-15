@@ -134,30 +134,6 @@ fi
 
 # # Install TUI apps
 
-# ## TODO: java https://github.com/halcyon/asdf-java
-
-# brew tap homebrew/cask-fonts
-
-# ## font-hack-nerd-font 
-# if [ -z "$(brew list | grep font-hack-nerd-font)" ]; then
-# 		echo "INFO: Install font-hack-nerd-font."
-
-# 		brew install font-hack-nerd-font
-# fi
-
-# ## awscli
-# if [ -z "$(which aws)" ]; then
-# 		echo "INFO: Install aws."
-
-# 		if [ -n "$OS_LINUX" ]; then
-# 				sudo apt install -y awscli
-# 		elif [ -n "$OS_MAC" ]; then
-# 				brew install awscli
-# 		fi
-# fi
-
-
-
 # if [ -z $CODESPACES ]; then
 
 # 		## imwheel
@@ -250,38 +226,6 @@ fi
 
 # 				sudo apt install -y flatpak
 # 		fi
-
-# 		## slack
-# 		if [ -z "$(which slack)" ] && [ -z "$(mdfind "kMDItemKind == 'Application'" | grep Slack)" ]; then
-# 				echo "INFO: Install slack."
-
-# 				if [ -n "$OS_LINUX" ]; then
-# 						flatpak --user --app slack --assumeyes
-# 				elif [ -n "$OS_MAC" ]; then
-# 						brew install slack
-# 				fi
-# 		fi
-
-# 		## 1Password
-# 		if [ -z "$(which 1password)" ] && [ -z "$(mdfind "kMDItemKind == 'Application'" | grep 1Password)" ]; then
-# 				echo "INFO: Install 1password."
-
-# 				if [ -n "$OS_LINUX" ]; then
-# 						curl -sS https://downloads.1password.com/linux/keys/1password.asc | sudo gpg --dearmor --output /usr/share/keyrings/1password-archive-keyring.gpg
-# 						echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/amd64 stable main' \
-# 								| sudo tee /etc/apt/sources.list.d/1password.list
-# 						sudo mkdir -p /etc/debsig/policies/AC2D62742012EA22/
-# 						curl -sS https://downloads.1password.com/linux/debian/debsig/1password.pol | sudo tee /etc/debsig/policies/AC2D62742012EA22/1password.pol
-# 						sudo mkdir -p /usr/share/debsig/keyrings/AC2D62742012EA22
-# 						curl -sS https://downloads.1password.com/linux/keys/1password.asc | sudo gpg --dearmor --output /usr/share/debsig/keyrings/AC2D62742012EA22/debsig.gpg
-
-# 						sudo apt update
-# 						sudo apt install -y 1password
-# 				elif [ -n "$OS_MAC" ]; then
-# 						brew install 1password
-# 				fi
-# 		fi
-
 
 # 		## discord
 # 		if [ -z "$(which discord)" ] && [ -z "$(mdfind "kMDItemKind == 'Application'" | grep Discord)" ]; then
