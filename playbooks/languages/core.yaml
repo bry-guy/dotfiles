@@ -3,10 +3,10 @@
   connection: local
 
   tasks:
-    - import_playbook: ruby.yaml
-    - import_playbook: python.yaml
-    - import_playbook: nodejs.yaml
-    - import_playbook: golang.yaml
+    - import_tasks: ruby.yaml
+    - import_tasks: python.yaml
+    - import_tasks: nodejs.yaml
+    - import_tasks: golang.yaml
 
     - name: Install asdf languages via .tool-versions
       ansible.builtin.shell: 
