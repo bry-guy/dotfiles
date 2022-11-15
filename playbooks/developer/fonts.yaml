@@ -1,0 +1,8 @@
+- name: Tap fonts
+  community.general.homebrew_tap:
+    name: homebrew/cask-fonts
+
+- name: Install fonts
+  community.general.homebrew_cask:
+    name: font-hack-nerd-font
+    state: latest

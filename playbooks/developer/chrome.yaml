@@ -1,0 +1,4 @@
+- name: Install Chrome
+  community.general.homebrew_cask:
+    name: chrome
+    state: latest

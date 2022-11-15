@@ -1,9 +1,0 @@
-- name: Postman
-  hosts: 127.0.0.1
-  connection: local
-
-  tasks:
-    - name: Install Postman
-      community.general.homebrew_cask:
-        name: postman
-        state: latest

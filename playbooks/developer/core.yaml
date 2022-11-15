@@ -1,0 +1,15 @@
+- name: Install developer tools
+  hosts: 127.0.0.1
+  connection: local
+
+  tasks:
+    - import_tasks: alacritty.yaml
+    - import_tasks: amethyst.yaml
+    - import_tasks: chrome.yaml
+    - import_tasks: dash.yaml
+    - import_tasks: docker.yaml
+    - import_tasks: fonts.yaml
+    - import_tasks: karabiner-elements.yaml
+    - import_tasks: postman.yaml
+
+

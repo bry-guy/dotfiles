@@ -1,0 +1,4 @@
+- name: Install Dash
+  community.general.homebrew_cask:
+    name: dash
+    state: latest

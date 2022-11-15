@@ -1,0 +1,17 @@
+- name: Install apps
+  hosts: 127.0.0.1
+  connection: local
+
+  tasks:
+  - name: Install apps
+    community.general.homebrew_cask:
+      name: "{{ item }}"
+      state: latest
+    loop:
+      - discord
+      - obsidian
+      - signal
+      - spotify
+      - todoist
+      - zoom
+      - slack

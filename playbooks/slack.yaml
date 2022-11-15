@@ -1,9 +1,0 @@
-- name: Slack
-  hosts: 127.0.0.1
-  connection: local
-
-  tasks:
-    - name: Install slack
-      community.general.homebrew_cask:
-        name: slack
-        state: latest
