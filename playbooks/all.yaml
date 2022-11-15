@@ -2,22 +2,16 @@
   hosts: 127.0.0.1
   connection: local
 
-##### Operating system packages and configuration
+#### Operating system packages and configuration
 
 - import_playbook: core.yaml
 
-##### Developer tools
+#### Developer tools
 
-# Docker
-- import_playbook: docker/core.yaml
+- import_playbook: docker.yaml
+- import_playbook: postman.yaml
 
-# Postman
-- import_playbook: postman/core.yaml
+#### Applications
 
-##### Applications
-
-# Alacritty (high performance terminal application)
-- import_playbook: alacritty/core.yaml
-
-# Slack desktop application
-- import_playbook: slack/core.yaml
+- import_playbook: alacritty.yaml
+- import_playbook: slack.yaml

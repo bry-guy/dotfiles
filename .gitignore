@@ -49,6 +49,7 @@
 !script/**/*
 
 !playbooks/
+!playbooks/*
 !playbooks/**/*
 
 !.ssh/

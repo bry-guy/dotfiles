@@ -3,11 +3,6 @@
   hosts: 127.0.0.1
   connection: local
 
-  vars:
-    # distribution_fallback:
-    #   'Pop!_OS': 'Ubuntu'
-    # distribution: "{{ distribution_fallback[ansible_distribution] | default(ansible_distribution) }}"
-
   tasks:
     - name: Create home directories
       file:
@@ -59,7 +54,8 @@
         - .ssh/
       become: yes
 
-    # - name: Link amethyst preferences
+    - name: Link amethyst preferences
+      ansible.builtin.shell: ln -f ~/.config/amethyst/* ~/Library/Preferences/
     
     - name: Link 1password ssh key
       ansible.builtin.shell: mkdir -p ~/.1password && ln -sf ~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock ~/.1password/agent.sock
@@ -75,39 +71,3 @@
         update_homebrew: true
         upgrade_all: true
      
-
-    # - name: Add ~/.local/bin to PATH
-    #   lineinfile:
-    #     path: ~/.local/bin
-    #     line: export PATH=$PATH:~/.local/bin
-
-    # - name: Update APT package list
-    #   become: yes
-    #   apt:
-    #     update_cache: yes
-    #   register: apt_update
-    #   retries: 5
-    #   until: apt_update is success
-
-    # - name: Upgrade to latest APT packages
-    #   become: yes
-    #   apt:
-    #     upgrade: yes
-
-    # - name: Install core packages
-    #   become: yes
-    #   apt:
-    #     package: "{{ item }}"
-    #   loop:
-    #     - curl
-    #     - dconf-editor
-    #     - exfat-fuse
-    #     - htop
-    #     - inetutils-traceroute
-    #     - jq
-    #     - net-tools
-    #     - p7zip-full
-    #     - unzip
-    #     - uuid
-    #     - xclip
-
