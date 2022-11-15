@@ -72,7 +72,7 @@
 
     - name: Install utilities
       community.general.homebrew:
-        name: {{ item }}
+        name: "{{ item }}"
         state: latest
         loop:
           - wget
@@ -82,3 +82,5 @@
           - tmux
           - tldr
           - asdf
+
+

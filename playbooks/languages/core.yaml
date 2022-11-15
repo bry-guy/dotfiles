@@ -2,7 +2,7 @@
   hosts: 127.0.0.1
   connection: local
 
-- import_playbook: {{ item }}
+- import_playbook: "{{ item }}"
   with_fileglob:
     - "./languages/*.yaml"
 
