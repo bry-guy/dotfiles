@@ -7,8 +7,8 @@
 - import_playbook: nodejs.yaml
 - import_playbook: golang.yaml
 
-  tasks:
-    - name: Install asdf languages via .tool-versions
-      ansible.builtin.shell: 
-        chdir: ~
-        cmd: asdf install
+tasks:
+  - name: Install asdf languages via .tool-versions
+    ansible.builtin.shell: 
+      chdir: ~
+      cmd: asdf install
