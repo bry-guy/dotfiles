@@ -2,8 +2,8 @@
 
 # Log dotfiles setup
 mkdir $HOME/log
-exec > >(tee -i $HOME/log/dotfiles_setup.log)
-exec 2>&1
+# exec > >(tee -i $HOME/log/dotfiles_setup.log)
+# exec 2>&1
 
 set -x
 
