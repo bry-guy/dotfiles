@@ -74,13 +74,13 @@
       community.general.homebrew:
         name: "{{ item }}"
         state: latest
-        loop:
-          - wget
-          - marp-cli
-          - ripgrep
-          - fzf
-          - tmux
-          - tldr
-          - asdf
+      loop:
+        - wget
+        - marp-cli
+        - ripgrep
+        - fzf
+        - tmux
+        - tldr
+        - asdf
 
 
