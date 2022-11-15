@@ -1,7 +1,3 @@
-- name: Ruby
-  hosts: 127.0.0.1
-  connection: local
-
   tasks:
     - name: Install Ruby dependencies
       community.general.homebrew:
