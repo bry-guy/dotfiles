@@ -2,9 +2,10 @@
   hosts: 127.0.0.1
   connection: local
 
-- import_playbook: "{{ item }}"
-  with_fileglob:
-    - "./languages/*.yaml"
+- import_playbook: ruby.yaml
+- import_playbook: python.yaml
+- import_playbook: nodejs.yaml
+- import_playbook: golang.yaml
 
   tasks:
     - name: Install asdf languages via .tool-versions
