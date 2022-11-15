@@ -1,7 +1,2 @@
-- name: NodeJS
-  hosts: 127.0.0.1
-  connection: local
-
-  tasks:
-    - name: Add NodeJS asdf plugin
-      ansible.builtin.shell: asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
+- name: Add NodeJS asdf plugin
+  ansible.builtin.shell: asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git

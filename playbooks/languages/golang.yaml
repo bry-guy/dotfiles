@@ -1,12 +1,7 @@
-- name: Golang
-  hosts: 127.0.0.1
-  connection: local
+- name: Install Golang dependencies
+  community.general.homebrew:
+    name: coreutils
+    state: latest
 
-  tasks:
-    - name: Install Golang dependencies
-      community.general.homebrew:
-        name: coreutils
-        state: latest
-
-    - name: Add Golang asdf plugin
-      ansible.builtin.shell: asdf plugin-add golang https://github.com/kennyp/asdf-golang.git
+- name: Add Golang asdf plugin
+  ansible.builtin.shell: asdf plugin-add golang https://github.com/kennyp/asdf-golang.git
