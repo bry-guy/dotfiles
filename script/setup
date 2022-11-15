@@ -17,5 +17,5 @@ fi
 
 if [ -n "$(which ansible-playbook)" ]; then
 		echo "INFO: Running all playbooks."
-		ansible-playbook -K playbooks/all.yaml
+		ansible-playbook -K playbooks/_all.yaml
 fi

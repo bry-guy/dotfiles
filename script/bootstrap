@@ -99,17 +99,6 @@ fi
 
 # # Manual installs
 
-# if [ -z "$(which wget)" ]; then
-# 		echo "INFO: Install wget."
-
-# 		if [ -n "$OS_LINUX" ]; then
-# 				sudo apt install -y wget
-# 		elif [ -n "$OS_MAC" ]; then
-# 				brew install wget
-# 		fi
-
-# fi
-
 # ## neovim
 # if [ -z "$(which nvim)" ]; then
 # 		echo "INFO: Install neovim."
@@ -143,26 +132,6 @@ fi
 # 		fi
 # fi
 
-# ## keyd
-# if [ -z $CODESPACES ] && [ -n "$OS_LINUX" ]; then
-# 		if [ -z "$(which keyd)" ]; then
-# 				echo "INFO: Install keyd."
-
-# 				cd $HOME/.local/artifacts
-
-# 				git clone https://github.com/rvaiya/keyd
-# 				cd keyd
-# 				make && sudo make install
-
-# 				### link config file saved as keyd.conf
-# 				sudo ln -sf .config/keyd/default.conf /etc/keyd/default.conf
-
-# 				sudo systemctl enable keyd && sudo systemctl start keyd
-
-# 				cd $WORKING_DIR
-# 		fi
-# fi
-
 # # Install TUI apps
 
 # if [ -z "$(which asdf)" ]; then
@@ -173,43 +142,6 @@ fi
 # 		source . $HOME/.asdf/asdf.sh
 # fi
 
-# ## Install langs
-
-# if [ -z "$(asdf plugin list | grep nodejs)" ]; then
-# 		echo "INFO: Add nodejs asdf plugin."
-# 		brew install gpg gawk
-# 		asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
-# fi
-
-# if [ -z "$(asdf plugin list | grep golang)" ]; then
-# 		if [ -n "$OS_MAC" ]; then
-# 				echo "INFO: Install coreutils (golang dep)."
-# 				brew install coreutils
-# 		fi
-
-# 		echo "INFO: Add golang asdf plugin."
-# 		asdf plugin-add golang https://github.com/kennyp/asdf-golang.git
-
-# fi
-
-# if [ -z "$(asdf plugin list | grep ruby)" ]; then
-# 		if [ -n "$OS_MAC" ]; then
-# 				echo "INFO: Install openssl (ruby dep)."
-
-# 				brew install openssl@1.1 readline
-
-# 				echo "INFO: Install ruby-build (ruby dep)."
-# 				brew install ruby-build
-# 				brew upgrade ruby-build
-
-# 				echo "INFO: Add ruby asdf plugin."
-# 				asdf plugin add ruby https://github.com/asdf-vm/asdf-ruby.git
-# 		fi
-# fi
-
-
-# echo "INFO: Install languages from asdf .tool-versions."
-# asdf install
 
 # ## TODO: python https://github.com/danhper/asdf-python
 # ## TODO: java https://github.com/halcyon/asdf-java
@@ -234,39 +166,7 @@ fi
 # 		fi
 # fi
 
-# ## marp-cli
-# if [ -z "$(which marp)" ]; then
-# 		echo "INFO: Install marp-cli."
 
-# 		if [ -n "$OS_LINUX" ]; then
-# 				echo "INFO: No installation available from package managers for marp. \
-# 						install via Docker if you want this on Linux."
-# 		elif [ -n "$OS_MAC" ]; then
-# 				brew install marp-cli
-# 		fi
-# fi
-
-# ## ripgrep
-# if [ -z "$(which rg)" ]; then
-# 		echo "INFO: Install rg."
-
-# 		if [ -n "$OS_LINUX" ]; then
-# 				sudo apt install -y ripgrep
-# 		elif [ -n "$OS_MAC" ]; then
-# 				brew install ripgrep
-# 		fi
-# fi
-
-# ## fzf
-# if [ -z "$(which fzf)" ]; then
-# 		echo "INFO: Install fzf."
-
-# 		if [ -n "$OS_LINUX" ]; then
-# 				sudo apt install -y fzf
-# 		elif [ -n "$OS_MAC" ]; then
-# 				brew install fzf
-# 		fi
-# fi
 
 # if [ -z $CODESPACES ]; then
 
@@ -281,23 +181,6 @@ fi
 # 				fi
 # 		fi
 
-# 		## tmux
-# 		if [ -z "$(which tmux)" ]; then
-# 				echo "INFO: Install tmux."
-
-# 				if [ -n "$OS_LINUX" ]; then
-# 						sudo apt install -y tmux
-# 				elif [ -n "$OS_MAC" ]; then
-# 						brew install tmux
-# 				fi
-# 		fi
-
-# 		## tmux
-# 		if [ -z "$(which op)" ]; then
-# 				echo "INFO: Install 1password-cli (op)."
-
-# 				brew install --cask 1password/tap/1password-cli
-# 		fi
 
 # 		## imwheel
 # 		if [ -z "$(which imwheel)" ] && [ -n "$OS_LINUX" ]; then
@@ -566,30 +449,3 @@ fi
 
 
 # # Install Brews
-
-# ## tldr
-# if [ -z "$(which tldr)" ]; then
-# 		echo "INFO: Install tldr."
-
-# 		brew install tldr
-# fi
-
-# # zsh!
-
-# ## zsh
-# if [ -z $(which zsh) ]; then
-
-# 		if [ -n "$OS_LINUX" ]; then
-# 				sudo apt install -y zsh
-# 		elif [ -n "$OS_MAC" ]; then
-# 				brew install zsh
-# 		fi
-# fi
-
-# if [[ $SHELL != *"zsh"* ]]; then
-# 		echo "Changing shell to zsh."
-# 		chsh -s "$(which zsh)"
-# fi
-
-# [ -n "$OS_LINUX" ] && echo "Run eval \$(/home/linuxbrew/.linuxbrew/bin/brew shellenv) to finish installing brew."
-

@@ -60,7 +60,6 @@
     - name: Link 1password ssh key
       ansible.builtin.shell: mkdir -p ~/.1password && ln -sf ~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock ~/.1password/agent.sock
 
-        
     - name: Accept new ssh fingerprints
       shell: ssh-keyscan -H {{ item }} >> ~/.ssh/known_hosts
       loop: 
@@ -70,4 +69,16 @@
       community.general.homebrew: 
         update_homebrew: true
         upgrade_all: true
-     
+
+    - name: Install utilities
+      community.general.homebrew:
+        name: {{ item }}
+        state: latest
+        loop:
+          - wget
+          - marp-cli
+          - ripgrep
+          - fzf
+          - tmux
+          - tldr
+          - asdf

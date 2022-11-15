@@ -1,0 +1,7 @@
+- name: Python
+  hosts: 127.0.0.1
+  connection: local
+
+  tasks:
+    - name: Add Python asdf plugin
+      ansible.builtin.shell: asdf plugin-add python

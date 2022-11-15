@@ -129,7 +129,7 @@ export PATH="$HOME/.local/bin:$PATH"
 export PG_HOME="$(brew --prefix)/var/postgres"
 
 ## asdf
-. $HOME/.asdf/asdf.sh
+. /usr/local/opt/asdf/libexec/asdf.sh
 
 ## brew
 export PATH="/usr/local/sbin:$PATH"

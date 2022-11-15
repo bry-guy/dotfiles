@@ -8,6 +8,7 @@
 
 #### Developer tools
 
+- import_playbook: languages/core.yaml
 - import_playbook: docker.yaml
 - import_playbook: postman.yaml
 
