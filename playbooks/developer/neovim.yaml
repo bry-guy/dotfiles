@@ -19,4 +19,4 @@
 
 - name: (Neovim) Install treesitter parsers
   ansible.builtin.shell: 
-    cmd: | nvim --headless +TSInstall +qa
+    cmd: nvim --headless +TSInstall +qa
