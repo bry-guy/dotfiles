@@ -1,0 +1,24 @@
+- name: Install Neovim
+  community.general.homebrew:
+    name: nvim
+    state: latest
+
+- name: Neovim: Install vim-plug
+  ansible.builtin.shell: 
+    cmd: | 
+      curl -fLo
+      "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim
+      --create-dirs
+      https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    creates: ~/.local/share/nvim/
+
+- name: Neovim: Install plugins
+  ansible.builtin.shell: 
+    cmd: | nvim --headless +PlugInstall +qa
+    creates: ~/.vim/plugged/vim-surround/
+
+# TODO: Run plugin-specific post-install commands
+# - name: Neovim: Install plugins
+#   ansible.builtin.shell: 
+#     cmd: | nvim --headless +PlugInstall +qa
+#     creates: ~/.vim/plugged/vim-surround/
