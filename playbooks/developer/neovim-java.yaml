@@ -1,0 +1,53 @@
+- name: Install jdtls
+  community.general.homebrew:
+    name: jdtls
+    state: latest
+
+- name: Clone java-debug
+  ansible.builtin.git:
+    repo: https://github.com/microsoft/java-debug 
+    dest: ~/.local/src/java-debug
+
+- name: Reset java-debug install directory
+  file:
+    state: "{{ item }}"
+    path: "~/.local/lib/java-debug"
+    mode: 0777
+    owner: "{{ ansible_user_id }}"
+  with_items:
+    - absent
+    - directory
+
+- name: Install java-debug
+  ansible.builtin.shell: 
+    cmd: |
+      asdf shell java $(asdf list java | grep adoptopenjdk-11)
+      ./mvnw clean install
+      cp -r ./com.microsoft.java.debug* ~/.local/lib/java-debug
+    creates: ~/.local/lib/java-debug/com.microsoft.java.debug.core/
+    chdir: ~/.local/src/java-debug
+
+- name: Clone vscode-java-test
+  ansible.builtin.git:
+    repo: https://github.com/microsoft/vscode-java-test 
+    dest: ~/.local/src/vscode-java-test
+
+- name: Reset java-debug install directory
+  file:
+    state: "{{ item }}"
+    path: "~/.local/lib/vscode-java-test"
+    mode: 0777
+    owner: "{{ ansible_user_id }}"
+  with_items:
+    - absent
+    - directory
+
+- name: Install vscode-java-test
+  ansible.builtin.shell: 
+    cmd: |
+      asdf shell java $(asdf list java | grep adoptopenjdk-11)
+      npm install
+      npm run build-plugin
+      cp -r ./vscode-java-test/* ~/.local/lib/vscode-java-test
+    creates: ~/.local/lib/vscode-java-test/package.json
+    chdir: ~/.local/src/vscode-java-test
