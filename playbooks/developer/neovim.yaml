@@ -5,7 +5,7 @@
 
 - name: (Neovim) Install vim-plug
   ansible.builtin.shell: 
-    cmd: | 
+    cmd: > 
       sh -c 'curl -fLo
       "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim
       --create-dirs
