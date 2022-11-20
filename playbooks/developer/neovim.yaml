@@ -14,7 +14,7 @@
 
 - name: (Neovim) Install plugins
   ansible.builtin.shell: 
-    cmd: | nvim --headless +PlugInstall +qa
+    cmd: nvim --headless +PlugInstall +qa
     creates: ~/.vim/plugged/vim-surround/
 
 # TODO: Run plugin-specific post-install commands
