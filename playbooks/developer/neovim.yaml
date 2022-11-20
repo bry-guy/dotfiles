@@ -17,7 +17,6 @@
     cmd: nvim --headless +PlugInstall +qa
     creates: ~/.vim/plugged/vim-surround/
 
-- name: Neovim: Install treesitter parsers
+- name: (Neovim) Install treesitter parsers
   ansible.builtin.shell: 
     cmd: | nvim --headless +TSInstall +qa
-    creates: ~/.vim/plugged/vim-surround/
