@@ -6,7 +6,7 @@ require("obsidian").setup({
   notes_subdir = "Inbox",
   daily_notes = {
     folder = "Diaries",
-  }
+  },
   note_id_func = function(title)
     -- Create note IDs in a Zettelkasten format with a timestamp and a suffix.
     local suffix = ""
@@ -19,7 +19,8 @@ require("obsidian").setup({
         suffix = suffix .. string.char(math.random(65, 90))
       end
     end
-    return tostring(os.time()) .. "-" .. suffix
+    return tostring(os.date("%Y%m%d_%H%M%S")) .. "-" .. suffix
+  end,
 })
 
 vim.keymap.set(
