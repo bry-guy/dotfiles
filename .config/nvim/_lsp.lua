@@ -30,14 +30,33 @@ local on_attach = function(client, bufnr)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
 end
 
+require("mason").setup()
+require("mason-lspconfig").setup({
+  ensure_installed = { 'terramformls', 'apex_ls', 'tsserver' },
+  automatic_installation = true,
+})
 
-local servers = {}
-for _, lsp in pairs(servers) do
-		require('lspconfig')[lsp].setup {
-				capabilities = capabilities,
-				on_attach = on_attach,
-				flags = {
-				  debounce_text_changes = 150,
-				}
-		}
-end
+
+local servers = { 'tsserver', 'terraformls', 'apex_ls' }
+require'lspconfig'.tsserver.setup {
+	capabilities = capabilities,
+	on_attach = on_attach,
+}
+
+require'lspconfig'.terraformls.setup {
+	capabilities = capabilities,
+	on_attach = on_attach,
+}
+
+-- require'lspconfig'.apex_ls.setup {
+-- 	capabilities = capabilities,
+-- 	on_attach = on_attach,
+-- 	filetypes = { 'st', 'apexcode' }
+-- }
+
+-- for _, lsp in pairs(servers) do
+--   require'lspconfig'.lsp.setup {
+-- 	capabilities = capabilities,
+-- 	on_attach = on_attach,
+--   }
+-- end

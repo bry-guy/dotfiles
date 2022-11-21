@@ -1,4 +1,6 @@
 call plug#begin('~/.vim/plugged')
+Plug 'williamboman/mason.nvim'
+Plug 'williamboman/mason-lspconfig.nvim'
 Plug 'neovim/nvim-lspconfig'
 
 Plug 'hrsh7th/cmp-nvim-lsp'
@@ -45,4 +47,11 @@ Plug 'jeffkreeftmeijer/vim-numbertoggle'
 Plug 'reedes/vim-pencil'
 
 Plug 'plasticboy/vim-markdown'
+
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+
+Plug 'hashivim/vim-terraform'
+
+Plug 'NoahTheDuke/vim-just'
+
 call plug#end()

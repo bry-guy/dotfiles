@@ -2,6 +2,8 @@
 vim.opt_local.autoindent = true
 vim.opt_local.si = true -- smart indent
 vim.opt_local.shiftwidth = 4
+vim.opt_local.expandtab = true 
+vim.opt_local.tabstop = 4
 vim.opt_local.cinoptions = 'j1' -- anonymous functions
 
 -- lsp options
@@ -17,12 +19,13 @@ local config = {
     '-Dlog.protocol=true',
     '-Dlog.level=ALL',
     '-Xms1g',
+	'-javaagent:' .. vim.env.HOME .. '/.local/lib/jdt-language-server/lombok.jar',
+    '-jar', vim.env.HOME .. '/.local/lib/jdt-language-server/plugins/org.eclipse.equinox.launcher_1.6.400.v20210924-0641.jar',
+    '-configuration', vim.env.HOME .. '/.local/lib/jdt-language-server/config_mac',
+    '-data', workspace_dir,
     '--add-modules=ALL-SYSTEM',
     '--add-opens', 'java.base/java.util=ALL-UNNAMED',
     '--add-opens', 'java.base/java.lang=ALL-UNNAMED',
-    '-jar', vim.env.HOME .. '/.local/lib/jdt-language-server/plugins/org.eclipse.equinox.launcher_1.6.400.v20210924-0641.jar',
-    '-configuration', vim.env.HOME .. '/.local/lib/jdt-language-server/config_mac',
-    '-data', workspace_dir
   },
 
   root_dir = require('jdtls.setup').find_root({'.git', 'mvnw', 'gradlew'}),

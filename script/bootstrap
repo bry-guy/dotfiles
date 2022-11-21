@@ -7,8 +7,9 @@ exec 2>&1
 
 # set -x
 
-## detect OS
-[ -f $HOME/.os_detect ] && source $HOME/.os_detect
+## detect 
+source .os_detect
+source .arch_detect
 
 # Setup home directories mkdir $HOME/.local
 mkdir $HOME/.local/lib
@@ -25,6 +26,11 @@ cp -R .git/ $HOME/.git
 cp -R .config/ $HOME/.config
 
 ln -f .config/amethyst/* ~/Library/Preferences/
+
+# Update rosetta
+if [ -n "$ARCH_ARM64" ]; then
+		softwareupdate --install-rosetta --agree-to-license
+fi
 
 # Update xcode
 if [ -n "$OS_MAC" ]; then
@@ -161,6 +167,7 @@ if [ -z "$(asdf plugin list | grep golang)" ]; then
 		echo "INFO: Add golang asdf plugin."
 		asdf plugin-add golang https://github.com/kennyp/asdf-golang.git
 
+		go env -w GOBIN="$HOME/.local/bin"
 fi
 
 if [ -z "$(asdf plugin list | grep ruby)" ]; then
@@ -261,6 +268,8 @@ if [ -z $CODESPACES ]; then
 				elif [ -n "$OS_MAC" ]; then
 						brew install tmux
 				fi
+				
+				git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 		fi
 
 		## tmux
@@ -303,6 +312,9 @@ if [ -z $CODESPACES ]; then
 						-C $HOME/.local/lib/jdt-language-server
 
 				ln -sf $HOME/.local/lib/jdt-language-server/bin/jdtls $HOME/.local/bin/jdtls
+
+				wget https://projectlombok.org/downloads/lombok.jar -P $HOME/.local/artifacts
+				cp $HOME/.local/artifacts/lombak.jar $HOME/.local/lib/jdt-language-server/
 		fi
 
 		if [ -z "$(which gradle)" ]; then
@@ -507,7 +519,7 @@ if [ -z $CODESPACES ]; then
 				if [ -n "$OS_LINUX" ]; then
 						sudo apt install -y docker
 				elif [ -n "$OS_MAC" ]; then
-						brew install docker
+						brew install --cask docker
 				fi
 		fi
 
@@ -537,6 +549,13 @@ fi
 
 
 # Install Brews
+
+## direnv
+if [ -z "$(which direnv)" ]; then
+		echo "INFO: Install direnv."
+
+		brew install direnv
+fi
 
 ## tldr
 if [ -z "$(which tldr)" ]; then
