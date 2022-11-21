@@ -87,4 +87,9 @@
         - asdf
         - awscli
 
+    - name: Clone second-brain
+      ansible.builtin.git:
+        repo: https://github.com/bry-guy/second-brain
+        dest: ~/second-brain
+        creates: ~/second-brain/
 
