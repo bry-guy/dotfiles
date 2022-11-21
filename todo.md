@@ -1,7 +1,7 @@
-- [ ] Set brew to update weekly
+- [ ] Fixup obsidian.nvim to create notes with no prefix, but timestamps in metadata
 - [ ] Setup nvim-cmp with toggling
 - [ ] Install dasht + vim-dasht
-- [ ] Install obsidian.vim
+- [x] Install obsidian.vim
 - [ ] Get alacritty/tmux to show current path in title bar
 - [ ] Fix indenting per filetype
 - [ ] fix copy/paste
