@@ -47,4 +47,7 @@ Plug 'reedes/vim-pencil'
 " Plug 'plasticboy/vim-markdown'
 
 Plug 'editorconfig/editorconfig-vim'
+
+Plug 'epwalsh/obsidian.nvim'
+
 call plug#end()

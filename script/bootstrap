@@ -97,16 +97,4 @@ if [ -z "$(which ansible)" ]; then
 		brew install ansible
 fi
 
-# # Manual installs
 
-# TODOs
-# - [x] Automate neovim install
-# - [x] Automate java vim install(s)
-# - [x] Discover/document osx config via .osx from dude's repo
-# - [x] Unblock homebrew apps from macOS (alacritty e.g.)
-# - [x] Automate setup of osx config
-		# - [ ] Install extensions in Safari
-# - [x] Automate setup of Karabiner Elements
-# - [ ] Install dasht + vim-dasht
-# - [ ] Install obsidian.vim
-# - [ ] Set brew to update weekly
