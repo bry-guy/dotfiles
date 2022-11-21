@@ -102,11 +102,11 @@ fi
 # TODOs
 # - [x] Automate neovim install
 # - [x] Automate java vim install(s)
-# - [ ] Discover/document osx config via .osx from dude's repo
-# - [ ] Unblock homebrew apps from macOS (alacritty e.g.)
-# - [ ] Automate setup of osx config
+# - [x] Discover/document osx config via .osx from dude's repo
+# - [x] Unblock homebrew apps from macOS (alacritty e.g.)
+# - [x] Automate setup of osx config
 		# - [ ] Install extensions in Safari
-# - [ ] Automate setup of Karabiner Elements
+# - [x] Automate setup of Karabiner Elements
 # - [ ] Install dasht + vim-dasht
 # - [ ] Install obsidian.vim
 # - [ ] Set brew to update weekly

@@ -54,6 +54,9 @@
         - .ssh/
       become: yes
 
+    - name: Update macOS defaults
+      ansible.builtin.shell: source ~/.osx
+
     - name: Link amethyst preferences
       ansible.builtin.shell: ln -f ~/.config/amethyst/* ~/Library/Preferences/
     
