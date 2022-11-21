@@ -32,7 +32,7 @@
     repo: https://github.com/microsoft/vscode-java-test 
     dest: ~/.local/src/vscode-java-test
 
-- name: Reset java-debug install directory
+- name: Reset vscode-java-test install directory
   file:
     state: "{{ item }}"
     path: "~/.local/lib/vscode-java-test"
@@ -48,6 +48,6 @@
       asdf shell java $(asdf list java | grep adoptopenjdk-11)
       npm install
       npm run build-plugin
-      cp -r ./vscode-java-test/* ~/.local/lib/vscode-java-test
+      cp -r ./* ~/.local/lib/vscode-java-test
     creates: ~/.local/lib/vscode-java-test/package.json
     chdir: ~/.local/src/vscode-java-test
