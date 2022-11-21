@@ -99,75 +99,9 @@ fi
 
 # # Manual installs
 
-# # Install TUI apps
-
-# if [ -z $CODESPACES ]; then
-
-# 		if [ -z "$(which jdtls)" ]; then
-# 				echo "INFO: Install eclipse.jdt.ls."
-
-# 				wget https://download.eclipse.org/jdtls/milestones/1.9.0/jdt-language-server-1.9.0-202203031534.tar.gz \
-# 						-P $HOME/.local/artifacts
-
-# 				rm -rf $HOME/.local/lib/jdt-language-server
-# 				mkdir $HOME/.local/lib/jdt-language-server
-
-# 				tar -xzf $HOME/.local/artifacts/jdt-language-server-1.9.0-202203031534.tar.gz \
-# 						-C $HOME/.local/lib/jdt-language-server
-
-# 				ln -sf $HOME/.local/lib/jdt-language-server/bin/jdtls $HOME/.local/bin/jdtls
-# 		fi
-
-# 		if [ -z "$(which gradle)" ]; then
-# 				echo "INFO: Install gradle."
-
-# 				wget https://services.gradle.org/distributions/gradle-7.4.1-bin.zip -P $HOME/.local/artifacts
-
-# 				unzip -d $HOME/.local/lib/gradle $HOME/.local/artifacts/gradle-*.zip
-# 		fi
-
-# 		if [ -z "$(find $HOME/.local/lib/java-debug -type d -name 'com.microsoft.java.debug.core')" ]; then
-# 				echo "INFO: Install java-debug."
-
-# 				git clone https://github.com/microsoft/java-debug $HOME/.local/src/java-debug
-
-# 				cd $HOME/.local/src/java-debug
-# 				if [ -n $OS_LINUX ]; then
-# 						JAVA_HOME="$JAVA_11_HOME/Contents/Home" ./mvnw clean install
-# 				elif [ -n $OS_MAC ]; then
-# 						JAVA_HOME="$JAVA_11_HOME/Contents/Home" ./mvnw clean install
-# 				fi
-
-# 				rm -rf $HOME/.local/lib/java-debug
-# 				mkdir $HOME/.local/lib/java-debug
-# 				cp -r com.microsoft.java.debug* $HOME/.local/lib/java-debug
-
-# 				cd $WORKING_DIR
-# 		fi
-
-# 		# if [ -z "$(find $HOME/.local/lib -type d -iname '*vscode-java-test*')" ]; then
-# 		# 		echo "INFO: Install vscode-java-test."
-
-# 		# 		git clone https://github.com/microsoft/vscode-java-test $HOME/.local/src/vscode-java-test
-
-# 		# 		cd $HOME/.local/src/vscode-java-test
-
-# 		# 		npm install
-# 		# 		JAVA_HOME=$JAVA_11_HOME npm run build-plugin
-
-# 		# 		rm -rf $HOME/.local/lib/vscode-java-test
-# 		# 		mkdir $HOME/.local/lib/vscode-java-test
-# 		# 		cp -r $HOME/.local/src/vscode-java-test/* $HOME/.local/lib/vscode-java-test
-
-# 		# 		cd $WORKING_DIR
-# 		# fi
-
-# fi
-
-
 # TODOs
 # - [x] Automate neovim install
-# - [ ] Automate java vim install(s)
+# - [x] Automate java vim install(s)
 # - [ ] Discover/document osx config via .osx from dude's repo
 # - [ ] Unblock homebrew apps from macOS (alacritty e.g.)
 # - [ ] Automate setup of osx config
