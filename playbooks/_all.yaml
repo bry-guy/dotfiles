@@ -6,3 +6,5 @@
 - import_playbook: languages/core.yaml
 - import_playbook: developer/core.yaml
 - import_playbook: apps/core.yaml
+
+- import_playbook: cleanup.yaml
