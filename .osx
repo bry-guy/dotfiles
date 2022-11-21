@@ -1,5 +1,5 @@
 # Allow apps opened from untrusted (open anyway)
-defaults write com.apple.SecurityPref.Privacy.LastSourceSelected -bool false 
+defaults write com.apple.SecurityPref.Privacy.LastSourceSelected -int 0 
 
 # Key Repeat
 defaults write NSGlobalDomain InitialKeyRepeat -int 20
@@ -30,11 +30,17 @@ defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
 # Show the ~/Library folder
 chflags nohidden ~/Library
 
+## Dock
+
 # Set the icon size of Dock items
-defaults write com.apple.dock tilesize -int 30
+defaults write com.apple.dock tilesize -int 48
+defaults write com.apple.dock autohide -int 1
+defaults write com.apple.dock magnification -int 1
+defaults write com.apple.dock largesize -int 50
 
 # Speed up Mission Control animations
 defaults write com.apple.dock expose-animation-duration -float 0.15
+defaults write com.apple.dock mru-spaces -bool false
 
 # Show the main window when launching Activity Monitor
 defaults write com.apple.ActivityMonitor OpenMainWindow -bool true
