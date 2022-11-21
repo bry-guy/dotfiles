@@ -7,6 +7,7 @@
   ansible.builtin.git:
     repo: https://github.com/microsoft/java-debug 
     dest: ~/.local/src/java-debug
+    force: yes
 
 - name: Reset java-debug install directory
   file:
@@ -31,6 +32,7 @@
   ansible.builtin.git:
     repo: https://github.com/microsoft/vscode-java-test 
     dest: ~/.local/src/vscode-java-test
+    force: yes
 
 - name: Reset vscode-java-test install directory
   file:
