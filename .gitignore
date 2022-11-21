@@ -8,12 +8,6 @@
 !.zprofile
 !.tmux.conf
 !.zshrc
-!.inputrc
-!.skhdrc
-!.spacebarrc
-!.yabairc
-!.imwheelrc
-!.os_detect
 !.osx
 !.tool-versions
 
@@ -21,7 +15,6 @@
 !.local/.gitignore
 
 !.config/
-
 !.config/alacritty/
 !.config/alacritty/**/*
 
