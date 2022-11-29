@@ -32,21 +32,31 @@ end
 
 require("mason").setup()
 require("mason-lspconfig").setup({
-  ensure_installed = { 'terramformls', 'apex_ls', 'tsserver' },
+  ensure_installed = { 'terraformls', 'apex_ls', 'tsserver' },
   automatic_installation = true,
 })
 
-
-local servers = { 'tsserver', 'terraformls', 'apex_ls' }
-require'lspconfig'.tsserver.setup {
-	capabilities = capabilities,
-	on_attach = on_attach,
+require("mason-lspconfig").setup_handlers {
+  function (server_name) -- default handler (optional)
+	  require("lspconfig")[server_name].setup {}
+  end,
+  -- Next, you can provide a dedicated handler for specific servers.
+  -- For example, a handler override for the `rust_analyzer`:
+  -- ["rust_analyzer"] = function ()
+	  -- require("rust-tools").setup {}
+  -- end
 }
 
-require'lspconfig'.terraformls.setup {
-	capabilities = capabilities,
-	on_attach = on_attach,
-}
+-- local servers = { 'tsserver', 'terraformls', 'apex_ls' }
+-- require'lspconfig'.tsserver.setup {
+-- 	capabilities = capabilities,
+-- 	on_attach = on_attach,
+-- }
+
+-- require'lspconfig'.terraformls.setup {
+-- 	capabilities = capabilities,
+-- 	on_attach = on_attach,
+-- }
 
 -- require'lspconfig'.apex_ls.setup {
 -- 	capabilities = capabilities,
