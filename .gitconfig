@@ -13,6 +13,7 @@
 	last = log -1 HEAD
 	forget = update-index --assume-unchanged
 	remember = update-index --no-assume-unchanged
+	forgotten = ! git ls-files -v | grep "^h "
 [core]
 	excludesFile = ~/.local/.gitignore
 [init]
