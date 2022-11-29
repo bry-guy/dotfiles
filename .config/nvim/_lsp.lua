@@ -8,9 +8,9 @@ vim.api.nvim_set_keymap('n', '<space>q', '<cmd>lua vim.diagnostic.setloclist()<C
 
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
-local on_attach = function(client, bufnr)
+local on_attach = function(_, bufnr)
   -- Enable completion triggered by <c-x><c-o>
-  vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+  -- vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
   -- Mappings.
   -- See `:help vim.lsp.*` for documentation on any of the below functions
@@ -32,41 +32,48 @@ end
 
 require("mason").setup()
 require("mason-lspconfig").setup({
-  ensure_installed = { 'terraformls', 'apex_ls', 'tsserver' },
+  ensure_installed = {
+	'apex_ls',
+	'bashls',
+	'sumneko_lua',
+	'terraformls',
+	'tsserver'
+  },
   automatic_installation = true,
 })
 
+local lsp = require("lspconfig")
+
 require("mason-lspconfig").setup_handlers {
-  function (server_name) -- default handler (optional)
-	  require("lspconfig")[server_name].setup {}
+  function (server_name)
+	require("lspconfig")[server_name].setup {
+	  on_attach = on_attach,
+	  capabilities = capabilities
+	}
   end,
-  -- Next, you can provide a dedicated handler for specific servers.
-  -- For example, a handler override for the `rust_analyzer`:
-  -- ["rust_analyzer"] = function ()
-	  -- require("rust-tools").setup {}
-  -- end
+  ["sumneko_lua"] = function ()
+	lsp.sumneko_lua.setup {
+	  root_dir = function(fname)
+		if fname == vim.loop.os_homedir() then return nil end
+		local root_pattern = lsp.util.root_pattern('.git', '*.rockspec')(fname)
+		return root_pattern or fname
+	  end,
+	  settings = {
+		Lua = {
+		  runtime = {
+			version = 'LuaJIT',
+		  },
+		  diagnostics = {
+			globals = {'vim'},
+		  },
+		  workspace = {
+			library = vim.api.nvim_get_runtime_file("", true),
+		  },
+		  telemetry = {
+			enable = false,
+		  },
+		},
+	  },
+	}
+  end,
 }
-
--- local servers = { 'tsserver', 'terraformls', 'apex_ls' }
--- require'lspconfig'.tsserver.setup {
--- 	capabilities = capabilities,
--- 	on_attach = on_attach,
--- }
-
--- require'lspconfig'.terraformls.setup {
--- 	capabilities = capabilities,
--- 	on_attach = on_attach,
--- }
-
--- require'lspconfig'.apex_ls.setup {
--- 	capabilities = capabilities,
--- 	on_attach = on_attach,
--- 	filetypes = { 'st', 'apexcode' }
--- }
-
--- for _, lsp in pairs(servers) do
---   require'lspconfig'.lsp.setup {
--- 	capabilities = capabilities,
--- 	on_attach = on_attach,
---   }
--- end

@@ -69,14 +69,15 @@ PROMPT='${vim_mode} '
 ## Title Bar
 case ${TERM} in
  alacritty)
-	  precmd () {
-		  print -Pn "\e]0;$USER@$HOST:$(dirs)\a"
-	  }
-          ;;
- xterm-256color) precmd () {
-		  echo -ne "\033]0;$(dirs)\007"
-	  }
-          ;;
+		 precmd () {
+				 print -Pn "\e]0;%~\a"
+		 }
+		 ;;
+ screen-256color)
+		 precmd () {
+				 print -Pn "\e]0;%~\a"
+		 }
+		 ;;
 esac
 
 ### zsh
