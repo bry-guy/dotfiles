@@ -1,18 +1,21 @@
+- [x] Stylize tmux
+- [ ] Try out telescope over fzf
+- [ ] Switch to nvim-tree w/ vinegar mode
+- [ ] Install dasht + vim-dasht
+- [ ] Re-theme Vim with day/night theming
+- [ ] Re-do nvim-java with jdtls (+ nvim-jdtls?), java-test, java-debug-adapter installed via mason 
+- [ ] Fixup obsidian.nvim to create notes with no prefix, but timestamps in metadata
+- [ ] Consider trying `tpope/vim-eunuch`
+- [ ] Get sumneko_lua to stop being upset about home_dir
 - [x] Merge ansible and devbook branches
 - [x] Setup nvim-cmp with toggling
-- [ ] Try out telescope over fzf
-- [ ] Install dasht + vim-dasht
 - [x] Install obsidian.vim
-- [ ] Get alacritty/tmux to show current path in title bar
-  - [ ] vim title updates? https://medium.com/usevim/changing-vims-title-713001d4049c  
+- [x] Get alacritty/tmux to show current path in title bar
+  - [x] vim title updates? https://medium.com/usevim/changing-vims-title-713001d4049c  
 - [x] Fix indenting per filetype(s)
 - [x] fix copy/paste
   - [x] alacritty vim mode? 
   - [x] visual mode in tmux (rather than visual line?)
-- [ ] Re-do nvim-java with jdtls, java-test, java-debug-adapter installed via mason 
-- [ ] Fixup obsidian.nvim to create notes with no prefix, but timestamps in metadata
-- [ ] Consider trying `tpope/vim-eunuch`
-- [ ] Get sumneko_lua to stop being upset about home_dir
 - [x] Use `asdf` to install/track tool versions
 - [x] Fix prompt color-changing $ for vim-mode
 - [x] fix ctrl+c breaking prompt
