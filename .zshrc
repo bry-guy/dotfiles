@@ -10,6 +10,7 @@ zstyle :compinstall filename '/home/brain/.zshrc'
 ## asdf for compinit
 fpath=(${ASDF_DIR}/completions $fpath)
 
+autoload -U +X bashcompinit && bashcompinit
 autoload -Uz compinit promptinit colors
 compinit
 promptinit
@@ -62,7 +63,7 @@ function git_branch() {
 }
 
 setopt prompt_subst
-RPROMPT='%{%F{cyan}%}$(pwd)%{%F{none}%} %{%F{green}%}$(git_branch)%{%F{none}%}'
+# RPROMPT='%{%F{cyan}%}$(pwd)%{%F{none}%} %{%F{green}%}$(git_branch)%{%F{none}%}'
 PROMPT='${vim_mode} '
 
 ## Title Bar
@@ -130,9 +131,17 @@ export PATH="$HOME/.local/bin:$PATH"
 # postgres
 export PG_HOME="$(brew --prefix)/var/postgres"
 
+## direnv
+eval "$(direnv hook zsh)"
+
+## onepass
+eval "$(op completion zsh)"; compdef _op op
+
+## terraform
+complete -o nospace -C /opt/homebrew/bin/terraform terraform
+
 ## asdf
 . /usr/local/opt/asdf/libexec/asdf.sh
 
 ## brew
 export PATH="/usr/local/sbin:$PATH"
-

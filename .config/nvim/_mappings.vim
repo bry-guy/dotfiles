@@ -15,6 +15,12 @@ nnoremap \x :bp<cr>:bd #<cr>
 " vim.fzf search word under cursor
 nnoremap <silent> <Leader>rg :Rg <C-R><C-W><CR>
 
+" vim.fzf Files 
+nnoremap <silent> <Leader>f :Files 
+
+" vim.fzf Files with query
+nnoremap <silent> <Leader>F :FZF -q <C-R><C-W><CR>
+
 " LSPs
 lua << EOF
 -- Mappings.
