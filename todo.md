@@ -1,5 +1,6 @@
-- [ ] Fixup obsidian.nvim to create notes with no prefix, but timestamps in metadata
+- [ ] Merge ansible and devbook branches
 - [ ] Setup nvim-cmp with toggling
+- [ ] Try out telescope over fzf
 - [ ] Install dasht + vim-dasht
 - [x] Install obsidian.vim
 - [ ] Get alacritty/tmux to show current path in title bar
@@ -7,7 +8,7 @@
 - [ ] fix copy/paste
   - [ ] alacritty vim mode? 
   - [ ] visual mode in tmux (rather than visual line?)
-  - [ ] xclip?
+- [ ] Fixup obsidian.nvim to create notes with no prefix, but timestamps in metadata
 - [x] Use `asdf` to install/track tool versions
 - [x] Fix prompt color-changing $ for vim-mode
 - [x] fix ctrl+c breaking prompt

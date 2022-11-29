@@ -11,6 +11,8 @@
 	st = status
 	unstage = reset HEAD --
 	last = log -1 HEAD
+	forget = update-index --assume-unchanged
+	remember = update-index --no-assume-unchanged
 [core]
 	excludesFile = ~/.local/.gitignore
 [init]
