@@ -1,4 +1,5 @@
 - name: Install Docker
   community.general.homebrew_cask:
     name: docker
-    state: latest
+    state: present
+    accept_external_apps: true

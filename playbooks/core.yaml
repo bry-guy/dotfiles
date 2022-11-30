@@ -87,4 +87,6 @@
         - tldr
         - asdf
         - awscli
+        - fd
+        - direnv
 

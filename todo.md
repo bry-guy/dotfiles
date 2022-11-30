@@ -1,13 +1,18 @@
-- [x] Stylize tmux
-- [ ] Switch from Obsidian sync to iCloud sync
-- [ ] Try out telescope over fzf
-- [ ] Switch to nvim-tree w/ vinegar mode
+- [ ] Try out leap
+- [ ] Try out vim-repeat
 - [ ] Install dasht + vim-dasht
-- [ ] Re-theme Vim with day/night theming
+- [ ] Re-theme Vim with day/night theming (moonfly ain't bad tho)
 - [ ] Re-do nvim-java with jdtls (+ nvim-jdtls?), java-test, java-debug-adapter installed via mason 
 - [ ] Fixup obsidian.nvim to create notes with no prefix, but timestamps in metadata
 - [ ] Consider trying `tpope/vim-eunuch`
 - [ ] Get sumneko_lua to stop being upset about home_dir
+- [ ] Create dasht telescope extension?
+- [x] Stylize tmux
+- [x] Try out telescope over fzf
+- [x] Switch to nvim-tree w/ vinegar mode
+- [x] Switch to dirbuf.nvim
+- [x] Configure dirbuf.nvim to open in vertical/horizontal splits
+- [x] Configure telescope to open in splits using same pattern as dirbuf.nvim
 - [x] Merge ansible and devbook branches
 - [x] Setup nvim-cmp with toggling
 - [x] Install obsidian.vim

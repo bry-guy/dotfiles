@@ -2,7 +2,7 @@
 defaults write com.apple.SecurityPref.Privacy.LastSourceSelected -int 0 
 
 # Key Repeat
-defaults write NSGlobalDomain InitialKeyRepeat -int 20
+defaults write NSGlobalDomain InitialKeyRepeat -int 13
 defaults write NSGlobalDomain KeyRepeat -int 1
 
 # Disable press-and-hold for keys in favor of key repeat

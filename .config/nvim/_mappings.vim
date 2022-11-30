@@ -12,15 +12,6 @@ nnoremap \x :bp<cr>:bd #<cr>
 " exit terminal-mode
 :tnoremap <Esc> <C-\><C-n>
 
-" vim.fzf search word under cursor
-nnoremap <silent> <Leader>rg :Rg <C-R><C-W><CR>
-
-" vim.fzf Files 
-nnoremap <silent> <Leader>f :Files 
-
-" vim.fzf Files with query
-nnoremap <silent> <Leader>F :FZF -q <C-R><C-W><CR>
-
 " LSPs
 lua << EOF
 -- Mappings.
@@ -85,3 +76,4 @@ nnoremap <silent> <leader>dl :lua require'dap'.run_last()<CR>
 nnoremap <silent> <leader>do :lua require'dapui'.open()<CR>
 nnoremap <silent> <leader>dc :lua require'dapui'.close()<CR>
 nnoremap <silent> <leader>dt :lua require'dapui'.toggle()<CR>
+

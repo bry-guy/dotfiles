@@ -1,8 +1,10 @@
 call plug#begin('~/.vim/plugged')
+" Setup
 Plug 'williamboman/mason.nvim'
 Plug 'williamboman/mason-lspconfig.nvim'
 Plug 'neovim/nvim-lspconfig'
 
+" Editing
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-path'
@@ -19,17 +21,17 @@ Plug 'rcarriga/nvim-dap-ui'
 
 Plug 'vimwiki/vimwiki'
 
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } },
-Plug 'junegunn/fzf.vim'
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
 
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-Plug 'bry-guy/vim-bg-colors'
 
+" Theming
+Plug 'bry-guy/vim-bg-colors'
 Plug 'itchyny/lightline.vim'
 
-Plug 'tpope/vim-vinegar'
+" tpope
+" Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-surround'
@@ -38,24 +40,26 @@ Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-rails'
 
+" Utils
 Plug 'vim-test/vim-test'
-
 Plug 'duggiefresh/vim-easydir'
-
 Plug 'jeffkreeftmeijer/vim-numbertoggle'
-
 Plug 'reedes/vim-pencil'
-
-" Plug 'plasticboy/vim-markdown'
-
 Plug 'editorconfig/editorconfig-vim'
-
 Plug 'epwalsh/obsidian.nvim'
 
+" Plug 'nvim-tree/nvim-web-devicons'
+" Plug 'nvim-tree/nvim-tree.lua'
+Plug 'elihunter173/dirbuf.nvim'
+
+" Language enhancers
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
-
 Plug 'hashivim/vim-terraform'
-
 Plug 'NoahTheDuke/vim-just'
+
+" Telescope
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
+Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 
 call plug#end()
