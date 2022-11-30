@@ -29,7 +29,7 @@ local config = {
   },
 
   root_dir = require('jdtls.setup').find_root({'.git', 'mvnw', 'gradlew'}),
-  capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities()),
+  capabilities = require('cmp_nvim_lsp').default_capabilities(),
 }
 
 local bundles = {
@@ -42,7 +42,7 @@ config['init_options'] = {
   bundles = bundles;
 }
 
-config['on_attach'] = function(client, bufnr)
+config['on_attach'] = function(_, bufnr)
   require('jdtls').setup_dap({ hotcodereplace = 'auto' })
   require('jdtls.setup').add_commands()
   local opts = { noremap=true, silent=true }

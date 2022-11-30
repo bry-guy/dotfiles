@@ -20,6 +20,7 @@
         - ~/.git
         - ~/.ssh
         - ~/dev
+        - ~/second-brain
 
     - name: Install 1password
       community.general.homebrew_cask: 
@@ -86,9 +87,4 @@
         - tldr
         - asdf
         - awscli
-
-    - name: Clone second-brain
-      ansible.builtin.git:
-        repo: https://github.com/bry-guy/second-brain
-        dest: ~/second-brain
 

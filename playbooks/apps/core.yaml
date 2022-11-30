@@ -6,7 +6,8 @@
   - name: Install apps
     community.general.homebrew_cask:
       name: "{{ item }}"
-      state: latest
+      state: present
+      accept_external_apps: true
     loop:
       - discord
       - obsidian

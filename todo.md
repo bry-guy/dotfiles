@@ -1,4 +1,5 @@
 - [x] Stylize tmux
+- [ ] Switch from Obsidian sync to iCloud sync
 - [ ] Try out telescope over fzf
 - [ ] Switch to nvim-tree w/ vinegar mode
 - [ ] Install dasht + vim-dasht
