@@ -11,6 +11,7 @@ require('telescope').setup {
   },
   defaults = {
     file_ignore_patterns = { ".git/", "node_modules" },
+	hidden = true,
 	mappings = {
 	  n = {
 		["<C-j>"] = actions.preview_scrolling_down,

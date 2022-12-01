@@ -16,8 +16,9 @@ compinit
 promptinit
 colors
 
-## detect OS
-[ -f $HOME/.os_detect ] && source $HOME/.os_detect
+## detect OS and arch
+[ -f $HOME/.detect_os ] && source $HOME/.detect_os
+[ -f $HOME/.detect_arch ] && source $HOME/.detect_arch
 
 ## config files
 [ -f $HOME/.secrets ] && . $HOME/.secrets
@@ -142,7 +143,7 @@ eval "$(op completion zsh)"; compdef _op op
 complete -o nospace -C /opt/homebrew/bin/terraform terraform
 
 ## asdf
-. /usr/local/opt/asdf/libexec/asdf.sh
+. $(brew --prefix asdf)/libexec/asdf.sh
 
 ## brew
 export PATH="/usr/local/sbin:$PATH"

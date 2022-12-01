@@ -1,0 +1,14 @@
+case $(uname -m) in
+  arm64)
+    ARCH_ARM=1 
+    ;;
+
+  x86_64)
+    ARCH_X86=1
+    ;;
+
+  *)
+    echo "Unknown architecture."
+	exit 1
+	;;
+esac

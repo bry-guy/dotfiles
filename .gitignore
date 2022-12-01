@@ -10,6 +10,8 @@
 !.zshrc
 !.osx
 !.tool-versions
+!.detect_os
+!.detect_arch
 
 !.local/
 !.local/.gitignore
