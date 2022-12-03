@@ -147,3 +147,8 @@ complete -o nospace -C /opt/homebrew/bin/terraform terraform
 
 ## brew
 export PATH="/usr/local/sbin:$PATH"
+
+## functions
+#
+## declare fbar function
+aws-set-creds() { eval $(aws-sso-creds export --profile $1) }

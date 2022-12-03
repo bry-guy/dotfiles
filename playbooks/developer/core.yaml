@@ -5,6 +5,7 @@
   tasks:
     - import_tasks: alacritty.yaml
     - import_tasks: amethyst.yaml
+    - import_tasks: aws.yaml
     - import_tasks: chrome.yaml
     - import_tasks: dash.yaml
     - import_tasks: docker.yaml
