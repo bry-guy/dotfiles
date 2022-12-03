@@ -1,11 +1,8 @@
 #!/bin/bash
 
 # Log dotfiles setup
-mkdir $HOME/log
 exec > >(tee -i $HOME/log/dotfiles_install.log)
 exec 2>&1
-
-set -x
 
 ## detect OS
 case $(uname -s) in

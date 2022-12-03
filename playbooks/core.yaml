@@ -90,3 +90,8 @@
         - fd
         - direnv
 
+    - name: Install zplug
+      ansible.builtin.shell: 
+        cmd: curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh
+        creates: ~/.zplug
+

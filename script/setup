@@ -5,8 +5,6 @@ mkdir $HOME/log
 # exec > >(tee -i $HOME/log/dotfiles_setup.log)
 # exec 2>&1
 
-set -x
-
 ## Run ansible for all playbooks
 
 if [ -n "$(which ansible-galaxy)" ]; then

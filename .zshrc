@@ -1,15 +1,40 @@
 ## plugins
+source ~/.zplug/init.zsh
+
+## Make sure to use double quotes
+zplug "joshskidmore/zsh-fzf-history-search"
+
+# Install plugins if there are plugins that have not been installed
+if ! zplug check --verbose; then
+    printf "Install? [y/N]: "
+    if read -q; then
+        echo; zplug install
+    fi
+fi
+
+# Then, source plugins and add commands to $PATH
+zplug load
+
+## bind vi keys
+bindkey -v
+
+## history
 HISTFILE=~/.histfile
 HISTSIZE=10000
 SAVEHIST=10000
 setopt append_history
 setopt share_history
+
+## History search using text behind cursor
+bindkey "^[[A" history-beginning-search-backward
+bindkey "^[[B" history-beginning-search-forward
+# bindkey "^r" history-incremental-search-backward
+
 unsetopt beep
 zstyle :compinstall filename '/home/brain/.zshrc'
 
 ## asdf for compinit
 fpath=(${ASDF_DIR}/completions $fpath)
-
 autoload -U +X bashcompinit && bashcompinit
 autoload -Uz compinit promptinit colors
 compinit
@@ -27,15 +52,10 @@ colors
 ## lang
 export LANG="en_US.UTF-8"
 
-## History search using text behind cursor
-bindkey "^[[A" history-beginning-search-backward
-bindkey "^[[B" history-beginning-search-forward
-bindkey "^R" history-incremental-search-backward
 
 ## Match case-insensitive 
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 
 
-bindkey -v
 vim_ins_mode="%{$fg[green]%}$%{$reset_color%}"
 vim_cmd_mode="%{$fg[magenta]%}$%{$reset_color%}"
 vim_mode=$vim_ins_mode
@@ -152,3 +172,4 @@ export PATH="/usr/local/sbin:$PATH"
 #
 ## declare fbar function
 aws-set-creds() { eval $(aws-sso-creds export --profile $1) }
+

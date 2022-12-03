@@ -1,6 +1,3 @@
-# Allow apps opened from untrusted (open anyway)
-defaults write com.apple.SecurityPref.Privacy.LastSourceSelected -int 0 
-
 # Key Repeat
 defaults write NSGlobalDomain InitialKeyRepeat -int 13
 defaults write NSGlobalDomain KeyRepeat -int 1
@@ -40,6 +37,8 @@ defaults write com.apple.dock largesize -int 50
 
 # Speed up Mission Control animations
 defaults write com.apple.dock expose-animation-duration -float 0.15
+
+# Don't move spaces around
 defaults write com.apple.dock mru-spaces -bool false
 
 # Show the main window when launching Activity Monitor
