@@ -1,15 +1,15 @@
-- name: Install jdtls
+- name: (DEPRECATED) Install jdtls
   community.general.homebrew:
     name: jdtls
     state: latest
 
-- name: Clone java-debug
+- name: (DEPRECATED) Clone java-debug
   ansible.builtin.git:
     repo: https://github.com/microsoft/java-debug 
     dest: ~/.local/src/java-debug
     force: yes
 
-- name: Reset java-debug install directory
+- name: (DEPRECATED) Reset java-debug install directory
   file:
     state: "{{ item }}"
     path: "~/.local/lib/java-debug"
@@ -19,7 +19,7 @@
     - absent
     - directory
 
-- name: Install java-debug
+- name: (DEPRECATED) Install java-debug
   ansible.builtin.shell: 
     cmd: |
       asdf shell java $(asdf list java | grep adoptopenjdk-11)
@@ -28,13 +28,13 @@
     creates: ~/.local/lib/java-debug/com.microsoft.java.debug.core/
     chdir: ~/.local/src/java-debug
 
-- name: Clone vscode-java-test
+- name: (DEPRECATED) Clone vscode-java-test
   ansible.builtin.git:
     repo: https://github.com/microsoft/vscode-java-test 
     dest: ~/.local/src/vscode-java-test
     force: yes
 
-- name: Reset vscode-java-test install directory
+- name: (DEPRECATED) Reset vscode-java-test install directory
   file:
     state: "{{ item }}"
     path: "~/.local/lib/vscode-java-test"
@@ -44,7 +44,7 @@
     - absent
     - directory
 
-- name: Install vscode-java-test
+- name: (DEPRECATED) Install vscode-java-test
   ansible.builtin.shell: 
     cmd: |
       asdf shell java $(asdf list java | grep adoptopenjdk-11)

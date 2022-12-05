@@ -4,8 +4,9 @@ require("mason-nvim-dap").setup({
 	ensure_installed = {
 	  "javadbg",
 	  "javatest",
-	  "python"
+	  "python",
 	},
+	automatic_setup = {}
 })
 
 require("mason-nvim-dap").setup_handlers({
