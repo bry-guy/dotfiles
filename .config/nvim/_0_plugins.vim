@@ -17,7 +17,7 @@ Plug 'hrsh7th/vim-vsnip-integ'
 Plug 'mfussenegger/nvim-jdtls'
 
 Plug 'mfussenegger/nvim-dap'
-Plug 'rcarriga/nvim-dap-ui'
+Plug 'mfussenegger/nvim-dap-python'
 
 Plug 'vimwiki/vimwiki'
 
@@ -25,6 +25,7 @@ Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
 
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+
 
 " Theming
 Plug 'bry-guy/vim-bg-colors'

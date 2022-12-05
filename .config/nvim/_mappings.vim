@@ -58,8 +58,9 @@ vnoremap crm <Esc><Cmd>lua require('jdtls').extract_method(true)<CR>
 
 " If using nvim-dap
 " This requires java-debug and vscode-java-test bundles, see install steps in this README further below.
-nnoremap <leader>df <Cmd>lua require'jdtls'.test_class()<CR>
-nnoremap <leader>dn <Cmd>lua require'jdtls'.test_nearest_method()<CR>
+" TODO: Unfuck this, since it's over-written in _dap specific to python
+" nnoremap <leader>df <Cmd>lua require'jdtls'.test_class()<CR>
+" nnoremap <leader>dn <Cmd>lua require'jdtls'.test_nearest_method()<CR>
 
 " nvim-dap mappings
 nnoremap <silent> <F5> :lua require'dap'.continue()<CR>
@@ -71,9 +72,4 @@ nnoremap <silent> <leader>B :lua require'dap'.set_breakpoint(vim.fn.input('Break
 nnoremap <silent> <leader>lp :lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>
 nnoremap <silent> <leader>dr :lua require'dap'.repl.open()<CR>
 nnoremap <silent> <leader>dl :lua require'dap'.run_last()<CR>
-
-" nvim-dap-ui mappings
-nnoremap <silent> <leader>do :lua require'dapui'.open()<CR>
-nnoremap <silent> <leader>dc :lua require'dapui'.close()<CR>
-nnoremap <silent> <leader>dt :lua require'dapui'.toggle()<CR>
 

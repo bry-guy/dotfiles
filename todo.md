@@ -1,18 +1,23 @@
 - [x] Setup zsh reverse search
-- [ ] Try nvim-dap w/ telescope extension (no nvim-dap-ui)
+- [x] Try nvim-dap w/ telescope extension (no nvim-dap-ui)
+- [ ] Re-do nvim-java with jdtls (+ nvim-jdtls?), java-test, java-debug-adapter installed via mason 
+- [ ] Unfuck dap (java/python/all) mappings
+- [ ] Debug in java successfully
 - [ ] Try out leap
 - [ ] Try out vim-repeat
 - [ ] Try cheatsheet.nvim
 - [ ] Install dasht + vim-dasht
 - [ ] Consider trying `tpope/vim-eunuch`
-- [ ] Re-do nvim-java with jdtls (+ nvim-jdtls?), java-test, java-debug-adapter installed via mason 
 - [ ] Re-theme Vim with day/night theming (moonfly ain't bad tho)
 - [ ] Fixup obsidian.nvim to create notes with no prefix, but timestamps in metadata
 - [ ] Get sumneko_lua to stop being upset about home_dir
+- [ ] [FOSS] Contribute to nvim-dap-python to start in normal mode
+- [ ] [FOSS] Contribute to nvim-dap-python to add test_file and test_last (like tpope)
 - [ ] [FOSS] Contribute to vim-test to pass debugger for usage with nvim-dap
 - [ ] [FOSS] Contribute to dirbuf.nvim (repro + fix the tsv extension thing)
 - [ ] [FOSS] Contribute to dirbuf.nvim (maintain cursor position)
 - [ ] [FOSS] Create dasht telescope extension
+- [ ] [FOSS] Contribute to nvim-python to add test_suite (like tpope)
 - [x] Stylize tmux
 - [x] Try out telescope over fzf
 - [x] Switch to nvim-tree w/ vinegar mode

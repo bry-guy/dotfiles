@@ -37,7 +37,8 @@ require("mason-lspconfig").setup({
 	'bashls',
 	'sumneko_lua',
 	'terraformls',
-	'tsserver'
+	'tsserver',
+	'pylsp'
   },
   automatic_installation = true,
 })

@@ -3,6 +3,7 @@ source ~/.zplug/init.zsh
 
 ## Make sure to use double quotes
 zplug "joshskidmore/zsh-fzf-history-search"
+export ZSH_FZF_HISTORY_SEARCH_BIND='^r'
 
 # Install plugins if there are plugins that have not been installed
 if ! zplug check --verbose; then
