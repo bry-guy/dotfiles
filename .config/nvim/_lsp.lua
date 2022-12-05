@@ -6,15 +6,7 @@ vim.api.nvim_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', op
 vim.api.nvim_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
 vim.api.nvim_set_keymap('n', '<space>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
 
--- Use an on_attach function to only map the following keys
--- after the language server attaches to the current buffer
 local on_attach = function(_, bufnr)
-  -- Enable completion triggered by <c-x><c-o>
-  -- vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-
-  -- Mappings.
-  -- See `:help vim.lsp.*` for documentation on any of the below functions
-  -- NOTE: These are de-normalized in java.lua for java, dealwithit.jpg
   vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
@@ -30,7 +22,6 @@ local on_attach = function(_, bufnr)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
 end
 
-require("mason").setup()
 require("mason-lspconfig").setup({
   ensure_installed = {
 	'apex_ls',
@@ -38,7 +29,8 @@ require("mason-lspconfig").setup({
 	'sumneko_lua',
 	'terraformls',
 	'tsserver',
-	'pylsp'
+	'pylsp',
+	'jdtls'
   },
   automatic_installation = true,
 })
@@ -52,6 +44,7 @@ require("mason-lspconfig").setup_handlers {
 	  capabilities = capabilities
 	}
   end,
+  ["jdtls"] = function() end,
   ["sumneko_lua"] = function ()
 	lsp.sumneko_lua.setup {
 	  root_dir = function(fname)

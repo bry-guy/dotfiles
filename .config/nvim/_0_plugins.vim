@@ -19,6 +19,8 @@ Plug 'mfussenegger/nvim-jdtls'
 Plug 'mfussenegger/nvim-dap'
 Plug 'mfussenegger/nvim-dap-python'
 
+Plug 'jayp0521/mason-nvim-dap.nvim'
+
 Plug 'vimwiki/vimwiki'
 
 Plug 'junegunn/goyo.vim'
@@ -53,6 +55,7 @@ Plug 'mechatroner/rainbow_csv'
 " Plug 'nvim-tree/nvim-web-devicons'
 " Plug 'nvim-tree/nvim-tree.lua'
 Plug 'elihunter173/dirbuf.nvim'
+
 
 " Language enhancers
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }

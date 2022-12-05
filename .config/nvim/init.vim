@@ -40,3 +40,6 @@ set encoding=utf-8
 " filetype overrides
 au BufRead,BufNewFile *.cls,*.trigger set filetype=apexcode
 
+" plugin setup
+lua require("mason").setup()
+

@@ -1,4 +1,38 @@
 local dap = require('dap')
+
+require("mason-nvim-dap").setup({
+	ensure_installed = {
+	  "javadbg",
+	  "javatest",
+	  "python"
+	},
+})
+
+require("mason-nvim-dap").setup_handlers({
+  function(source_name)
+	require('mason-nvim-dap.automatic_setup')(source_name)
+  end,
+  python = function(_)
+	dap.adapters.python = {
+	  type = "executable",
+	  command = "/usr/bin/python3",
+	  args = {
+		"-m",
+		"debugpy.adapter",
+	  },
+	}
+
+	dap.configurations.python = {
+	  {
+		type = "python",
+		request = "launch",
+		name = "Launch file",
+		program = "${file}", -- This configuration will launch the current file if used.
+	  },
+	}
+  end,
+})
+
 dap.configurations.java = {
   {
     type = 'java';
@@ -9,7 +43,6 @@ dap.configurations.java = {
   },
 }
 
--- require('dap-python').test_runner = 'pytest'
 require('dap-python').setup('~/.virtualenvs/debugpy/bin/python')
 require('dap-python').test_runner = 'pytest'
 
