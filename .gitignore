@@ -1,5 +1,8 @@
 *
 
+!test-manifest-paths.java
+!jdtls-bundles.lua
+
 !.gitconfig
 !.gitignore
 

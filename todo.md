@@ -1,8 +1,17 @@
 - [x] Setup zsh reverse search
 - [x] Try nvim-dap w/ telescope extension (no nvim-dap-ui)
-- [ ] Re-do nvim-java with jdtls (+ nvim-jdtls?), java-test, java-debug-adapter installed via mason 
+- [x] Re-do nvim-java with jdtls (+ nvim-jdtls?), java-test, java-debug-adapter installed via mason 
+- [ ] Fix `jdtls` and `nvim-jdtls` extension mapping
+		- `bundleInfo not found`: `jdtls` thinks the `command-runner.jar` manifest is `null`
+		- `jdtls-bundles.lua` makes it appear that paths to bundles are correct
+		- `mason_pkg .. /java-test/extension/server/test.java` proves `JarFile.getManifest()` works on `command-runner.jar`
+		- `nvim-jdtls` may be incorrectly parsing paths to bundles
+		- Either, I'm sending paths to `nvim-jdtls` incorrectly OR `nvim-jdtls` is incorrectly parsing those paths
+		- [ ] Debug `nvim-jdtls` paths received
+		- [ ] Log paths `jdtls` sees (requires re-compilation) 
 - [ ] Unfuck dap (java/python/all) mappings
-- [ ] Debug in java successfully
+- [x] Debug in java successfully
+- [ ] Unfuck git submodule for `inspect.lua`
 - [ ] Try out leap
 - [ ] Try out vim-repeat
 - [ ] Try cheatsheet.nvim
