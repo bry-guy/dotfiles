@@ -52,6 +52,8 @@ Plug 'editorconfig/editorconfig-vim'
 Plug 'epwalsh/obsidian.nvim'
 Plug 'mechatroner/rainbow_csv'
 
+Plug 'kikito/inspect.lua', { 'dir': '~/.config/nvim/lua/inspect.lua' }
+
 " Plug 'nvim-tree/nvim-web-devicons'
 " Plug 'nvim-tree/nvim-tree.lua'
 Plug 'elihunter173/dirbuf.nvim'

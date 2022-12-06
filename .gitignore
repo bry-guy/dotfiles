@@ -20,6 +20,7 @@
 !.config/alacritty/
 !.config/alacritty/**/*
 
+.config/nvim/lua/
 !.config/nvim/
 !.config/nvim/**/*
 

@@ -11,6 +11,7 @@ local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h:t')
 local workspace_dir = vim.env.HOME .. '/dev/workspaces/' .. project_name
 local mason_pkgs = vim.env.HOME .. '/.local/share/nvim/mason/packages'
 
+-- todo: join mappings by sharing global lsp_config
 local config = {
   cmd = {
     'java',
@@ -21,7 +22,7 @@ local config = {
     '-Dlog.level=ALL',
     '-Xms1g',
 	'-javaagent:' .. mason_pkgs .. '/jdtls/lombok.jar',
-    '-jar', mason_pkgs .. '/jdtls/plugins/org.eclipse.equinox.launcher_1.6.400.*.jar',
+    '-jar', vim.fn.glob(mason_pkgs .. '/jdtls/plugins/org.eclipse.equinox.launcher_1.6.400.*.jar'),
     '-configuration', mason_pkgs .. '/jdtls/config_mac',
     '-data', workspace_dir,
     '--add-modules=ALL-SYSTEM',
@@ -31,13 +32,30 @@ local config = {
 
   root_dir = require('jdtls.setup').find_root({'.git', 'mvnw', 'gradlew'}),
   capabilities = require('cmp_nvim_lsp').default_capabilities(),
+  init_options = {
+	bundles = {}
+  },
 }
 
+-- TODO: Load these bundles fails -> see :LspLog
+-- bug report: jdtls is reporting "bundleInfo not found" when attempting to get the manifest for the runner-jar-with-dependencies
+-- file path looks good, jar looks good, but java's getManifest() is returning null. why?
 local bundles = {
-  vim.fn.glob(mason_pkgs .. "/java-debug-adapter/server/com.microsoft.java.debug.plugin-*.jar"),
+  vim.fn.glob(mason_pkgs .. "/java-debug-adapter/extension/server/com.microsoft.java.debug.plugin-*.jar", 1),
 };
 
-vim.list_extend(bundles, vim.split(vim.fn.glob(mason_pkgs .. "/java-test/extension/server/*.jar"), "\n"))
+vim.list_extend(bundles, vim.split(vim.fn.glob(mason_pkgs .. "/java-test/extension/server/*.jar", 1), "\n"))
+
+-- local bundles = vim.fn.glob(mason_pkgs .. "/java-debug-adapter/extension/server/com.microsoft.java.debug.plugin-*.jar", true, true)
+-- local extra_bundles = vim.fn.glob(mason_pkgs .. "/java-test/extension/server/*.jar", 1), true, true)
+-- vim.list_extend(bundles, extra_bundles)
+
+-- local bundles = vim.fn.glob(vim.env.HOME .. "/.local/share/nvim/mason/packages/java-debug-adapter/extension/server/com.microsoft.java.debug.plugin-*.jar", true, true)
+-- local extra_bundles = vim.fn.glob(vim.env.HOME .. "/.local/share/nvim/mason/packages/java-test/extension/server/*.jar", true, true)
+-- vim.list_extend(bundles, extra_bundles)
+
+local inspect = require('inspect')
+io.stderr:write(inspect(bundles))
 
 config['init_options'] = {
   bundles = bundles;
@@ -71,8 +89,8 @@ config['on_attach'] = function(_, bufnr)
   vim.api.nvim_buf_set_keymap(bufnr, 'v', '<space>ec', "<Esc><cmd>lua require'jdtls'.extract_constant(true)<CR>", opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'v', '<space>em', "<Esc><cmd>lua require'jdtls'.extract_method(true)<CR>", opts)
 
-  vim.api.nvim_set_keymap('n', '<leader>dn', "<cmd>lua require('dap-python').test_method()<CR>", { noremap = true })
-  vim.api.nvim_set_keymap('n', '<leader>dl', "<cmd>lua require('dap-python').test_class()<CR>", { noremap = true })
+  vim.api.nvim_set_keymap('n', '<leader>dn', "<cmd>lua require('jdtls').test_nearest_method()<CR>", { noremap = true })
+  vim.api.nvim_set_keymap('n', '<leader>dl', "<cmd>lua require('jdtls').test_class()<CR>", { noremap = true })
 end
 
 require('jdtls').start_or_attach(config)

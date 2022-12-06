@@ -1,3 +1,5 @@
+# zmodload zsh/zprof # debug enable
+
 ## plugins
 source ~/.zplug/init.zsh
 
@@ -36,9 +38,14 @@ zstyle :compinstall filename '/home/brain/.zshrc'
 
 ## asdf for compinit
 fpath=(${ASDF_DIR}/completions $fpath)
-autoload -U +X bashcompinit && bashcompinit
-autoload -Uz compinit promptinit colors
-compinit
+# autoload -U +X bashcompinit && bashcompinit
+# https://medium.com/@dannysmith/little-thing-2-speeding-up-zsh-f1860390f92
+autoload -Uz compinit bashcompinit promptinit colors
+for dump in ~/.zcompdump(N.mh+24); do
+  compinit
+done
+# compinit
+bashcompinit
 promptinit
 colors
 
@@ -174,3 +181,4 @@ export PATH="/usr/local/sbin:$PATH"
 ## declare fbar function
 aws-set-creds() { eval $(aws-sso-creds export --profile $1) }
 
+# zprof # debug enable
