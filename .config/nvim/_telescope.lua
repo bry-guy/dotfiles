@@ -30,8 +30,8 @@ vim.keymap.set('n', '<leader>fw', builtin.grep_string, {})
 vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
 vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
 vim.keymap.set('n', '<leader>fo', builtin.oldfiles, {})
-vim.keymap.set('n', '<leader>fc', builtin.commands, {})
-vim.keymap.set('n', '<leader>fm', builtin.man_pages, {})
+vim.keymap.set('n', '<leader>fm', builtin.commands, {})
+vim.keymap.set('n', '<leader>fn', builtin.man_pages, {})
 
 vim.keymap.set('n', '<leader>fr', builtin.lsp_references, {})
 -- TODO: Figure out how to use telescope to grep through auto-completion lists 
