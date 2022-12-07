@@ -54,8 +54,8 @@ vim.list_extend(bundles, vim.split(vim.fn.glob(mason_pkgs .. "/java-test/extensi
 -- local extra_bundles = vim.fn.glob(vim.env.HOME .. "/.local/share/nvim/mason/packages/java-test/extension/server/*.jar", true, true)
 -- vim.list_extend(bundles, extra_bundles)
 
-local inspect = require('inspect')
-io.stderr:write(inspect(bundles))
+-- local inspect = require('inspect')
+-- io.stderr:write(inspect(bundles))
 
 config['init_options'] = {
   bundles = bundles;

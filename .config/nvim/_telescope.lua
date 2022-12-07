@@ -10,7 +10,7 @@ require('telescope').setup {
     }
   },
   defaults = {
-    file_ignore_patterns = { ".git/", "node_modules" },
+    file_ignore_patterns = { ".git/", "node_modules", ".yarn/cache" },
 	hidden = true,
 	mappings = {
 	  n = {
@@ -19,12 +19,26 @@ require('telescope').setup {
 		["<C-v>"] = actions.select_vertical,
 		["<C-s>"] = actions.select_horizontal,
 	  },
+	},
+	layout_strategy = 'flex',
+	layout_config = {
+	  width = 0.90,
+	  flex = {
+		flip_columns = 320,
+	  }
+	},
+  },
+  pickers = {
+	find_files = {
+	  no_ignore = true,
+	  hidden = true,
 	}
   }
 }
 
 local builtin = require('telescope.builtin')
-vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
+vim.keymap.set('n', '<leader>fF', builtin.find_files, {})
+vim.keymap.set('n', '<leader>ff', builtin.git_files, {})
 vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
 vim.keymap.set('n', '<leader>fw', builtin.grep_string, {})
 vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
