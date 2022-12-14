@@ -2,12 +2,14 @@ draw_bold_text_with_bright_colors: true
 
 # https://gist.github.com/andersevenrud/015e61af2fd264371032763d4ed965b6
 env:
-  TERM: xterm-256color
+  TERM: alacritty
 
 window:
   dynamic_title: true
 
-# Colors
+draw_bold_text_with_bright_colors: true
+
+# Colors (https://github.com/bluz71/vim-moonfly-colors/blob/master/terminal_themes/alacritty.yml)
 colors:
   # Default colors
   primary:
@@ -27,26 +29,25 @@ colors:
 
   # Normal colors
   normal:
-    black:   '#373c40'
+    black:   '#323437'
     red:     '#ff5454'
     green:   '#8cc85f'
     yellow:  '#e3c78a'
     blue:    '#80a0ff'
     magenta: '#d183e8'
     cyan:    '#79dac8'
-    white:   '#a1aab8'
+    white:   '#c6c6c6'
 
   # Bright colors
   bright:
-    black:   '#7c8f8f'
+    black:   '#949494'
     red:     '#ff5189'
     green:   '#36c692'
-    yellow:  '#bfbf97'
-    blue:    '#78c2ff'
+    yellow:  '#c2c292'
+    blue:    '#74b2ff'
     magenta: '#ae81ff'
     cyan:    '#85dc85'
-    white:   '#e2637f'
-
+    white:   '#e4e4e4'
 font:
     family: "Hack"
     size: 16.0

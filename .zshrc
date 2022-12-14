@@ -102,7 +102,7 @@ case ${TERM} in
 				 print -Pn "\e]0;%~\a"
 		 }
 		 ;;
- screen-256color)
+ *-256color)
 		 precmd () {
 				 print -Pn "\e]0;%~\a"
 		 }

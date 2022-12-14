@@ -1,6 +1,7 @@
 - [x] Setup zsh reverse search
 - [x] Try nvim-dap w/ telescope extension (no nvim-dap-ui)
 - [x] Re-do nvim-java with jdtls (+ nvim-jdtls?), java-test, java-debug-adapter installed via mason 
+- [ ] Automate ncurses/terminfo update on macOS (https://stackoverflow.com/questions/51488920/backspace-not-working-in-tmux-command-prompt0)  (https://gist.github.com/bbqtd/a4ac060d6f6b9ea6fe3aabe735aa9d95)
 - [ ] Fix `jdtls` and `nvim-jdtls` extension mapping
 		- `bundleInfo not found`: `jdtls` thinks the `command-runner.jar` manifest is `null`
 		- `jdtls-bundles.lua` makes it appear that paths to bundles are correct
@@ -12,10 +13,12 @@
 - [ ] Unfuck dap (java/python/all) mappings
 - [x] Debug in java successfully
 - [ ] Unfuck git submodule for `inspect.lua`
+- [ ] Add telescope function to search_string under visual selection
 - [ ] Try out leap
 - [ ] Try out vim-repeat
 - [ ] Try cheatsheet.nvim
 - [ ] Install dasht + vim-dasht
+- [ ] Add chezmoi to the dotfiles mix
 - [ ] Consider trying `tpope/vim-eunuch`
 - [ ] Re-theme Vim with day/night theming (moonfly ain't bad tho)
 - [ ] Fixup obsidian.nvim to create notes with no prefix, but timestamps in metadata
