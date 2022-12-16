@@ -1,6 +1,7 @@
 - [x] Setup zsh reverse search
 - [x] Try nvim-dap w/ telescope extension (no nvim-dap-ui)
 - [x] Re-do nvim-java with jdtls (+ nvim-jdtls?), java-test, java-debug-adapter installed via mason 
+- [ ] Add creset function to vim to do cexpr []
 - [ ] Automate ncurses/terminfo update on macOS (https://stackoverflow.com/questions/51488920/backspace-not-working-in-tmux-command-prompt0)  (https://gist.github.com/bbqtd/a4ac060d6f6b9ea6fe3aabe735aa9d95)
 - [ ] Fix `jdtls` and `nvim-jdtls` extension mapping
 		- `bundleInfo not found`: `jdtls` thinks the `command-runner.jar` manifest is `null`

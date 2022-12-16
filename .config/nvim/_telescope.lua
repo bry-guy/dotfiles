@@ -16,8 +16,8 @@ require('telescope').setup {
 	  n = {
 		["<C-j>"] = actions.preview_scrolling_down,
 		["<C-k>"] = actions.preview_scrolling_up,
-		["<C-v>"] = actions.select_vertical,
-		["<C-s>"] = actions.select_horizontal,
+		['<C-">'] = actions.select_vertical,
+		['<C-%>'] = actions.select_horizontal,
 	  },
 	},
 	layout_strategy = 'flex',

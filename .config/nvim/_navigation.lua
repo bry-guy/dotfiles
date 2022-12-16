@@ -17,5 +17,6 @@ function Navigation_open(cmd)
 end
 
 vim.api.nvim_set_keymap('n', '_', ':DirbufQuit <CR>', {})
-vim.api.nvim_set_keymap('n', '<C-v>', '<cmd>lua Navigation_open("vsplit")<CR>', {})
-vim.api.nvim_set_keymap('n', '<C-s>', '<cmd>lua Navigation_open("split")<CR>', {})
+-- TODO: Make these openable via splits with better commands (can't overwrite <C-v>!)
+vim.api.nvim_set_keymap('n', '<C-">', '<cmd>lua Navigation_open("vsplit")<CR>', {})
+vim.api.nvim_set_keymap('n', '<C-%>', '<cmd>lua Navigation_open("split")<CR>', {})

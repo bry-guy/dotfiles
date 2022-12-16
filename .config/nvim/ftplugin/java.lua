@@ -10,6 +10,7 @@ vim.opt_local.cinoptions = 'j1' -- anonymous functions
 local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h:t')
 local workspace_dir = vim.env.HOME .. '/dev/workspaces/' .. project_name
 local mason_pkgs = vim.env.HOME .. '/.local/share/nvim/mason/packages'
+local java_installs = vim.env.HOME .. '/.asdf/installs/java'
 
 -- todo: join mappings by sharing global lsp_config
 local config = {
@@ -34,6 +35,22 @@ local config = {
   capabilities = require('cmp_nvim_lsp').default_capabilities(),
   init_options = {
 	bundles = {}
+  },
+  settings = {
+	java = {
+	  configuration = {
+		runtimes = {
+		  {
+			name = "JavaSE-11",
+			path = vim.fn.glob(java_installs .. '/adoptopenjdk-11*'),
+		  },
+		  {
+			name = "JavaSE-17",
+			path = vim.fn.glob(java_installs .. '/adoptopenjdk-17*'),
+		  },
+		}
+	  }
+	}
   },
 }
 
