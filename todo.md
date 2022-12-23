@@ -1,8 +1,3 @@
-- [x] Setup zsh reverse search
-- [x] Try nvim-dap w/ telescope extension (no nvim-dap-ui)
-- [x] Re-do nvim-java with jdtls (+ nvim-jdtls?), java-test, java-debug-adapter installed via mason 
-- [ ] Fix amethsyt floating windows (prob all settings) not saving
-- [ ] Add creset function to vim to do cexpr []
 - [ ] Automate ncurses/terminfo update on macOS (https://stackoverflow.com/questions/51488920/backspace-not-working-in-tmux-command-prompt0)  (https://gist.github.com/bbqtd/a4ac060d6f6b9ea6fe3aabe735aa9d95)
 - [ ] Fix `jdtls` and `nvim-jdtls` extension mapping
 		- `bundleInfo not found`: `jdtls` thinks the `command-runner.jar` manifest is `null`
@@ -13,7 +8,6 @@
 		- [ ] Debug `nvim-jdtls` paths received
 		- [ ] Log paths `jdtls` sees (requires re-compilation) 
 - [ ] Unfuck dap (java/python/all) mappings
-- [x] Debug in java successfully
 - [ ] Unfuck git submodule for `inspect.lua`
 - [ ] Add telescope function to search_string under visual selection
 - [ ] Try out leap
@@ -32,6 +26,12 @@
 - [ ] [FOSS] Contribute to dirbuf.nvim (maintain cursor position)
 - [ ] [FOSS] Create dasht telescope extension
 - [ ] [FOSS] Contribute to nvim-python to add test_suite (like tpope)
+- [ ] Add creset function to vim to do cexpr []
+- [x] Fix amethsyt floating windows (prob all settings) not saving: Can't do it, amethyst always overwrites on re-launch
+- [x] Setup zsh reverse search
+- [x] Try nvim-dap w/ telescope extension (no nvim-dap-ui)
+- [x] Re-do nvim-java with jdtls (+ nvim-jdtls?), java-test, java-debug-adapter installed via mason 
+- [x] Debug in java successfully
 - [x] Stylize tmux
 - [x] Try out telescope over fzf
 - [x] Switch to nvim-tree w/ vinegar mode
