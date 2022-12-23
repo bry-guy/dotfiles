@@ -2,10 +2,7 @@
 
 ## plugins
 source ~/.zplug/init.zsh
-
-## Make sure to use double quotes
 zplug "joshskidmore/zsh-fzf-history-search"
-export ZSH_FZF_HISTORY_SEARCH_BIND='^r'
 
 # Install plugins if there are plugins that have not been installed
 if ! zplug check --verbose; then
@@ -20,6 +17,14 @@ zplug load
 
 ## bind vi keys
 bindkey -v
+
+## zsh-fzf-history-search
+## Make sure to use double quotes
+export ZSH_FZF_HISTORY_SEARCH_BIND="^R"
+export ZSH_FZF_HISTORY_SEARCH_EVENT_NUMBERS=0
+export ZSH_FZF_HISTORY_SEARCH_DATES_IN_SEARCH=0
+export ZSH_FZF_HISTORY_SEARCH_REMOVE_DUPLICATES=1
+
 
 ## history
 HISTFILE=~/.histfile

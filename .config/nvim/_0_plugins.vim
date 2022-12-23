@@ -28,6 +28,9 @@ Plug 'junegunn/limelight.vim'
 
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
+Plug 'terryma/vim-multiple-cursors'
+
+
 
 " Theming
 Plug 'bry-guy/vim-bg-colors'
