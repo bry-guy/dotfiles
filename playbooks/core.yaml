@@ -58,8 +58,8 @@
     - name: Update macOS defaults
       ansible.builtin.shell: source ~/.osx
 
-    - name: Link amethyst preferences
-      ansible.builtin.shell: ln -f ~/.config/amethyst/* ~/Library/Preferences/
+    - name: Install (copy) amethyst preferences
+      ansible.builtin.shell: cp ~/.config/amethyst/* ~/Library/Preferences/
     
     - name: Link 1password ssh key
       ansible.builtin.shell: mkdir -p ~/.1password && ln -sf ~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock ~/.1password/agent.sock
