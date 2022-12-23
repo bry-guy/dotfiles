@@ -1,0 +1,13 @@
+## telescope
+
+Preview Scroll Down | <C-j> 
+Preview Scroll Up | <C-j>
+
+Select Vertical | <C-"> 
+Select Horizontal | <C-%> 
+
+## formatoptions @prose @fo @pencil @goyo
+
+Show formatoptions | :set fo?
+Help fo table | :h fo-table
+

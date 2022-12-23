@@ -41,7 +41,7 @@ let g:pencil#textwidth = 120
 augroup pencil
   autocmd!
   autocmd FileType markdown,md,mkd	call pencil#init({'wrap': 'soft'})
-  autocmd FileType text				call pencil#init({'wrap': 'hard', 'autoformat': 1})
+  " autocmd FileType text				call pencil#init({'wrap': 'hard', 'autoformat': 1})
 augroup END
 
 " goyo

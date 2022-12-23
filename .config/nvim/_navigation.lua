@@ -18,5 +18,5 @@ end
 
 vim.api.nvim_set_keymap('n', '_', ':DirbufQuit <CR>', {})
 -- TODO: Make these openable via splits with better commands (can't overwrite <C-v>!)
-vim.api.nvim_set_keymap('n', '<C-">', '<cmd>lua Navigation_open("vsplit")<CR>', {})
-vim.api.nvim_set_keymap('n', '<C-%>', '<cmd>lua Navigation_open("split")<CR>', {})
+-- vim.api.nvim_set_keymap('n', '<C-">', '<cmd>lua Navigation_open("vsplit")<CR>', {})
+-- vim.api.nvim_set_keymap('n', '<C-%>', '<cmd>lua Navigation_open("split")<CR>', {})

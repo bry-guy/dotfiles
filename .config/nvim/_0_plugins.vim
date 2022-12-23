@@ -55,10 +55,7 @@ Plug 'mechatroner/rainbow_csv'
 
 Plug 'kikito/inspect.lua', { 'dir': '~/.config/nvim/lua/inspect.lua' }
 
-" Plug 'nvim-tree/nvim-web-devicons'
-" Plug 'nvim-tree/nvim-tree.lua'
 Plug 'elihunter173/dirbuf.nvim'
-
 
 " Language enhancers
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
@@ -66,9 +63,12 @@ Plug 'hashivim/vim-terraform'
 Plug 'NoahTheDuke/vim-just'
 
 " Telescope
+Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 Plug 'nvim-telescope/telescope-dap.nvim'
+
+Plug 'sudormrfbin/cheatsheet.nvim'
 
 call plug#end()
