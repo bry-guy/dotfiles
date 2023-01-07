@@ -1,3 +1,5 @@
+- [ ] Unfuck second-brain dirbuf hotkey
+- [ ] Enable dap-repl autocomplete (see dap-configuration)
 - [ ] Automate ncurses/terminfo update on macOS (https://stackoverflow.com/questions/51488920/backspace-not-working-in-tmux-command-prompt0)  (https://gist.github.com/bbqtd/a4ac060d6f6b9ea6fe3aabe735aa9d95)
 - [ ] Fix `jdtls` and `nvim-jdtls` extension mapping
 		- `bundleInfo not found`: `jdtls` thinks the `command-runner.jar` manifest is `null`
@@ -12,7 +14,6 @@
 - [ ] Add telescope function to search_string under visual selection
 - [ ] Try out leap
 - [ ] Try out vim-repeat
-- [ ] Try cheatsheet.nvim
 - [ ] Install dasht + vim-dasht
 - [ ] Add chezmoi to the dotfiles mix
 - [ ] Consider trying `tpope/vim-eunuch`
@@ -27,6 +28,7 @@
 - [ ] [FOSS] Create dasht telescope extension
 - [ ] [FOSS] Contribute to nvim-python to add test_suite (like tpope)
 - [ ] Add creset function to vim to do cexpr []
+- [x] Try cheatsheet.nvim
 - [x] Fix amethsyt floating windows (prob all settings) not saving: Can't do it, amethyst always overwrites on re-launch
 - [x] Setup zsh reverse search
 - [x] Try nvim-dap w/ telescope extension (no nvim-dap-ui)

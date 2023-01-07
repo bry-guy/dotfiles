@@ -10,7 +10,3 @@ alias ignore='vim ~/.config/git/ignore'
 alias brew-unlock='rm -rf /usr/local/var/homebrew/locks'
 alias nvim-log='~/.local/share/nvim/log'
 alias pry-clean="git status | grep 'modified' | awk '{ print \"$2\" }' | xargs gsed -i '/binding.pry/d'"
-
-alias wiki='(nvim ~/vimwiki/index.md +cd %h)'
-alias scratch='(nvim ~/vimwiki/scratch.md +cd %h)'
-alias todo='(nvim ~/vimwiki/todo.md +cd %h)'

@@ -21,8 +21,6 @@ Plug 'mfussenegger/nvim-dap-python'
 
 Plug 'jayp0521/mason-nvim-dap.nvim'
 
-Plug 'vimwiki/vimwiki'
-
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
 

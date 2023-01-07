@@ -107,7 +107,7 @@ config['on_attach'] = function(_, bufnr)
   vim.api.nvim_buf_set_keymap(bufnr, 'v', '<space>em', "<Esc><cmd>lua require'jdtls'.extract_method(true)<CR>", opts)
 
   vim.api.nvim_set_keymap('n', '<leader>dn', "<cmd>lua require('jdtls').test_nearest_method()<CR>", { noremap = true })
-  vim.api.nvim_set_keymap('n', '<leader>dl', "<cmd>lua require('jdtls').test_class()<CR>", { noremap = true })
+  vim.api.nvim_set_keymap('n', '<leader>dc', "<cmd>lua require('jdtls').test_class()<CR>", { noremap = true })
 end
 
 require('jdtls').start_or_attach(config)

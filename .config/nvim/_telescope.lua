@@ -32,7 +32,10 @@ require('telescope').setup {
 	find_files = {
 	  no_ignore = true,
 	  hidden = true,
-	}
+	},
+	buffers = {
+	  sort_mru = true
+	},
   }
 }
 
