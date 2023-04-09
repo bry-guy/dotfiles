@@ -16,7 +16,8 @@ require("mason-nvim-dap").setup({
 	"javadbg",
 	"javatest",
 	"python",
-	"bash"
+	"bash",
+	"delve"
   },
   handlers = {
 	function(config)

@@ -14,10 +14,10 @@ require('telescope').setup {
 	hidden = true,
 	mappings = {
 	  n = {
-		["<C-j>"] = actions.preview_scrolling_down,
-		["<C-k>"] = actions.preview_scrolling_up,
-		['<C-">'] = actions.select_vertical,
-		['<C-%>'] = actions.select_horizontal,
+		["J"] = actions.preview_scrolling_down,
+		["K"] = actions.preview_scrolling_up,
+		['"'] = actions.select_vertical,
+		["%"] = actions.select_horizontal,
 	  },
 	},
 	layout_strategy = 'flex',

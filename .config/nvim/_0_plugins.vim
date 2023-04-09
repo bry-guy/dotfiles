@@ -8,6 +8,11 @@ Plug 'jayp0521/mason-nvim-dap.nvim'
 Plug 'williamboman/mason-lspconfig.nvim'
 Plug 'neovim/nvim-lspconfig'
 
+Plug 'nvim-lua/plenary.nvim'
+
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+
+
 " Debugging
 Plug 'mfussenegger/nvim-jdtls'
 Plug 'mfussenegger/nvim-dap-python'
@@ -25,9 +30,16 @@ Plug 'hrsh7th/vim-vsnip-integ'
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
 
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
 Plug 'terryma/vim-multiple-cursors'
+
+" Testing
+Plug 'vim-test/vim-test'
+Plug 'antoinemadec/FixCursorHold.nvim'
+Plug 'nvim-neotest/neotest'
+Plug 'nvim-neotest/neotest-vim-test'
+Plug 'nvim-neotest/neotest-go'
+Plug 'nvim-neotest/neotest-python'
 
 " Theming
 Plug 'bry-guy/vim-bg-colors'
@@ -44,7 +56,6 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-rails'
 
 " Utils
-Plug 'vim-test/vim-test'
 Plug 'duggiefresh/vim-easydir'
 Plug 'jeffkreeftmeijer/vim-numbertoggle'
 Plug 'reedes/vim-pencil'
@@ -59,19 +70,22 @@ Plug 'elihunter173/dirbuf.nvim'
 Plug 'sudormrfbin/cheatsheet.nvim'
 
 " Language enhancers
-" Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 Plug 'hashivim/vim-terraform'
 Plug 'NoahTheDuke/vim-just'
 
 " Telescope
 Plug 'nvim-lua/popup.nvim'
-Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 Plug 'nvim-telescope/telescope-dap.nvim'
 
 " External Integrations
 Plug 'pwntester/octo.nvim'
-Plug 'kyazdani42/nvim-web-devicons'
+Plug 'nvim-tree/nvim-web-devicons'
+
+
+" Plugin Development
+Plug 'folke/neodev.nvim'
+
 
 call plug#end()

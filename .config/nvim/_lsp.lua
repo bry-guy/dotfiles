@@ -32,7 +32,7 @@ require("mason-lspconfig").setup({
 	'pylsp',
 	'jdtls',
 	'gopls',
-	'golang_lint_ls'
+	'golangci_lint_ls'
   },
   automatic_installation = true,
 })
