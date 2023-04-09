@@ -11,38 +11,67 @@ vim.api.nvim_set_keymap('n', '<leader>dr', "<cmd>lua require'dap'.repl.open()<CR
 vim.api.nvim_set_keymap('n', '<leader>dl', "<cmd>lua require'dap'.run_last()<CR>", { noremap = true })
 
 require("mason-nvim-dap").setup({
-	ensure_installed = {
-	  "javadbg",
-	  "javatest",
-	  "python",
-	},
-	automatic_setup = {}
+  automatic_setup = true,
+  ensure_installed = {
+	"javadbg",
+	"javatest",
+	"python",
+	"bash"
+  },
+  handlers = {
+	function(config)
+	  -- all sources with no handler get passed here
+	  -- Keep original functionality
+	  require('mason-nvim-dap').default_setup(config)
+	end,
+	python = function(config)
+	  config.adapters.python = {
+		type = "executable",
+		command = "/usr/bin/python3",
+		args = {
+		  "-m",
+		  "debugpy.adapter",
+		},
+	  }
+
+	  config.configurations.python = {
+		{
+		  type = "python",
+		  request = "launch",
+		  name = "Launch file",
+		  program = "${file}", -- This configuration will launch the current file if used.
+		},
+	  }
+
+	  require('mason-nvim-dap').default_setup(config)
+	end,
+  }
 })
 
-require("mason-nvim-dap").setup_handlers({
-  function(source_name)
-	require('mason-nvim-dap.automatic_setup')(source_name)
-  end,
-  python = function(_)
-	dap.adapters.python = {
-	  type = "executable",
-	  command = "/usr/bin/python3",
-	  args = {
-		"-m",
-		"debugpy.adapter",
-	  },
-	}
+-- require("mason-nvim-dap").setup_handlers({
+--   function(source_name)
+-- 	require('mason-nvim-dap.automatic_setup')(source_name)
+--   end,
+--   python = function(_)
+-- 	dap.adapters.python = {
+-- 	  type = "executable",
+-- 	  command = "/usr/bin/python3",
+-- 	  args = {
+-- 		"-m",
+-- 		"debugpy.adapter",
+-- 	  },
+-- 	}
 
-	dap.configurations.python = {
-	  {
-		type = "python",
-		request = "launch",
-		name = "Launch file",
-		program = "${file}", -- This configuration will launch the current file if used.
-	  },
-	}
-  end,
-})
+-- 	dap.configurations.python = {
+-- 	  {
+-- 		type = "python",
+-- 		request = "launch",
+-- 		name = "Launch file",
+-- 		program = "${file}", -- This configuration will launch the current file if used.
+-- 	  },
+-- 	}
+--   end,
+-- })
 
 dap.configurations.java = {
   {
@@ -53,6 +82,8 @@ dap.configurations.java = {
 	port = 5005;
   },
 }
+
+dap.defaults.fallback.terminal_win_cmd = 'tabnew'
 
 require('dap-python').setup('~/.virtualenvs/debugpy/bin/python')
 require('dap-python').test_runner = 'pytest'

@@ -1,8 +1,16 @@
 call plug#begin('~/.vim/plugged')
 " Setup
 Plug 'williamboman/mason.nvim'
+
+Plug 'mfussenegger/nvim-dap'
+Plug 'jayp0521/mason-nvim-dap.nvim'
+
 Plug 'williamboman/mason-lspconfig.nvim'
 Plug 'neovim/nvim-lspconfig'
+
+" Debugging
+Plug 'mfussenegger/nvim-jdtls'
+Plug 'mfussenegger/nvim-dap-python'
 
 " Editing
 Plug 'hrsh7th/cmp-nvim-lsp'
@@ -13,13 +21,6 @@ Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-vsnip'
 Plug 'hrsh7th/vim-vsnip'
 Plug 'hrsh7th/vim-vsnip-integ'
-
-Plug 'mfussenegger/nvim-jdtls'
-
-Plug 'mfussenegger/nvim-dap'
-Plug 'mfussenegger/nvim-dap-python'
-
-Plug 'jayp0521/mason-nvim-dap.nvim'
 
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
@@ -55,8 +56,10 @@ Plug 'kikito/inspect.lua', { 'dir': '~/.config/nvim/lua/inspect.lua' }
 
 Plug 'elihunter173/dirbuf.nvim'
 
+Plug 'sudormrfbin/cheatsheet.nvim'
+
 " Language enhancers
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+" Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 Plug 'hashivim/vim-terraform'
 Plug 'NoahTheDuke/vim-just'
 
@@ -67,6 +70,8 @@ Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 Plug 'nvim-telescope/telescope-dap.nvim'
 
-Plug 'sudormrfbin/cheatsheet.nvim'
+" External Integrations
+Plug 'pwntester/octo.nvim'
+Plug 'kyazdani42/nvim-web-devicons'
 
 call plug#end()

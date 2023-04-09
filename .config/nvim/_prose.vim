@@ -48,5 +48,5 @@ augroup END
 let g:goyo_width = 160
 
 " limelight
-let g:limelight_paragraph_span = 1
+let g:limelight_paragraph_span = 2
 

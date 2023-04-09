@@ -26,11 +26,13 @@ require("mason-lspconfig").setup({
   ensure_installed = {
 	'apex_ls',
 	'bashls',
-	'sumneko_lua',
+	'lua_ls',
 	'terraformls',
 	'tsserver',
 	'pylsp',
-	'jdtls'
+	'jdtls',
+	'gopls',
+	'golang_lint_ls'
   },
   automatic_installation = true,
 })
@@ -45,13 +47,13 @@ require("mason-lspconfig").setup_handlers {
 	}
   end,
   ["jdtls"] = function() end,
-  ["sumneko_lua"] = function ()
-	lsp.sumneko_lua.setup {
-	  root_dir = function(fname)
-		if fname == vim.loop.os_homedir() then return nil end
-		local root_pattern = lsp.util.root_pattern('.git', '*.rockspec')(fname)
-		return root_pattern or fname
-	  end,
+  ["lua_ls"] = function ()
+	lsp.lua_ls.setup {
+	  -- root_dir = function(fname)
+		-- if fname == vim.loop.os_homedir() then return nil end
+		-- local root_pattern = lsp.util.root_pattern('.git', '*.rockspec')(fname)
+		-- return root_pattern or fname
+	  -- end,
 	  settings = {
 		Lua = {
 		  runtime = {
