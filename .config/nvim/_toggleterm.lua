@@ -1,6 +1,7 @@
 require("toggleterm").setup()
 
 vim.keymap.set('n', '<leader><Space>', '<Cmd>:ToggleTerm direction=float<CR>')
+vim.keymap.set('v', '<leader><Space>', '<Cmd>:ToggleTermSendVisualLines direction=float<CR>')
 
 function _G.set_terminal_keymaps()
   local opts = {buffer = 0}
