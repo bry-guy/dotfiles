@@ -62,6 +62,7 @@ Plug 'reedes/vim-pencil'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'epwalsh/obsidian.nvim'
 Plug 'mechatroner/rainbow_csv'
+Plug 'Lenovsky/nuake'
 
 Plug 'kikito/inspect.lua', { 'dir': '~/.config/nvim/lua/inspect.lua' }
 
