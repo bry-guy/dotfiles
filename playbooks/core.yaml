@@ -89,6 +89,14 @@
         - awscli
         - fd
         - direnv
+        - aws-sso-creds
+        - coreutils
+        - fd
+        - gh
+        - just
+        - tldr3
+        - jq
+        - yq
 
     - name: Install zplug
       ansible.builtin.shell: 

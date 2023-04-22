@@ -1,3 +1,11 @@
+## tmux
+
+Resize Pane | <Leader><R>
+
+## alacritty
+
+Reset Font Size | <Ctrl-0>
+
 ## telescope
 
 Preview Scroll Down | <C-j> 
@@ -11,3 +19,7 @@ Select Horizontal | <C-%>
 Show formatoptions | :set fo?
 Help fo table | :h fo-table
 
+## test @neotest
+
+Prev Failed Test | <[t>
+Next Failed Test | <]t>

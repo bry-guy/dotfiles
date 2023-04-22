@@ -1,21 +1,22 @@
 call plug#begin('~/.vim/plugged')
 " Setup
-Plug 'williamboman/mason.nvim'
+Plug 'williamboman/mason.nvim' 
+		Plug 'williamboman/mason-lspconfig.nvim'
+		Plug 'mfussenegger/nvim-dap'
+		Plug 'jayp0521/mason-nvim-dap.nvim'
 
-Plug 'mfussenegger/nvim-dap'
-Plug 'jayp0521/mason-nvim-dap.nvim'
-
-Plug 'williamboman/mason-lspconfig.nvim'
 Plug 'neovim/nvim-lspconfig'
-
 Plug 'nvim-lua/plenary.nvim'
-
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
+Plug 'nathom/filetype.nvim'
 
 " Debugging
 Plug 'mfussenegger/nvim-jdtls'
 Plug 'mfussenegger/nvim-dap-python'
+
+" Linting
+Plug 'mfussenegger/nvim-lint'
 
 " Editing
 Plug 'hrsh7th/cmp-nvim-lsp'
@@ -42,7 +43,8 @@ Plug 'nvim-neotest/neotest-go'
 Plug 'nvim-neotest/neotest-python'
 
 " Theming
-Plug 'bry-guy/vim-bg-colors'
+" Plug 'bry-guy/vim-bg-colors'
+Plug 'bluz71/vim-moonfly-colors', { 'as': 'moonfly' }
 Plug 'itchyny/lightline.vim'
 
 " tpope

@@ -18,6 +18,7 @@ require('telescope').setup {
 		["K"] = actions.preview_scrolling_up,
 		['"'] = actions.select_vertical,
 		["%"] = actions.select_horizontal,
+		["Q"] = actions.send_selected_to_qflist + actions.open_qflist,
 	  },
 	},
 	layout_strategy = 'flex',
