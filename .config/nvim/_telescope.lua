@@ -1,16 +1,8 @@
 local actions = require('telescope.actions')
 
 require('telescope').setup {
-  extensions = {
-    fzf = {
-      fuzzy = true,
-      override_generic_sorter = true,
-      override_file_sorter = true,
-      case_mode = "smart_case",
-    }
-  },
   defaults = {
-    file_ignore_patterns = { ".git/", "node_modules", ".yarn/cache" },
+    file_ignore_patterns = { "^.git/", "node_modules", "^.yarn/cache" },
 	hidden = true,
 	mappings = {
 	  n = {
@@ -37,7 +29,12 @@ require('telescope').setup {
 	buffers = {
 	  sort_mru = true
 	},
-  }
+	live_grep = {
+	  additional_args = function(_)
+		return {"--hidden"}
+	  end
+	},
+  },
 }
 
 local builtin = require('telescope.builtin')

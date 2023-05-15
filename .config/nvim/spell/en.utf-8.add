@@ -25,3 +25,5 @@ filetype
 alacritty
 nvim-cmp
 administrable
+Dockerfile
+env
