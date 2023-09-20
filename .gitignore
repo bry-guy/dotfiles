@@ -10,6 +10,7 @@
 !.asdfrc
 !.zprofile
 !.tmux.conf
+!.fns
 !.zshrc
 !.osx
 !.tool-versions
@@ -56,3 +57,7 @@
 !.ssh/config
 
 !todo.md
+
+# !second-brain/
+# !second-brain/*
+# !second-brain/**/*

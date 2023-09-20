@@ -55,3 +55,4 @@ vim.keymap.set('n', '<leader>fr', builtin.lsp_references, {})
 vim.keymap.set('n', '<leader>ft', builtin.treesitter, {})
 
 require('telescope').load_extension('fzf')
+require('telescope').load_extension('software-licenses')

@@ -13,7 +13,7 @@ local cmp = require'cmp'
 
 cmp.setup({
   completion = {
-  		autocomplete = true,
+		autocomplete = { require('cmp.types').cmp.TriggerEvent.TextChanged },
   },
   snippet = {
     expand = function(args)

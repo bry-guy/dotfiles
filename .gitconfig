@@ -1,23 +1,37 @@
 [pull]
-	ff = only
+		ff = only
 [user]
-	email = bryan@bry-guy.net
-	user = bry-guy
-	name = Bryan Smith
+		email = bryan@bry-guy.net
+		user = bry-guy
+		name = Bryan Smith
 [alias]
-	co = checkout
-	br = branch
-	ci = commit
-	st = status
-	unstage = reset HEAD --
-	last = log -1 HEAD
-	forget = update-index --assume-unchanged
-	remember = update-index --no-assume-unchanged
-	forgotten = ! git ls-files -v | grep "^h "
+		co = checkout
+		br = branch
+		ci = commit
+		st = status
+		tg = tag --sort=-v:refname
+		unstage = reset HEAD --
+		last = log -1 HEAD
+		forget = update-index --assume-unchanged
+		remember = update-index --no-assume-unchanged
+		forgotten = ! git ls-files -v | grep "^h "
 [core]
-	excludesFile = ~/.local/.gitignore
+		excludesFile = ~/.local/.gitignore
 [init]
-	defaultBranch = main
+		defaultBranch = main
 
 [url "ssh://git@github.com/"]                                                   
-    insteadOf = https://github.com/ 
+		insteadOf = https://github.com/ 
+[merge]
+  tool = vimdiff
+[mergetool]
+  prompt = true
+[mergetool "vimdiff"]
+  cmd = nvim -d $BASE $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
+
+[diff]
+  tool = vimdiff
+[difftool]
+  prompt = true
+[difftool "vimdiff"]
+  cmd = nvim -d $BASE $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'

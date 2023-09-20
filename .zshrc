@@ -46,10 +46,11 @@ fpath=(${ASDF_DIR}/completions $fpath)
 # autoload -U +X bashcompinit && bashcompinit
 # https://medium.com/@dannysmith/little-thing-2-speeding-up-zsh-f1860390f92
 autoload -Uz compinit bashcompinit promptinit colors
-for dump in ~/.zcompdump(N.mh+24); do
-  compinit
-done
-# compinit
+# for dump in ~/.zcompdump(N.mh+24); do
+#   compinit
+# done
+rm -f ~/.zcompdump(N.mh+24)
+compinit
 bashcompinit
 promptinit
 colors
@@ -61,6 +62,7 @@ colors
 ## config files
 [ -f $HOME/.secrets ] && . $HOME/.secrets
 [ -f $HOME/.aliases ] && . $HOME/.aliases
+[ -f $HOME/.fns ] && . $HOME/.fns
 
 ## lang
 export LANG="en_US.UTF-8"
@@ -93,12 +95,34 @@ zle -N zle-line-finish
 # Theming
 ## Prompt
 function git_branch() {
-	git symbolic-ref --short HEAD 2> /dev/null
+		git symbolic-ref --short HEAD 2> /dev/null
+}
+
+function git_repo() {
+		git rev-parse --show-toplevel 2>/dev/null | xargs basename
+}
+
+function current_process() {
+    ps -o comm= -p $$
 }
 
 setopt prompt_subst
-# RPROMPT='%{%F{cyan}%}$(pwd)%{%F{none}%} %{%F{green}%}$(git_branch)%{%F{none}%}'
-PROMPT='${vim_mode} '
+autoload -Uz add-zsh-hook
+function aws_prompt_precmd() {
+		if [[ -n $AWS_VAULT ]]; then
+				if [[ $AWS_VAULT == *prod* ]]; then
+						# Set to bold and red
+						PROMPT="%B%F{red}[$AWS_VAULT]%f%b ${vim_mode} "
+				else
+						# Set to bold and yellow
+						PROMPT="%B%F{yellow}[$AWS_VAULT]%f%b ${vim_mode} "
+				fi
+		else
+				PROMPT="${vim_mode} "
+		fi
+}
+
+add-zsh-hook precmd aws_prompt_precmd
 
 ## Title Bar
 case ${TERM} in
@@ -178,6 +202,9 @@ complete -o nospace -C /opt/homebrew/bin/terraform terraform
 ## asdf
 . $(brew --prefix asdf)/libexec/asdf.sh
 
+## asdf golang
+. ~/.asdf/plugins/golang/set-env.zsh
+
 ## brew
 export PATH="/usr/local/sbin:$PATH"
 
@@ -187,3 +214,7 @@ export PATH="/usr/local/sbin:$PATH"
 aws-set-creds() { eval $(aws-sso-creds export --profile $1) }
 
 # zprof # debug enable
+export SSH_AUTH_SOCK=~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock
+
+# rancher
+export PATH="$HOME/.rd/bin:$PATH"

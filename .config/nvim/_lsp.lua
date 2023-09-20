@@ -1,5 +1,3 @@
-require("mason").setup()
-
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 local opts = { noremap=true, silent=true }
@@ -24,6 +22,56 @@ local on_attach = function(_, bufnr)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
 end
 
+require("neodev").setup({
+  -- override = function(_, library)
+	-- library.enabled = true
+	-- library.plugins = true
+  -- end,
+})
+
+local lspconfig_status_ok, lspconfig = pcall(require, "lspconfig")
+if not lspconfig_status_ok then
+  vim.notify("Couldn't load LSP-Config" .. lspconfig, vim.log.levels.ERROR)
+  return
+end
+
+local handlers = {
+  function (server_name)
+	lspconfig[server_name].setup {
+	  on_attach = on_attach,
+	  capabilities = capabilities
+	}
+  end,
+  ["lua_ls"] = function ()
+	lspconfig.lua_ls.setup {
+	  on_attach = on_attach,
+	  -- capabilities = capabilities,
+	  settings = {
+		Lua = {
+		  completion = {
+			callSnippet = "Replace"
+		  },
+		  -- runtime = {
+			-- version = 'LuaJIT'
+		  -- },
+		  -- diagnostics = {
+			-- globals = { "vim" }
+		  -- },
+		  workspace = {
+			-- library = { vim.env.VIMRUNTIME },
+			checkThirdParty = false,
+		  },
+		  telemetry = {
+			enable = false
+		  }
+		}
+	  }
+	}
+  end,
+}
+
+require("mason").setup()
+
 require("mason-lspconfig").setup({
   ensure_installed = {
 	'apex_ls',
@@ -36,42 +84,8 @@ require("mason-lspconfig").setup({
 	'gopls',
 	'golangci_lint_ls'
   },
+
+  -- automatic_installation = { exclude = { "lua_ls" }},
   automatic_installation = true,
+  handlers = handlers,
 })
-
-local lsp = require("lspconfig")
-
-require("mason-lspconfig").setup_handlers {
-  function (server_name)
-	require("lspconfig")[server_name].setup {
-	  on_attach = on_attach,
-	  capabilities = capabilities
-	}
-  end,
-  ["jdtls"] = function() end,
-  ["lua_ls"] = function ()
-	lsp.lua_ls.setup {
-	  -- root_dir = function(fname)
-		-- if fname == vim.loop.os_homedir() then return nil end
-		-- local root_pattern = lsp.util.root_pattern('.git', '*.rockspec')(fname)
-		-- return root_pattern or fname
-	  -- end,
-	  settings = {
-		Lua = {
-		  runtime = {
-			version = 'LuaJIT',
-		  },
-		  diagnostics = {
-			globals = {'vim'},
-		  },
-		  workspace = {
-			library = vim.api.nvim_get_runtime_file("", true),
-		  },
-		  telemetry = {
-			enable = false,
-		  },
-		},
-	  },
-	}
-  end,
-}

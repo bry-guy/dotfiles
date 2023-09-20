@@ -1,6 +1,6 @@
-golang 1.20.3
+golang 1.21.0
 nodejs 18.12.1
 ruby 3.1.2
-python 3.11.0
+python 3.11.0 3.10.0
 java adoptopenjdk-17.0.4+101 adoptopenjdk-11.0.16+101
 

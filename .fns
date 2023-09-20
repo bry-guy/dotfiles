@@ -1,0 +1,24 @@
+opr() {
+    local env_file cmd env
+
+    if [[ "$1" == "local-dev" ]]; then
+        env_file="./app.local-dev.env"
+        shift
+		cmd="op run --no-masking --env-file=\"${env_file}\" $@"
+
+
+    elif [[ "$1" =~ ^(dev|test|sandbox|prod)$ ]]; then
+        env="$1"
+        shift
+        env_file="./app.env"
+		cmd="APP_ENV=\"${env}\" op run --no-masking --env-file=\"${env_file}\" $@"
+
+    else
+        echo "ERROR: Invalid environment."
+        return 1
+    fi
+
+    # Run command
+	echo "Running command: $cmd"
+    eval "$cmd"
+}

@@ -23,3 +23,8 @@ Help fo table | :h fo-table
 
 Prev Failed Test | <[t>
 Next Failed Test | <]t>
+
+## xml @xmllint
+
+Format XML | !xmllint --format -
+

@@ -50,3 +50,18 @@ let g:goyo_width = 160
 " limelight
 let g:limelight_paragraph_span = 2
 
+" glow
+
+lua << EOF
+require('glow').setup({
+  -- glow_path = "", -- will be filled automatically with your glow bin in $PATH, if anyglow
+  -- install_path = "~/.local/bin", -- default path for installing glow binary
+  -- border = "shadow", -- floating window border config
+  -- style = "dark|light", -- filled automatically with your current editor background, you can override using glow json style
+  -- pager = false,
+  width = 180,
+  height = 100,
+  width_ratio = 0.85, -- maximum width of the Glow window compared to the nvim window size (overrides `width`)
+  height_ratio = 0.85,
+})
+EOF
