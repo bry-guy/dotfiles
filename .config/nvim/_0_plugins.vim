@@ -29,6 +29,7 @@ Plug 'hrsh7th/vim-vsnip-integ'
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
 
+Plug 'anuvyklack/pretty-fold.nvim'
 
 Plug 'terryma/vim-multiple-cursors'
 
