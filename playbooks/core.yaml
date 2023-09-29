@@ -1,8 +1,5 @@
-# TODO: Use async packages in many places to speed things up!
 - name: Core OS packages
-  hosts: 127.0.0.1
-  connection: local
-
+  hosts: localhost
   tasks:
     - name: Create home directories
       file:

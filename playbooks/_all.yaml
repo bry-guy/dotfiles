@@ -1,5 +1,5 @@
 - name: Setup and ensure prerequisites
-  hosts: all
+  hosts: localhost
   become: yes
   tasks:
     - name: Gather the OS type

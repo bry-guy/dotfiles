@@ -1,15 +1,13 @@
-- hosts: localhost
-  tasks:
-    - name: Install Alacritty (Linux)
-      when: ansible_os_family == "Debian"
-      become: yes
-      apt:
-        name: alacritty
-        state: present
+- name: Install Alacritty (Linux)
+  when: ansible_os_family == "Debian"
+  become: yes
+  apt:
+    name: alacritty
+    state: present
 
-    - name: Install Alacritty
-      when: ansible_os_family == "Darwin"
-      community.general.homebrew_cask:
-        name: alacritty
-        state: latest
+- name: Install Alacritty
+  when: ansible_os_family == "Darwin"
+  community.general.homebrew_cask:
+    name: alacritty
+    state: latest
 

@@ -12,7 +12,6 @@
     - import_tasks: fonts.yaml
     - import_tasks: karabiner-elements.yaml
     - import_tasks: neovim.yaml
-    - import_tasks: neovim-java.yaml
     - import_tasks: postman.yaml
 
 

@@ -1,52 +1,58 @@
 ---
 - name: Install Docker
-  hosts: localhost
   when: ansible_os_family == "Darwin"
   community.general.homebrew_cask:
     name: docker
     state: present
     accept_external_apps: true
 
-- name: Install Docker on Debian
-  hosts: localhost
-  become: yes
+- name: Update apt cache
   when: ansible_os_family == "Debian"
-  tasks:
-    - name: Update apt cache
-      apt:
-        update_cache: yes
+  become: yes
+  apt:
+    update_cache: yes
 
-    - name: Install required dependencies
-      apt:
-        name:
-          - apt-transport-https
-          - ca-certificates
-          - curl
-          - gnupg2
-          - software-properties-common
-        state: present
+- name: Install required dependencies
+  when: ansible_os_family == "Debian"
+  become: yes
+  apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg2
+      - software-properties-common
+    state: present
 
-    - name: Add Docker's official GPG key
-      apt_key:
-        url: https://download.docker.com/linux/debian/gpg
-        state: present
+- name: Add Docker's official GPG key
+  when: ansible_os_family == "Debian"
+  become: yes
+  apt_key:
+    url: https://download.docker.com/linux/debian/gpg
+    state: present
 
-    - name: Add Docker's official APT repository
-      apt_repository:
-        repo: "deb [arch=amd64] https://download.docker.com/linux/debian {{ ansible_lsb.codename }} stable"
-        state: present
+- name: Add Docker's official APT repository
+  when: ansible_os_family == "Debian"
+  become: yes
+  apt_repository:
+    repo: "deb [arch=amd64] https://download.docker.com/linux/debian {{ ansible_lsb.codename }} stable"
+    state: present
 
-    - name: Install Docker CE
-      apt:
-        name:
-          - docker-ce
-          - docker-ce-cli
-          - containerd.io
-        state: present
+- name: Install Docker CE
+  when: ansible_os_family == "Debian"
+  become: yes
+  apt:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+    state: present
 
-    - name: Ensure Docker service is running
-      service:
-        name: docker
-        state: started
-        enabled: yes
+- name: Ensure Docker service is running
+  when: ansible_os_family == "Debian"
+  become: yes
+  service:
+    name: docker
+    state: started
+    enabled: yes
 
