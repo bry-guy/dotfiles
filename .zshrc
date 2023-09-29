@@ -214,7 +214,10 @@ export PATH="/usr/local/sbin:$PATH"
 aws-set-creds() { eval $(aws-sso-creds export --profile $1) }
 
 # zprof # debug enable
+# macOS
 export SSH_AUTH_SOCK=~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock
+# linux
+# export SSH_AUTH_SOCK=~/.1password/agent.sock
 
 # rancher
 export PATH="$HOME/.rd/bin:$PATH"
