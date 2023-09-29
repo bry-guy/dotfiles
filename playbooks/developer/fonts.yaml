@@ -1,8 +1,42 @@
-- name: Tap fonts
-  community.general.homebrew_tap:
-    name: homebrew/cask-fonts
 
-- name: Install fonts
-  community.general.homebrew_cask:
-    name: font-hack-nerd-font
-    state: latest
+- hosts: localhost
+  tasks:
+    - name: Tap fonts
+      when: ansible_os_family == "Darwin"
+      community.general.homebrew_tap:
+        name: homebrew/cask-fonts
+
+    - name: Install fonts
+      when: ansible_os_family == "Darwin"
+      community.general.homebrew_cask:
+        name: font-hack-nerd-font
+        state: latest
+
+    - name: Ensure unzip is installed (Linux)
+      when: ansible_os_family == "Debian"
+      become: yes
+      apt:
+        name: unzip
+        state: present
+
+    - name: Download Nerd Font Hack family (Linux)
+      when: ansible_os_family == "Debian"
+      become: yes
+      get_url:
+        url: https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/Hack.zip
+        dest: "/tmp/Hack.zip"
+        mode: '0755'
+
+    - name: Unzip and install Nerd Font Hack family (Linux)
+      when: ansible_os_family == "Debian"
+      become: yes
+      unarchive:
+        src: "/tmp/Hack.zip"
+        dest: "/usr/share/fonts/truetype/"
+        remote_src: yes
+
+    - name: Update font cache (Linux)
+      when: ansible_os_family == "Debian"
+      become: yes
+      command: fc-cache -fv
+

@@ -23,11 +23,13 @@
         - ~/second-brain
 
     - name: Install 1password
+      when: ansible_os_family == "Darwin"
       community.general.homebrew_cask: 
         name: 1password
         state: latest
 
     - name: Install 1password-cli
+      when: ansible_os_family == "Darwin"
       community.general.homebrew_cask: 
         name: 1password-cli
         state: latest
@@ -56,12 +58,15 @@
       become: yes
 
     - name: Update macOS defaults
+      when: ansible_os_family == "Darwin"
       ansible.builtin.shell: source ~/.osx
 
     - name: Install (copy) amethyst preferences
+      when: ansible_os_family == "Darwin"
       ansible.builtin.shell: cp ~/.config/amethyst/* ~/Library/Preferences/
     
     - name: Link 1password ssh key
+      when: ansible_os_family == "Darwin"
       ansible.builtin.shell: mkdir -p ~/.1password && ln -sf ~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock ~/.1password/agent.sock
 
     - name: Accept new ssh fingerprints
@@ -89,14 +94,26 @@
         - awscli
         - fd
         - direnv
-        - aws-sso-creds
         - coreutils
         - fd
         - gh
         - just
-        - tldr3
+        - tldr
         - jq
         - yq
+
+    - name: Install zsh (linux)
+      when: ansible_os_family == "Debian"
+      become: yes
+      apt:
+        name: zsh
+        state: present
+
+    - name: Change shell to zsh (linux)
+      when: ansible_os_family == "Debian"
+      become: yes
+      ansible.builtin.shell:
+        cmd: chsh -s $(which zsh)
 
     - name: Install zplug
       ansible.builtin.shell: 

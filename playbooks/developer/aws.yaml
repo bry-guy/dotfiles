@@ -1,8 +1,0 @@
-- name: Tap jaxxstorm 
-  community.general.homebrew_tap:
-    name: jaxxstorm/tap
-
-- name: Install aws-sso-creds
-  community.general.homebrew:
-    name: aws-sso-creds
-    state: latest

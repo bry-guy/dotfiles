@@ -1,4 +1,5 @@
 - name: Install Karabiner Elements
+  when: ansible_os_family == "Darwin"
   community.general.homebrew_cask:
     name: karabiner-elements
     state: latest

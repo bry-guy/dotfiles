@@ -1,4 +1,7 @@
-- name: Install Amethyst
-  community.general.homebrew_cask:
-    name: amethyst
-    state: latest
+- hosts: localhost
+  tasks:
+    - name: Install Amethyst
+      community.general.homebrew_cask:
+        name: amethyst
+        state: latest
+      when: ansible_os_family == "Darwin"

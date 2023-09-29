@@ -1,9 +1,0 @@
-- name: Cleanup post-install
-  hosts: 127.0.0.1
-  connection: local
-
-  tasks:
-    - name: Delete dotfiles directory
-      file:
-        state: absent
-        path: ~/dotfiles/

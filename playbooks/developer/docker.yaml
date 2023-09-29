@@ -1,5 +1,52 @@
+---
 - name: Install Docker
+  hosts: localhost
+  when: ansible_os_family == "Darwin"
   community.general.homebrew_cask:
     name: docker
     state: present
     accept_external_apps: true
+
+- name: Install Docker on Debian
+  hosts: localhost
+  become: yes
+  when: ansible_os_family == "Debian"
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install required dependencies
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg2
+          - software-properties-common
+        state: present
+
+    - name: Add Docker's official GPG key
+      apt_key:
+        url: https://download.docker.com/linux/debian/gpg
+        state: present
+
+    - name: Add Docker's official APT repository
+      apt_repository:
+        repo: "deb [arch=amd64] https://download.docker.com/linux/debian {{ ansible_lsb.codename }} stable"
+        state: present
+
+    - name: Install Docker CE
+      apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+        state: present
+
+    - name: Ensure Docker service is running
+      service:
+        name: docker
+        state: started
+        enabled: yes
+

@@ -1,9 +1,9 @@
-- name: Install apps
-  hosts: 127.0.0.1
-  connection: local
+- name: Install macOS apps
+  hosts: localhost
 
   tasks:
-  - name: Install apps
+  - name: Install apps (macOS)
+    when: ansible_os_family == "Darwin"
     community.general.homebrew_cask:
       name: "{{ item }}"
       state: present
@@ -18,3 +18,17 @@
       - slack
       - gifcapture
       - tailscale
+
+  - name: Install apps (Linux)
+    when: ansible_os_family == "Debian"
+    community.general.flatpak:
+      name: "{{ item }}"
+      state: present
+    loop:
+    - com.discordapp.Discord
+    - md.obsidian.Obsidian
+    - org.signal.Signal
+    - com.spotify.Client
+    - com.todoist.Todoist
+    - us.zoom.Zoom
+    - com.slack.Slack
