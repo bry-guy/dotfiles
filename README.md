@@ -12,6 +12,10 @@ Philosophically:
 - When hotkeys diverge substantially (Lock, Close Window, etc), use macOS hotkeys
 - Terminal signals are not compromised
 
+### Weird Hotkeys
+
+- Open Link in New Tab: ctrl + space (Karabiner cannot remap button presses :sob:)
+
 ### popOS config
 
 To create, change, and update `keybinds.dconf`:
