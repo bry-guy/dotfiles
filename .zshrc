@@ -221,3 +221,7 @@ export SSH_AUTH_SOCK=~/.1password/agent.sock
 
 # rancher
 export PATH="$HOME/.rd/bin:$PATH"
+
+# aichat
+export AICHAT_CONFIG_DIR="$HOME/.config/aichat/"
+export AICHAT_ROLES_FILE="$HOME/.config/aichat/roles.yaml"

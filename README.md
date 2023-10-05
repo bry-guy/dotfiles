@@ -8,6 +8,7 @@ I unify my hotkeys between macOS and popOS as much as possible. These are set in
 
 Philosophically:
 - macOS should be configured in Karabiner, so disabling config reverts to default
+- macOS should not switch cmd and ctrl, but rather be explicit (saves cmd+tab functionality)
 - Parity is constrained by macOS system constraints (popOS is more configurable)
 - When hotkeys diverge substantially (Lock, Close Window, etc), use macOS hotkeys
 - Terminal signals are not compromised

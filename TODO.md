@@ -1,0 +1,1 @@
+- [ ] Add aichat to ansible config
