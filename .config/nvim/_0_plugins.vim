@@ -12,9 +12,13 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 " Debugging
 Plug 'mfussenegger/nvim-jdtls'
 Plug 'mfussenegger/nvim-dap-python'
+Plug 'leoluz/nvim-dap-go'
 
 " Linting
 Plug 'mfussenegger/nvim-lint'
+
+" AI
+Plug 'zbirenbaum/copilot.lua'
 
 " Editing
 Plug 'hrsh7th/cmp-nvim-lsp'
@@ -23,6 +27,7 @@ Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/cmp-cmdline'
 Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-vsnip'
+Plug 'saadparwaiz1/cmp_luasnip'
 Plug 'hrsh7th/vim-vsnip'
 Plug 'hrsh7th/vim-vsnip-integ'
 
@@ -77,6 +82,8 @@ Plug 'ellisonleao/glow.nvim'
 Plug 'hashivim/vim-terraform'
 Plug 'NoahTheDuke/vim-just'
 Plug 'ray-x/go.nvim'
+Plug 'L3MON4D3/LuaSnip', { 'tag': 'v2.1.1', 'do': 'make install_jsregexp'}
+Plug 'rafamadriz/friendly-snippets'
 
 " Telescope
 Plug 'nvim-lua/popup.nvim'

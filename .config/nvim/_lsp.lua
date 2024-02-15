@@ -45,20 +45,12 @@ local handlers = {
   ["lua_ls"] = function ()
 	lspconfig.lua_ls.setup {
 	  on_attach = on_attach,
-	  -- capabilities = capabilities,
 	  settings = {
 		Lua = {
 		  completion = {
 			callSnippet = "Replace"
 		  },
-		  -- runtime = {
-			-- version = 'LuaJIT'
-		  -- },
-		  -- diagnostics = {
-			-- globals = { "vim" }
-		  -- },
 		  workspace = {
-			-- library = { vim.env.VIMRUNTIME },
 			checkThirdParty = false,
 		  },
 		  telemetry = {
@@ -66,6 +58,20 @@ local handlers = {
 		  }
 		}
 	  }
+	}
+  end,
+  ["jdtls"] = function () end, -- jdtls is invoked on each buffer via filetype hook
+  ["pylsp"] = function ()
+	lspconfig.pylsp.setup {
+	  on_attach = on_attach,
+	  settings = {
+		pylsp = {
+		  plugins = {
+			pyflakes = {enabled = false},
+			pylint = {enabled = false},
+		  },
+		},
+	  },
 	}
   end,
 }

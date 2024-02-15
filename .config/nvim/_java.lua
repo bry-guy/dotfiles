@@ -1,10 +1,4 @@
--- indenting options
-vim.opt_local.autoindent = true
-vim.opt_local.si = true -- smart indent
-vim.opt_local.shiftwidth = 4
-vim.opt_local.expandtab = true
-vim.opt_local.tabstop = 4
-vim.opt_local.cinoptions = 'j1' -- anonymous functions
+local M = {}
 
 local on_attach = function(_, bufnr)
   require('jdtls').setup_dap({ hotcodereplace = 'auto' })
@@ -34,26 +28,23 @@ local on_attach = function(_, bufnr)
   vim.api.nvim_buf_set_keymap(bufnr, 'v', '<space>ec', "<Esc><cmd>lua require'jdtls'.extract_constant(true)<CR>", opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'v', '<space>em', "<Esc><cmd>lua require'jdtls'.extract_method(true)<CR>", opts)
 
-  -- vim.api.nvim_set_keymap('n', '<leader>dn', "<cmd>lua require('jdtls').test_nearest_method()<CR>", { noremap = true })
-  -- vim.api.nvim_set_keymap('n', '<leader>dc', "<cmd>lua require('jdtls').test_class()<CR>", { noremap = true })
+  vim.api.nvim_set_keymap('n', '<leader>dn', "<cmd>lua require('jdtls').test_nearest_method()<CR>", { noremap = true })
+  vim.api.nvim_set_keymap('n', '<leader>dc', "<cmd>lua require('jdtls').test_class()<CR>", { noremap = true })
 end
 
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
-local function handler()
+function M.handler()
     local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h:t')
     local workspace_dir = vim.env.HOME .. '/dev/workspaces/' .. project_name
     local mason_pkgs = vim.env.HOME .. '/.local/share/nvim/mason/packages'
     local java_installs = vim.env.HOME .. '/.asdf/installs/java'
 
-	-- local bundles = {
-	--   vim.fn.glob(mason_pkgs .. "/java-debug-adapter/extension/server/com.microsoft.java.debug.plugin-*.jar", true),
-	-- };
+	local bundles = {
+	  vim.fn.glob(mason_pkgs .. "/java-debug-adapter/extension/server/com.microsoft.java.debug.plugin-*.jar", 1),
+	};
 
-	-- vim.list_extend(bundles, vim.split(vim.fn.glob(mason_pkgs .. "/java-test/extension/server/*.jar", true), "\n"))
-
-	-- debug from ~
-	-- java -Declipse.application=org.eclipse.jdt.ls.core.id1 -Dosgi.bundles.defaultStartLevel=4 -Declipse.product=org.eclipse.jdt.ls.core.product -Dlog.protocol=true -Dlog.level=ALL -Xms1g -javaagent:.local/share/nvim/mason/packages/jdtls/lombok.jar -jar .local/share/nvim/mason/packages/jdtls/plugins/org.eclipse.equinox.launcher_1.6.600.v20231106-1826.jar -configuration ~/.local/share/nvim/mason/packages/jdtls/config_mac -data ~/dev/workspaces/nvim-debug --add-modules=ALL-SYSTEM --add-opens java.base/java.util=ALL-UNNAMED --add-opens java.base/java.lang=ALL-UNNAMED
+	vim.list_extend(bundles, vim.split(vim.fn.glob(mason_pkgs .. "/java-test/extension/server/*.jar", 1), "\n"))
 
 
     local config = {
@@ -66,7 +57,7 @@ local function handler()
 			'-Dlog.level=ALL',
 			'-Xms1g',
 			'-javaagent:' .. mason_pkgs .. '/jdtls/lombok.jar',
-			'-jar', vim.fn.glob(mason_pkgs .. '/jdtls/plugins/org.eclipse.equinox.launcher_1.6.600.v20231106-1826.jar'),
+			'-jar', vim.fn.glob(mason_pkgs .. '/jdtls/plugins/org.eclipse.equinox.launcher_1.6.500.*.jar'),
 			'-configuration', mason_pkgs .. '/jdtls/config_mac',
 			'-data', workspace_dir,
 			'--add-modules=ALL-SYSTEM',
@@ -76,9 +67,9 @@ local function handler()
         root_dir = require('jdtls.setup').find_root({'.git', 'mvnw', 'gradlew'}),
         capabilities = capabilities,
         on_attach = on_attach,
-		-- init_options = {
-		--   bundles = bundles
-		-- },
+		init_options = {
+		  bundles = bundles
+		},
 		settings = {
 		  java = {
 			configuration = {
@@ -97,8 +88,6 @@ local function handler()
 		},
     }
 
-	-- Finally, start or attach the jdtls server
-	require('jdtls').start_or_attach(config)
+    -- Finally, start or attach the jdtls server
+    require('jdtls').start_or_attach(config)
 end
-
-handler()

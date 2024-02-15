@@ -6,8 +6,13 @@ alias ls='LC_COLLATE=C ls --color=auto'
 alias k='kubectl'
 alias hg='history -1 | grep'
 alias python='python3'
+alias d='doppler'
 
 alias ignore='vim ~/.config/git/ignore'
 alias brew-unlock='rm -rf /usr/local/var/homebrew/locks'
 alias nvim-log='~/.local/share/nvim/log'
 alias pry-clean="git status | grep 'modified' | awk '{ print \"$2\" }' | xargs gsed -i '/binding.pry/d'"
+
+alias open-rancher="open -a /Applications/Rancher\ Desktop.app"
+alias open-colima="colima start --cpu 2 --memory 2 --vm-type=vz --mount-type=virtiofs --network-address"
+

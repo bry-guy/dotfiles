@@ -204,6 +204,9 @@ ASDF_FORCE_PREPEND=yes . $(brew --prefix asdf)/libexec/asdf.sh
 
 ## asdf golang
 . ~/.asdf/plugins/golang/set-env.zsh
+export GOPATH=$(asdf where golang)/packages
+export GOROOT=$(asdf where golang)/go
+export PATH=$PATH:$(go env GOPATH)/bin
 
 ## brew
 export PATH="/usr/local/sbin:$PATH"
@@ -215,9 +218,9 @@ aws-set-creds() { eval $(aws-sso-creds export --profile $1) }
 
 # zprof # debug enable
 # macOS
-# export SSH_AUTH_SOCK=~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock
+export SSH_AUTH_SOCK=~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock
 # linux
-export SSH_AUTH_SOCK=~/.1password/agent.sock
+# export SSH_AUTH_SOCK=~/.1password/agent.sock
 
 # rancher
 export PATH="$HOME/.rd/bin:$PATH"

@@ -211,6 +211,7 @@ key_bindings:
 
   ## Disable quit hotkey
   - { key: W,              mods: Command,                    action: None }
+  - { key: H,              mods: Command,                    action: None }
   # - { key: K,              mods: Control, mode: ~Vi|~Search, chars: "\x0c"                 }
   # - { key: K,              mods: Control, mode: ~Vi|~Search, action: ClearHistory          }
   # - { key: Key0,           mods: Control,                    action: ResetFontSize         }

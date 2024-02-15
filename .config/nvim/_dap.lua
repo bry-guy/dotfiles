@@ -96,9 +96,13 @@ require('dap-python').test_runner = 'pytest'
 
 require('telescope').load_extension('dap')
 
-vim.api.nvim_set_keymap('n', '<leader>dm', "<cmd>lua require'telescope'.extensions.dap.commands{}<CR>", { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>dg', "<cmd>lua require'telescope'.extensions.dap.configurations{}<CR>", { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>dL', "<cmd>lua require'telescope'.extensions.dap.list_breakpoints{}<CR>", { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>dv', "<cmd>lua require'telescope'.extensions.dap.variables{}<CR>", { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>df', "<cmd>lua require'telescope'.extensions.dap.frames{}<CR>", { noremap = true })
+vim.api.nvim_set_keymap('n', '<leader>dcmd', "<cmd>lua require'telescope'.extensions.dap.commands{}<CR>", { noremap = true })
+vim.api.nvim_set_keymap('n', '<leader>dcfg', "<cmd>lua require'telescope'.extensions.dap.configurations{}<CR>", { noremap = true })
+vim.api.nvim_set_keymap('n', '<leader>dlb', "<cmd>lua require'telescope'.extensions.dap.list_breakpoints{}<CR>", { noremap = true })
+vim.api.nvim_set_keymap('n', '<leader>dvar', "<cmd>lua require'telescope'.extensions.dap.variables{}<CR>", { noremap = true })
+vim.api.nvim_set_keymap('n', '<leader>dframes', "<cmd>lua require'telescope'.extensions.dap.frames{}<CR>", { noremap = true })
 
+
+-- golang
+
+require('dap-go').setup()
