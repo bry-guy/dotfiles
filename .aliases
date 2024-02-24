@@ -16,3 +16,6 @@ alias pry-clean="git status | grep 'modified' | awk '{ print \"$2\" }' | xargs g
 alias open-rancher="open -a /Applications/Rancher\ Desktop.app"
 alias open-colima="colima start --cpu 2 --memory 2 --vm-type=vz --mount-type=virtiofs --network-address"
 
+alias t="tmux" 
+alias ts="tmux new-session -A -t"
+alias tk="tmux kill-session -t"
