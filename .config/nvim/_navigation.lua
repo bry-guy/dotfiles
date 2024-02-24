@@ -20,27 +20,10 @@ require("oil").setup({
 })
 vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 
--- dirbuf
--- vim.g.loaded_netrw = 1
--- vim.g.loaded_netrwPlugin = 1
-
--- local dirbuf = require("dirbuf")
-
--- dirbuf.setup {
---   sort_order = "directories_first",
---   write_cmd = "DirbufSync -confirm"
--- }
-
--- function Navigation_open(cmd)
---   if vim.bo.filetype ~= 'dirbuf' then
--- 	return nil
---   end
-
---   dirbuf.enter(cmd)
--- end
-
--- vim.api.nvim_set_keymap('n', '_', ':DirbufQuit <CR>', {})
--- TODO: Make these openable via splits with better commands (can't overwrite <C-v>!)
--- vim.api.nvim_set_keymap('n', '<C-">', '<cmd>lua Navigation_open("vsplit")<CR>', {})
--- vim.api.nvim_set_keymap('n', '<C-%>', '<cmd>lua Navigation_open("split")<CR>', {})
---
+vim.api.nvim_create_user_command(
+  'Browse',
+  function (opts)
+    vim.fn.system { 'open', opts.fargs[1] }
+  end,
+  { nargs = 1 }
+)
