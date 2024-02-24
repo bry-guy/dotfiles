@@ -26,10 +26,7 @@ Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/cmp-cmdline'
 Plug 'hrsh7th/nvim-cmp'
-Plug 'hrsh7th/cmp-vsnip'
-Plug 'saadparwaiz1/cmp_luasnip'
-Plug 'hrsh7th/vim-vsnip'
-Plug 'hrsh7th/vim-vsnip-integ'
+Plug 'dcampos/nvim-snippy'
 
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
@@ -37,6 +34,9 @@ Plug 'junegunn/limelight.vim'
 Plug 'anuvyklack/pretty-fold.nvim'
 
 Plug 'terryma/vim-multiple-cursors'
+
+" Navigating
+Plug 'stevearc/oil.nvim'
 
 " Testing
 Plug 'vim-test/vim-test'
@@ -52,7 +52,6 @@ Plug 'bluz71/vim-moonfly-colors', { 'as': 'moonfly' }
 Plug 'itchyny/lightline.vim'
 
 " tpope
-" Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-surround'
@@ -72,8 +71,6 @@ Plug 'akinsho/toggleterm.nvim', {'tag' : '*'}
 
 Plug 'kikito/inspect.lua', { 'dir': '~/.config/nvim/lua/inspect.lua' }
 
-Plug 'elihunter173/dirbuf.nvim'
-
 Plug 'sudormrfbin/cheatsheet.nvim'
 
 Plug 'ellisonleao/glow.nvim'
@@ -82,8 +79,6 @@ Plug 'ellisonleao/glow.nvim'
 Plug 'hashivim/vim-terraform'
 Plug 'NoahTheDuke/vim-just'
 Plug 'ray-x/go.nvim'
-Plug 'L3MON4D3/LuaSnip', { 'tag': 'v2.1.1', 'do': 'make install_jsregexp'}
-Plug 'rafamadriz/friendly-snippets'
 
 " Telescope
 Plug 'nvim-lua/popup.nvim'
