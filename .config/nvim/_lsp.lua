@@ -87,7 +87,7 @@ require("mason-lspconfig").setup({
 	'tsserver',
 	'pylsp',
 	'jdtls',
-	'gopls',
+	'gopls@v0.14.2',
 	'golangci_lint_ls'
   },
 

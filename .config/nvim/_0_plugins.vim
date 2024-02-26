@@ -78,11 +78,10 @@ Plug 'ellisonleao/glow.nvim'
 " Language enhancers
 Plug 'hashivim/vim-terraform'
 Plug 'NoahTheDuke/vim-just'
-Plug 'ray-x/go.nvim'
 
 " Telescope
 Plug 'nvim-lua/popup.nvim'
-Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
+Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.5' }
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 Plug 'nvim-telescope/telescope-dap.nvim'
 Plug 'chip/telescope-software-licenses.nvim'

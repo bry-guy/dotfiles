@@ -19,3 +19,5 @@ alias open-colima="colima start --cpu 2 --memory 2 --vm-type=vz --mount-type=vir
 alias t="tmux" 
 alias ts="tmux new-session -A -t"
 alias tk="tmux kill-session -t"
+
+alias cobra="cobra-cli"
