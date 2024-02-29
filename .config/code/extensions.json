@@ -1,0 +1,9 @@
+{
+	"recommendations": [
+		"MS-vsliveshare.vsliveshare",
+		"ms-vscode-remote.remote-containers",
+		"golang.Go",
+		"asvetliakov.vscode-neovim"
+	]
+}
+
