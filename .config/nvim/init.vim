@@ -39,3 +39,5 @@ set encoding=utf-8
 
 " filetype overrides
 au BufRead,BufNewFile *.cls,*.trigger set filetype=apexcode
+autocmd BufRead,BufNewFile *.tmate.conf set filetype=tmux
+
