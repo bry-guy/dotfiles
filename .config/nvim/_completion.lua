@@ -5,15 +5,17 @@ local has_words_before = function()
   return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
 end
 
-local feedkey = function(key, mode)
-  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), mode, true)
-end
-
-local cmp = require'cmp'
+local cmp = require('cmp')
+local snippy = require('snippy')
 
 cmp.setup({
   completion = {
 		autocomplete = { require('cmp.types').cmp.TriggerEvent.TextChanged },
+  },
+  snippet = {
+	expand = function(args)
+	  require('snippy').expand_snippet(args.body)
+	end
   },
   mapping = {
     -- ['<C-Tab>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
@@ -21,6 +23,8 @@ cmp.setup({
 	["<Tab>"] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
+	  elseif snippy.can_expand_or_advance() then
+		snippy.expand_or_advance()
       elseif has_words_before() then
         cmp.complete()
       else
@@ -31,6 +35,8 @@ cmp.setup({
     ["<S-Tab>"] = cmp.mapping(function()
       if cmp.visible() then
         cmp.select_prev_item()
+	  elseif snippy.can_jump(-1) then
+        snippy.previous()
       end
     end, { "i", "s" }),
     ['<C-s>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
@@ -38,7 +44,7 @@ cmp.setup({
       i = cmp.mapping.abort(),
       c = cmp.mapping.close(),
     }),
-    ['<CR>'] = cmp.mapping.confirm({ select = true }), 
+    ['<CR>'] = cmp.mapping.confirm({ select = true }),
   },
   sources = cmp.config.sources({
     { name = 'nvim_lsp' },

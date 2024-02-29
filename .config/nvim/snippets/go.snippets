@@ -18,10 +18,16 @@ snippet lec
 	log.ErrorContext(ctx, "${0:$VISUAL}")
 
 # shortcuts
-snippet ifnerr
+snippet iferr
 	if err != nil {
 		${0:$VISUAL}
 	}
+snippet ifnok
+	if !ok {
+		${0:$VISUAL}
+	}
+snippet ferr
+	fmt.Errorf("${0:$VISUAL}")
 
 # functions
 snippet fn

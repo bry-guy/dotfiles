@@ -21,3 +21,5 @@ alias ts="tmux new-session -A -t"
 alias tk="tmux kill-session -t"
 
 alias cobra="cobra-cli"
+
+alias b2="vim ~/second-brain/."

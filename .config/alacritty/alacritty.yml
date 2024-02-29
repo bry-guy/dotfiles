@@ -75,6 +75,11 @@ font:
 
 key_bindings:
   - { key: N,              mods: Command,            action: SpawnNewInstance }
+  - { key: W,              mods: Command,                    action: None } # disable quit
+  - { key: H,              mods: Command,                    action: None } # disable hide
+  - { key: B,              mods: Command,     action: None        } # disable backwards_search
+  # - { key: Space,              mods: Command,     action: None        } # disable ??
+  # - { key: Space,              mods: Control,     action: None        } # disable ??
     
   # macOS support for mapping option to alt
   # https://github.com/alacritty/alacritty/issues/62#issuecomment-347552058
@@ -153,78 +158,4 @@ key_bindings:
   - { key: Backslash, mods: Alt,       chars: "\x1b\\"                      } # Alt + \
   - { key: Backslash, mods: Alt|Shift, chars: "\x1b|"                       } # Alt + |
 
-  ## macOS only
-  ## Send Command to Ctrl
-  # - { key: Space,     mods: Command,       chars: "\x00"                       } # Ctrl + Space
-  # - { key: A,         mods: Command,       chars: "\x01"                       }
-  # - { key: B,         mods: Command,       chars: "\x02"                       }
-  # - { key: C,         mods: Command,       chars: "\x03"                       }
-  # - { key: D,         mods: Command,       chars: "\x04"                       }
-  # - { key: E,         mods: Command,       chars: "\x05"                       }
-  # - { key: F,         mods: Command,       chars: "\x06"                       }
-  # - { key: G,         mods: Command,       chars: "\x07"                       }
-  # - { key: H,         mods: Command,       chars: "\x08"                       }
-  # - { key: I,         mods: Command,       chars: "\x09"                       }
-  # - { key: J,         mods: Command,       chars: "\x0a"                       }
-  # - { key: K,         mods: Command,       chars: "\x0b"                       }
-  # - { key: L,         mods: Command,       chars: "\x0c"                       }
-  # - { key: M,         mods: Command,       chars: "\x0d"                       }
-  # - { key: N,         mods: Command,       chars: "\x0e"                       }
-  # - { key: O,         mods: Command,       chars: "\x0f"                       }
-  # - { key: P,         mods: Command,       chars: "\x10"                       }
-  # - { key: Q,         mods: Command,       chars: "\x11"                       }
-  # - { key: R,         mods: Command,       chars: "\x12"                       }
-  # - { key: S,         mods: Command,       chars: "\x13"                       }
-  # - { key: T,         mods: Command,       chars: "\x14"                       }
-  # - { key: U,         mods: Command,       chars: "\x15"                       }
-  # - { key: V,         mods: Command,       chars: "\x16"                       }
-  # - { key: W,         mods: Command,       chars: "\x17"                       }
-  # - { key: X,         mods: Command,       chars: "\x18"                       }
-  # - { key: Y,         mods: Command,       chars: "\x19"                       }
-  # - { key: Z,         mods: Command,       chars: "\x1a"                       }
-  # - { key: A,         mods: Command|Shift,       chars: "\x61"                       }
-  # - { key: B,         mods: Command|Shift,       chars: "\x62"                       }
-  # - { key: C,         mods: Command|Shift,       chars: "\x63"                       }
-  # - { key: D,         mods: Command|Shift,       chars: "\x64"                       }
-  # - { key: E,         mods: Command|Shift,       chars: "\x65"                       }
-  # - { key: F,         mods: Command|Shift,       chars: "\x66"                       }
-  # - { key: G,         mods: Command|Shift,       chars: "\x67"                       }
-  # - { key: H,         mods: Command|Shift,       chars: "\x68"                       }
-  # - { key: I,         mods: Command|Shift,       chars: "\x69"                       }
-  # - { key: J,         mods: Command|Shift,       chars: "\x6a"                       }
-  # - { key: K,         mods: Command|Shift,       chars: "\x6b"                       }
-  # - { key: L,         mods: Command|Shift,       chars: "\x6c"                       }
-  # - { key: M,         mods: Command|Shift,       chars: "\x6d"                       }
-  # - { key: N,         mods: Command|Shift,       chars: "\x6e"                       }
-  # - { key: O,         mods: Command|Shift,       chars: "\x6f"                       }
-  # - { key: P,         mods: Command|Shift,       chars: "\x70"                       }
-  # - { key: Q,         mods: Command|Shift,       chars: "\x71"                       }
-  # - { key: R,         mods: Command|Shift,       chars: "\x72"                       }
-  # - { key: S,         mods: Command|Shift,       chars: "\x73"                       }
-  # - { key: T,         mods: Command|Shift,       chars: "\x74"                       }
-  # - { key: U,         mods: Command|Shift,       chars: "\x75"                       }
-  # - { key: V,         mods: Command|Shift,       chars: "\x76"                       }
-  # - { key: W,         mods: Command|Shift,       chars: "\x77"                       }
-  # - { key: X,         mods: Command|Shift,       chars: "\x78"                       }
-  # - { key: Y,         mods: Command|Shift,       chars: "\x79"                       }
-  # - { key: Z,         mods: Command|Shift,       chars: "\x7a"                       }
 
-  ## Disable quit hotkey
-  - { key: W,              mods: Command,                    action: None }
-  - { key: H,              mods: Command,                    action: None }
-  # - { key: K,              mods: Control, mode: ~Vi|~Search, chars: "\x0c"                 }
-  # - { key: K,              mods: Control, mode: ~Vi|~Search, action: ClearHistory          }
-  # - { key: Key0,           mods: Control,                    action: ResetFontSize         }
-  # - { key: Equals,         mods: Control,                    action: IncreaseFontSize      }
-  # - { key: Plus,           mods: Control,                    action: IncreaseFontSize      }
-  # - { key: NumpadAdd,      mods: Control,                    action: IncreaseFontSize      }
-  # - { key: Minus,          mods: Control,                    action: DecreaseFontSize      }
-  # - { key: NumpadSubtract, mods: Control,                    action: DecreaseFontSize      }
-  # - { key: V,              mods: Control,                    action: Paste                 }
-  # - { key: C,              mods: Control,                    action: Copy                  }
-  # - { key: C,              mods: Control, mode: Vi|~Search,  action: ClearSelection        }
-  # - { key: M,              mods: Control,                    action: Minimize              }
-  # - { key: Q,              mods: Control,                    action: Quit                  }
-  # - { key: N,              mods: Control,                    action: SpawnNewInstance      }
-  # - { key: F,              mods: Control, mode: ~Search,     action: SearchForward         }
-  # - { key: B,              mods: Control, mode: ~Search,     action: SearchBackward        }

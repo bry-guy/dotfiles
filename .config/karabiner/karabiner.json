@@ -18,7 +18,7 @@
                 },
                 "rules": [
                     {
-                        "description": "Map Control_Shift + C/V to copy/paste in term (ala Linux)",
+                        "description": "Enable Only in Terminal",
                         "manipulators": [
                             {
                                 "conditions": [
@@ -97,7 +97,7 @@
                         ]
                     },
                     {
-                        "description": "Map Copy/Paste to Ctrl+C/V except in Terminals",
+                        "description": "Enable only not in Terminal",
                         "manipulators": [
                             {
                                 "conditions": [
@@ -164,6 +164,42 @@
                                 "to": [
                                     {
                                         "key_code": "v",
+                                        "modifiers": [
+                                            "command"
+                                        ]
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "bundle_identifiers": [
+                                            "^com\\.apple\\.Terminal$",
+                                            "^com\\.googlecode\\.iterm2$",
+                                            "^co\\.zeit\\.hyperterm$",
+                                            "^co\\.zeit\\.hyper$",
+                                            "^io\\.alacritty$",
+                                            "^org\\.alacritty$",
+                                            "^net\\.kovidgoyal\\.kitty$"
+                                        ],
+                                        "type": "frontmost_application_unless"
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "w",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "control"
+                                        ],
+                                        "optional": [
+                                            "any"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "w",
                                         "modifiers": [
                                             "command"
                                         ]
@@ -223,19 +259,50 @@
                                     }
                                 ],
                                 "from": {
-                                    "key_code": "w",
+                                    "key_code": "spacebar",
                                     "modifiers": {
                                         "mandatory": [
                                             "control"
                                         ],
                                         "optional": [
-                                            "any"
+                                            "caps_lock",
+                                            "option",
+                                            "shift"
+                                        ]
+                                    }
+                                },
+                                "to": {
+                                    "modifiers": "command",
+                                    "pointing_button": "button1"
+                                },
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "bundle_identifiers": [
+                                            "^com\\.apple\\.Terminal$",
+                                            "^com\\.googlecode\\.iterm2$",
+                                            "^co\\.zeit\\.hyperterm$",
+                                            "^co\\.zeit\\.hyper$",
+                                            "^io\\.alacritty$",
+                                            "^org\\.alacritty$",
+                                            "^net\\.kovidgoyal\\.kitty$"
+                                        ],
+                                        "type": "frontmost_application_unless"
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "b",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "control"
                                         ]
                                     }
                                 },
                                 "to": [
                                     {
-                                        "key_code": "w",
+                                        "key_code": "b",
                                         "modifiers": [
                                             "command"
                                         ]
@@ -246,7 +313,7 @@
                         ]
                     },
                     {
-                        "description": "Map Commands to Ctrls",
+                        "description": "Ctrl -> Cmd",
                         "manipulators": [
                             {
                                 "from": {
@@ -510,25 +577,6 @@
                             },
                             {
                                 "from": {
-                                    "key_code": "b",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "control"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "b",
-                                        "modifiers": [
-                                            "command"
-                                        ]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
                                     "key_code": "i",
                                     "modifiers": {
                                         "mandatory": [
@@ -578,28 +626,6 @@
                                 "to": [
                                     {
                                         "key_code": "p",
-                                        "modifiers": [
-                                            "command",
-																						"shift"
-                                        ]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-
-                                "from": {
-                                    "key_code": "spacebar",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "control",
-																						"shift"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "spacebar",
                                         "modifiers": [
                                             "command",
 																						"shift"
@@ -748,26 +774,6 @@
                                         ]
                                     }
                                 ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "key_code": "spacebar",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_control"
-                                        ],
-                                        "optional": [
-                                            "caps_lock",
-                                            "option",
-                                            "shift"
-                                        ]
-                                    }
-                                },
-                                "to": {
-                                    "modifiers": "left_command",
-                                    "pointing_button": "button1"
-                                },
                                 "type": "basic"
                             },
                             {
