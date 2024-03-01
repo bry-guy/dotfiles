@@ -1,19 +1,16 @@
 [
     {
-        "key": "\\ f shift f",
-        "command": "workbench.action.quickOpen",
-        "when": "editorTextFocus"
+        "key": "\\ f shift+f",
+        "command": "workbench.action.quickOpen"
     },
     {
         "key": "\\ f f",
-        "command": "workbench.action.quickOpen",
-        "when": "editorTextFocus"
+        "command": "workbench.action.quickOpen"
     },
 		{
 			"key": "\\ f b",
 			"command": "workbench.action.quickOpen",
-			"args": "edt ",
-			"when": "editorTextFocus"
+			"args": "edt "
 		},
     {
         "key": "\\ f g",
@@ -88,6 +85,20 @@
         "key": "k",
         "command": "list.focusUp",
         "when": "breadcrumbsPossible && breadcrumbsVisible && !inputFocus && !editorFocus"
-    }
+    },
+		{
+			"key": "ctrl+b",
+			"command": "workbench.action.toggleSidebarVisibility"
+		},
+		{
+			"key": "cmd+w",
+			"command": "-workbench.action.closeWindow",
+			"when": "!editorIsOpen && !multipleEditorGroups"
+		},
+		{
+			"key": "cmd+w",
+			"command": "-workbench.action.closeActiveEditor"
+		}
+
 ]
 
