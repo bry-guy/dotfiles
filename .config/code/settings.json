@@ -3,5 +3,17 @@
         "editor.codeActionsOnSave": {
             "source.organizeImports": "explicit"
         }
-    }
+    },
+    "go.toolsManagement.autoUpdate": true,
+    "go.toolsGopath": "~/.asdf/installs/golang/1.22.0/go/",
+    "go.gopath": "~/.asdf/installs/golang/1.22.0/go/",
+
+    "extensions.experimental.affinity": {
+        "asvetliakov.vscode-neovim": 1
+    },
+
+		"editor.minimap.enabled": false,
+
+		"breadcrumbs.enabled": true
 }
+

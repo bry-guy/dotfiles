@@ -1,0 +1,93 @@
+[
+    {
+        "key": "\\ f shift f",
+        "command": "workbench.action.quickOpen",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "\\ f f",
+        "command": "workbench.action.quickOpen",
+        "when": "editorTextFocus"
+    },
+		{
+			"key": "\\ f b",
+			"command": "workbench.action.quickOpen",
+			"args": "edt ",
+			"when": "editorTextFocus"
+		},
+    {
+        "key": "\\ f g",
+				"command": "search.action.openNewEditor"
+    },
+    {
+        "key": "\\ g d",
+        "command": "editor.action.revealDefinition",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "\\ g d",
+        "command": "editor.action.goToImplementation",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "\\ g r",
+        "command": "editor.action.goToReferences",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "\\ g h",
+        "command": "editor.action.showHover",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "\\ g p",
+        "command": "editor.action.peekDefinition",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "\\ c r",
+        "command": "editor.action.rename",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "\\ c a",
+        "command": "editor.action.quickFix",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "\\ c i",
+        "command": "editor.action.organizeImports",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "escape",
+				"command": "search.action.focusQueryEditorWidget",
+				"when": "inSearchEditor"
+    },
+    {
+        "key": "-",
+        "command": "breadcrumbs.focus",
+        "when": "breadcrumbsPossible && breadcrumbsVisible"
+    },
+    {
+        "key": "-",
+        "command": "breadcrumbs.focusPrevious",
+        "when": "breadcrumbsActive && breadcrumbsVisible"
+    },
+    {
+        "key": "shift+-",
+        "command": "breadcrumbs.focusNext",
+        "when": "breadcrumbsActive && breadcrumbsVisible"
+    },
+		{
+			"key": "j",
+			"command": "list.focusDown",
+			"when": "breadcrumbsPossible && breadcrumbsVisible && !inputFocus && !editorFocus"
+		},
+    {
+        "key": "k",
+        "command": "list.focusUp",
+        "when": "breadcrumbsPossible && breadcrumbsVisible && !inputFocus && !editorFocus"
+    }
+]
+

@@ -1,7 +1,10 @@
 " https://afnan.io/posts/2018-04-12-my-neovim-development-setup/
+if exists('g:vscode')
+else
 for f in split(glob('~/.config/nvim/_*'), '\n')
 		exe 'source' f
 endfor
+end
 
 " nvim settings
 filetype on 
