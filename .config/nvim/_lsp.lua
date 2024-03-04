@@ -84,19 +84,26 @@ local handlers = {
 require("mason").setup()
 
 require("mason-lspconfig").setup({
-  ensure_installed = {
-	'apex_ls',
-	'bashls',
-	'lua_ls',
-	'terraformls',
-	'tsserver',
-	'pylsp',
-	'jdtls',
-	'gopls@v0.14.2',
-	'golangci_lint_ls'
-  },
+  -- ensure_installed = {
+	-- 'apex_ls',
+	-- 'bashls',
+	-- 'lua_ls',
+	-- 'terraformls',
+	-- 'tsserver',
+	-- 'pylsp',
+	-- 'jdtls',
+  -- },
 
   -- automatic_installation = { exclude = { "lua_ls" }},
-  automatic_installation = true,
+  -- automatic_installation = true,
   handlers = handlers,
 })
+
+require('lspconfig').golangci_lint_ls.setup{
+  on_attach = on_attach,
+  capabilities = capabilities
+}
+require('lspconfig').gopls.setup{
+  on_attach = on_attach,
+  capabilities = capabilities
+}

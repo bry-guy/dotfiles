@@ -3,6 +3,9 @@
 ## LSPs
 
 - [ ] Fix mason, asdf, and vscode all having different LSP sourcing
+  - [x] gopls
+  - [x] golangci-lint
+  - [ ] golangci-lint-langserver (temporarily in .local/bin)
   - [ ] Finish asdf shim hooks for all languages
     - [ ] LSPs
     - [ ] daps
