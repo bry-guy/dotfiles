@@ -55,6 +55,9 @@ local handlers = {
 		  completion = {
 			callSnippet = "Replace"
 		  },
+		  diagnostics = {
+			globals = { "vim" },
+		  },
 		  workspace = {
 			checkThirdParty = false,
 		  },

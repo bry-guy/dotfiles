@@ -22,3 +22,14 @@ opr() {
 	echo "Running command: $cmd"
     eval "$cmd"
 }
+
+chat() {
+    if [ -z "$1" ]; then
+        echo "Usage: chat <extension>"
+        return 1
+    fi
+
+		(find . -type f -name "*.$1" -exec sh -c 'echo "{}"; cat "{}"' \;; tree) | pbcopy
+
+}
+

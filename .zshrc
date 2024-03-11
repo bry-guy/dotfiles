@@ -1,18 +1,22 @@
 # zmodload zsh/zprof # debug enable
 
-## plugins
+# Source zplug
 source ~/.zplug/init.zsh
+
+# Define plugins
 zplug "joshskidmore/zsh-fzf-history-search"
 
-# Install plugins if there are plugins that have not been installed
+# Check if the plugins are installed and install them if they are not
 if ! zplug check --verbose; then
     printf "Install? [y/N]: "
     if read -q; then
         echo; zplug install
+    else
+        echo; echo "Skipping plugin installation."
     fi
 fi
 
-# Then, source plugins and add commands to $PATH
+# Load the plugins
 zplug load
 
 ## bind vi keys
@@ -20,7 +24,7 @@ bindkey -v
 
 ## zsh-fzf-history-search
 ## Make sure to use double quotes
-export ZSH_FZF_HISTORY_SEARCH_BIND="^R"
+# export ZSH_FZF_HISTORY_SEARCH_BIND="^R"
 export ZSH_FZF_HISTORY_SEARCH_EVENT_NUMBERS=0
 export ZSH_FZF_HISTORY_SEARCH_DATES_IN_SEARCH=0
 export ZSH_FZF_HISTORY_SEARCH_REMOVE_DUPLICATES=1

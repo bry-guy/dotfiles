@@ -28,3 +28,7 @@ Next Failed Test | <]t>
 
 Format XML | !xmllint --format -
 
+## whitespace @whitespace
+
+Enable whitespace | set :list
+Disable whitespace | set :nolist

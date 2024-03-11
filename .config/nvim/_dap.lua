@@ -17,7 +17,7 @@ require("mason-nvim-dap").setup({
 	"javatest",
 	"python",
 	"bash",
-	"delve"
+	-- "delve"
   },
   handlers = {
 	function(config)
@@ -104,5 +104,4 @@ vim.api.nvim_set_keymap('n', '<leader>dframes', "<cmd>lua require'telescope'.ext
 
 
 -- golang
-
 require('dap-go').setup()

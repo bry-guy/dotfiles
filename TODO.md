@@ -13,6 +13,7 @@
   - [ ] Switch LSPs to not use mason config
   - [ ] Remove mason
   - [ ] Write docs describe how current config works
+- [ ] Write blog post about it
 
 ## Linters
 
