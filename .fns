@@ -33,3 +33,30 @@ chat() {
 
 }
 
+b2() {
+		local dir
+		local cmd cmd2
+
+		local file="."
+
+		if [[ "$1" == "as" ]] || [[ "$1" == "work" ]]; then
+			file="AgentSync/"
+			cmd="+Goyo"
+		fi
+
+		if [[ "$1" == "journal" ]] || [[ "$1" == "diary" ]] || [[ "$1" == "today" ]]; then
+			dir="Diaries"
+			file="$(date -I).md"
+			cmd="+Goyo"
+			cmd2="+Limelight"
+
+		fi
+
+		if [[ "$1" == "root" ]] || [[ "$1" == "index" ]] || [[ "$1" == "home" ]] || [[ "$1" == "wiki" ]]; then
+			file="index.md"
+			cmd="+Goyo"
+		fi
+
+		cd ~/second-brain/"${dir}"
+		nvim "${file}" $cmd $cmd2
+}

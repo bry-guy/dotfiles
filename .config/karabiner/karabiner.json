@@ -350,7 +350,7 @@
                                     }
                                 ],
                                 "type": "basic"
-                            },
+                            }
                         ]
                     },
                     {
@@ -628,25 +628,6 @@
                                 "to": [
                                     {
                                         "key_code": "i",
-                                        "modifiers": [
-                                            "command"
-                                        ]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "key_code": "r",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "control"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "r",
                                         "modifiers": [
                                             "command"
                                         ]
