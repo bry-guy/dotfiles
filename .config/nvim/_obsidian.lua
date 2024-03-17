@@ -38,17 +38,20 @@ require("obsidian").setup({
   open_notes_in = "hsplit"
 })
 
-vim.keymap.set('n', '<leader>of', '<Cmd>ObsidianQuickSwitch<CR>')
-vim.keymap.set('n', '<leader>os', '<Cmd>ObsidianSearch<CR>')
-vim.keymap.set('n', '<leader>od', '<Cmd>ObsidianToday<CR>')
-vim.keymap.set('n', '<leader>ob', '<Cmd>ObsidianBacklinks<CR>')
+-- vim.keymap.set('n', '<leader>bf', '<Cmd>ObsidianQuickSwitch<CR>')
+vim.keymap.set('n', '<leader>bs', '<Cmd>ObsidianSearch<CR>')
+vim.keymap.set('n', '<leader>bd', '<Cmd>ObsidianToday<CR>')
+vim.keymap.set('n', '<leader>bb', '<Cmd>ObsidianBacklinks<CR>')
+vim.keymap.set('v', '<leader>bl', '<Cmd>ObsidianLink<CR>')
+vim.keymap.set('n', '<leader>bl', '<Cmd>ObsidianLinkNew<CR>')
+vim.keymap.set('n', '<leader>bf', '<Cmd>ObsidianFollowLink<CR>')
 
-vim.keymap.set('n', 'gf',
+vim.keymap.set('n', '<CR>',
   function()
     if require('obsidian').util.cursor_on_markdown_link() then
       return "<cmd>ObsidianFollowLink<CR>"
     else
-      return "gf"
+      return "<CR>"
     end
   end,
   { noremap = false, expr = true })
