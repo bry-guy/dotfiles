@@ -33,7 +33,7 @@ chat() {
 
 }
 
-b2() {
+wiki() {
 		local dir
 		local cmd cmd2
 
@@ -52,7 +52,7 @@ b2() {
 
 		fi
 
-		if [[ "$1" == "root" ]] || [[ "$1" == "index" ]] || [[ "$1" == "home" ]] || [[ "$1" == "wiki" ]]; then
+		if [[ "$1" == "root" ]] || [[ "$1" == "index" ]] || [[ "$1" == "home" ]]; then
 			file="index.md"
 			cmd="+Goyo"
 		fi

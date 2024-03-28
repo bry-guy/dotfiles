@@ -20,7 +20,7 @@ autocmd FileType markdown setlocal spell spelllang=en_us
 "   zg to add the word to your dictionary
 
 " autocmd FileType markdown set cursorline
-autocmd FileType markdown setlocal conceallevel=2
+autocmd FileType markdown setlocal conceallevel=1
 " autocmd FileType markdown set linebreak " Have lines wrap instead of continue off-screen
 autocmd FileType markdown setlocal expandtab " Converts tabs to spaces
 autocmd FileType markdown setlocal tabstop=2 " Use two spaces instead of tabs
@@ -29,7 +29,8 @@ autocmd FileType markdown setlocal scrolloff=12 " Keep cursor in approximately t
 autocmd FileType markdown setlocal mouse= " Disable mouse support
 
 " vim-markdown
-let g:vim_markdown_conceal = 2
+set conceallevel=1
+let g:vim_markdown_conceal = 1
 let g:vim_markdown_math = 1
 let g:vim_markdown_frontmatter = 1
 let g:vim_markdown_strikethrough = 1
@@ -37,6 +38,8 @@ let g:vim_markdown_follow_anchor = 1
 
 " vim-pencil
 let g:pencil#textwidth = 120
+let g:pencil#conceallevel = 2     " 0=disable, 1=one char, 2=hide char, 3=hide all (def)
+
 
 augroup pencil
   autocmd!
@@ -50,18 +53,3 @@ let g:goyo_width = 120
 " limelight
 let g:limelight_paragraph_span = 1
 
-" glow
-
-lua << EOF
-require('glow').setup({
-  -- glow_path = "", -- will be filled automatically with your glow bin in $PATH, if anyglow
-  -- install_path = "~/.local/bin", -- default path for installing glow binary
-  -- border = "shadow", -- floating window border config
-  -- style = "dark|light", -- filled automatically with your current editor background, you can override using glow json style
-  -- pager = false,
-  width = 180,
-  height = 100,
-  width_ratio = 0.85, -- maximum width of the Glow window compared to the nvim window size (overrides `width`)
-  height_ratio = 0.85,
-})
-EOF

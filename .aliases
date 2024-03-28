@@ -22,4 +22,6 @@ alias tk="tmux kill-session -t"
 
 alias cobra="cobra-cli"
 
-# alias b2="cd ~/second-brain && vim ."
+alias wr="wiki root"
+alias ww="wiki work"
+alias wt="wiki today"

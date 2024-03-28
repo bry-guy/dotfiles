@@ -54,6 +54,7 @@ Plug 'stevearc/oil.nvim'
 " Testing
 Plug 'vim-test/vim-test'
 Plug 'antoinemadec/FixCursorHold.nvim'
+Plug 'nvim-neotest/nvim-nio'
 Plug 'nvim-neotest/neotest'
 Plug 'nvim-neotest/neotest-vim-test'
 Plug 'nvim-neotest/neotest-go'
@@ -85,8 +86,6 @@ Plug 'akinsho/toggleterm.nvim', {'tag' : '*'}
 Plug 'kikito/inspect.lua', { 'dir': '~/.config/nvim/lua/inspect.lua' }
 
 Plug 'sudormrfbin/cheatsheet.nvim'
-
-Plug 'ellisonleao/glow.nvim'
 
 " Language enhancers
 Plug 'hashivim/vim-terraform'
