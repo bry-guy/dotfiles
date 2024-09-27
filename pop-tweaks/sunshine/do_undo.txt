@@ -1,0 +1,2 @@
+sh -c "nvidia-settings --assign CurrentMetaMode=\"DP-0: 3440x1440_120 +0+0 {viewportout=1920x1200+0+0}\""
+nvidia-settings --assign CurrentMetaMode="DP-0: 3440x1440_120 +0+0 {viewportout=3440x1440+0+0}"

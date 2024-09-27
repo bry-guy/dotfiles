@@ -67,6 +67,9 @@
 
 !todo.md
 
+!pop-tweaks/
+!pop-tweaks/**/*
+
 # !second-brain/
 # !second-brain/*
 # !second-brain/**/*
