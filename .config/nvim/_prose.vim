@@ -37,6 +37,8 @@ let g:vim_markdown_strikethrough = 1
 let g:vim_markdown_follow_anchor = 1
 
 " vim-pencil
+" TODO: Determine if conceallevel should be 0/1/2 (2 seems to hide stuff too
+" frequently)
 let g:pencil#textwidth = 120
 let g:pencil#conceallevel = 2     " 0=disable, 1=one char, 2=hide char, 3=hide all (def)
 

@@ -1,3 +1,9 @@
+-- local registry = require("mason-registry")
+-- registry.refresh(function ()
+--      registry.get_package("bash-debug-adapter")
+--      registry.get_package("motoko-lsp")
+-- end)
+
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 local opts = { noremap=true, silent=true }
@@ -7,6 +13,7 @@ vim.api.nvim_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', op
 vim.api.nvim_set_keymap('n', '<space>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
 
 local on_attach = function(_, bufnr)
+  -- print("setting up server "  .. server)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gt', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
@@ -34,10 +41,46 @@ require("neodev").setup({
   -- end,
 })
 
+
 local lspconfig_status_ok, lspconfig = pcall(require, "lspconfig")
 if not lspconfig_status_ok then
   vim.notify("Couldn't load LSP-Config" .. lspconfig, vim.log.levels.ERROR)
   return
+end
+
+-- pylsp pipenv setup
+
+-- Function to get the command to run pylsp using Pipenv
+local function get_pylsp_command()
+  -- Check if a Pipfile exists to confirm it's a pipenv project
+  if vim.fn.filereadable("Pipfile") ~= 0 then
+    -- print("Pipfile found. Using pipenv to run pylsp.")  -- Debug: Confirm using Pipenv
+    return {"pipenv", "run", "pylsp"}
+  else
+    -- print("No Pipfile found. Falling back to global pylsp.")  -- Debug: Fallback to global pylsp
+    return {"pylsp"}
+  end
+end
+
+-- Check if Pipfile exists in the current directory to decide environment
+local function setup_pylsp()
+  lspconfig.pylsp.setup{
+    cmd = get_pylsp_command(),
+    on_attach = on_attach,
+	capabilities = capabilities,
+    settings = {
+      pylsp = {
+        configurationSources = {"pycodestyle"},
+        plugins = {
+          pycodestyle = {enabled = true},
+          pyflakes = {enabled = false},
+          flake8 = {enabled = true},
+          pylint = {enabled = true},
+          jedi_completion = {enabled = true},
+          jedi_definition = {enabled = true, follow_imports = true},
+        }
+      }
+    } }
 end
 
 local handlers = {
@@ -69,19 +112,20 @@ local handlers = {
 	}
   end,
   ["jdtls"] = function () end, -- jdtls is invoked on each buffer via filetype hook
-  ["pylsp"] = function ()
-	lspconfig.pylsp.setup {
-	  on_attach = on_attach,
-	  settings = {
-		pylsp = {
-		  plugins = {
-			pyflakes = {enabled = false},
-			pylint = {enabled = false},
-		  },
-		},
-	  },
-	}
-  end,
+  -- ["pylsp"] = setup_pylsp(),
+  -- ["pylsp"] = function ()
+	-- lspconfig.pylsp.setup {
+	  -- on_attach = on_attach,
+	  -- settings = {
+		-- pylsp = {
+		  -- plugins = {
+			-- pyflakes = {enabled = false},
+			-- pylint = {enabled = false},
+		  -- },
+		-- },
+	  -- },
+	-- }
+  -- end,
 }
 
 require("mason").setup()
@@ -110,3 +154,4 @@ require('lspconfig').gopls.setup{
   on_attach = on_attach,
   capabilities = capabilities
 }
+setup_pylsp()

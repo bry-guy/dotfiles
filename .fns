@@ -57,6 +57,11 @@ wiki() {
 			cmd="+Goyo"
 		fi
 
+		if [[ "$1" == "brag" ]]; then
+			file="AgentSync/agentsync-brag.md"
+			cmd="+Goyo"
+		fi
+
 		cd ~/second-brain/"${dir}"
 		nvim "${file}" $cmd $cmd2
 }

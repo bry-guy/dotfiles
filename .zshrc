@@ -62,8 +62,11 @@ export ZSH_FZF_HISTORY_SEARCH_REMOVE_DUPLICATES=1
 HISTFILE=~/.histfile
 HISTSIZE=10000
 SAVEHIST=10000
-setopt append_history
-setopt share_history
+setopt SHARE_HISTORY
+setopt INC_APPEND_HISTORY  # Write to the history file immediately, not when the shell exits.
+setopt HIST_FIND_NO_DUPS  # Do not display duplicates in the history list.
+setopt HIST_IGNORE_ALL_DUPS  # Remove old duplicates leaving just the most recent entry in the history.
+
 
 ## History search using text behind cursor
 bindkey "^[[A" history-beginning-search-backward

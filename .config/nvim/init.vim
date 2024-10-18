@@ -20,6 +20,7 @@ set scrolloff=5
 set tabstop=4
 set softtabstop=4
 set signcolumn=yes
+set expandtab
 
 set hidden
 set ignorecase

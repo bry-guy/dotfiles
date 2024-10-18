@@ -1,6 +1,7 @@
 require("copilot").setup {
   filetypes = {
 	go = true,
+	python = true,
 	["*"] = false, -- disable for all other filetypes and ignore default `filetypes`
   },
   panel = {

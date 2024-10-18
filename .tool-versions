@@ -1,11 +1,11 @@
-golang 1.21.5
+golang 1.23.1
 nodejs 18.19.0
 ruby 3.1.2
 python 3.11.0 3.10.0
 java adoptopenjdk-17.0.4+101 adoptopenjdk-11.0.16+101
 
-gopls 0.14.2
-golangci-lint 1.56.2
+gopls 0.16.2
+golangci-lint 1.61.1
 golangci-lint-langserver 0.0.9
 delve 1.22.1
 

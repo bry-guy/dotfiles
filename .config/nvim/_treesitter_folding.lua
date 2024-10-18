@@ -27,6 +27,6 @@ autocmd('BufEnter', {
   command = "normal zx"
 })
 
--- Configure pretty folding via pretty-fold.nvim
-require('pretty-fold').setup()
+-- -- Configure pretty folding via pretty-fold.nvim
+-- require('pretty-fold').setup()
 

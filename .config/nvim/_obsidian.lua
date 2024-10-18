@@ -137,32 +137,33 @@ require("obsidian").setup({
   open_notes_in = "hsplit"
 })
 
--- fixup incorrect notes
-local client = require("obsidian").get_client()
-client:apply_async(function(note)
-  local did_update = false
+-- -- fixup incorrect notes
+-- local client = require("obsidian").get_client()
+-- client:apply_async(function(note)
+--   local did_update = false
 
-  if note.id ~= nil and string.find(note.id, " ") ~= nil then
-	did_update = true
+--   -- TODO: Copy contents to new note, delete old note to .trash
+--   if note.id ~= nil and string.find(note.id, " ") ~= nil then
+-- 	did_update = true
 
-	print("note.id: " .. note.id)
+-- 	print("note.id: " .. note.id)
 
-	local new_id = note_id_fn(note.id)
-	print("new_id: " .. new_id)
+-- 	local new_id = note_id_fn(note.id)
+-- 	print("new_id: " .. new_id)
 
-	print(string.format("ID: %s to %s", note.id, new_id))
-	note.id = new_id
+-- 	print(string.format("ID: %s to %s", note.id, new_id))
+-- 	note.id = new_id
 
-	local new_path = note_path_id_fn(note)
-	print(string.format("PATH: %s to %s", note.path, new_path))
-	note.path = new_path
-  end
+-- 	local new_path = note_path_id_fn(note)
+-- 	print(string.format("PATH: %s to %s", note.path, new_path))
+-- 	note.path = new_path
+--   end
 
-  if did_update then
-	print(string.format("UPDATE: %s", note.id))
-	note:save()
-  end
-end)
+--   if did_update then
+-- 	print(string.format("UPDATE: %s", note.id))
+-- 	note:save()
+--   end
+-- end)
 
 vim.keymap.set('n', '<leader>wn', "<Cmd>ObsidianNew<CR>")
 vim.keymap.set('n', '<leader>wf', "<Cmd>ObsidianQuickSwitch<CR>")

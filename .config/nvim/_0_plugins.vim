@@ -44,9 +44,7 @@ Plug 'dcampos/nvim-snippy'
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
 
-Plug 'anuvyklack/pretty-fold.nvim'
-
-Plug 'terryma/vim-multiple-cursors'
+Plug 'brenton-leighton/multiple-cursors.nvim'
 
 " Navigating
 Plug 'stevearc/oil.nvim'
@@ -65,7 +63,7 @@ Plug 'nvim-neotest/neotest-python'
 Plug 'bluz71/vim-moonfly-colors', { 'as': 'moonfly' }
 Plug 'itchyny/lightline.vim'
 
-" tpope
+" 
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-surround'
@@ -81,7 +79,6 @@ Plug 'reedes/vim-pencil'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'epwalsh/obsidian.nvim'
 Plug 'mechatroner/rainbow_csv'
-Plug 'akinsho/toggleterm.nvim', {'tag' : '*'}
 
 Plug 'kikito/inspect.lua', { 'dir': '~/.config/nvim/lua/inspect.lua' }
 
