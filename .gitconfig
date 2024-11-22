@@ -15,6 +15,13 @@
 		forget = update-index --assume-unchanged
 		remember = update-index --no-assume-unchanged
 		forgotten = ! git ls-files -v | grep "^h "
+
+        recent-remote = ! git for-each-ref --sort=-committerdate --format='%(committerdate:iso)|%(authorname)|%(refname:short)' refs/heads/ refs/remotes/ | grep -v 'dependabot' | head -15 | column -t -s '|'
+        recent = ! git branch --sort=-committerdate --format='%(committerdate:iso)|%(authorname)|%(refname:short)' | head -15 | column -t -s '|'
+
+
+        re = recent
+        rere = recent-remote
 [core]
 		excludesFile = ~/.local/.gitignore
 [init]
