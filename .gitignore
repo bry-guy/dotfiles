@@ -36,6 +36,8 @@
 .config/nvim/lua/**/*
 !.config/nvim/
 !.config/nvim/**/*
+!.config/nvim2/
+!.config/nvim2/**/*
 
 !.config/pop-shell/
 !.config/pop-shell/**/*
