@@ -21,11 +21,11 @@ autocmd('FileReadPost', {
   command = "normal zR"
 })
 
-autocmd('BufEnter', {
-  group = 'open_folds',
-  pattern = '*',
-  command = "normal zx"
-})
+-- autocmd('BufEnter', {
+--   group = 'open_folds',
+--   pattern = '*',
+--   command = "normal zx"
+-- })
 
 -- -- Configure pretty folding via pretty-fold.nvim
 -- require('pretty-fold').setup()

@@ -46,17 +46,9 @@ vim.o.encoding = 'utf-8'
 
 -- Enable colorscheme
 vim.opt.termguicolors = true
--- require("moonfly").custom_colors({
---   bg = "#121212",
---   violet = "#ff74b8",
--- })
 vim.cmd [[colorscheme moonfly]]
-vim.g.moonflyCursorColor = true
-vim.g.moonflyItalics = false
-vim.g.moonflyVirtualTextColor = true
 
---- Enable moonfly with borders for floating windows
-vim.g.moonflyNormalFloat = true
+-- LSP specific settings (TODO: why?)
 vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(
   vim.lsp.handlers.hover, {
     border = "single"
