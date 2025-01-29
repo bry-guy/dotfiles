@@ -12,6 +12,7 @@ export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@1.1)"
 export AICHAT_CONFIG_DIR="$HOME/.config/aichat/"
 export AICHAT_ROLES_FILE="$HOME/.config/aichat/roles.yaml"
 export PG_HOME="$(brew --prefix)/var/postgres"
+export HOMEBREW_BREWFILE="$HOME/.brewfile"
 
 # asdf
 ASDF_FORCE_PREPEND=yes . $(brew --prefix asdf)/libexec/asdf.sh
@@ -76,8 +77,11 @@ unsetopt beep
 zstyle :compinstall filename '/home/brain/.zshrc'
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' # match case-insensitive 
 
-## asdf for compinit
+## zsh completions
 fpath=(${ASDF_DIR}/completions $fpath)
+fpath=(~/.zsh/completions $fpath)
+
+
 
 ### https://medium.com/@dannysmith/little-thing-2-speeding-up-zsh-f1860390f92
 autoload -Uz compinit bashcompinit promptinit colors
@@ -166,3 +170,8 @@ eval "$(op completion zsh)"; compdef _op op
 
 ## terraform
 complete -o nospace -C /opt/homebrew/bin/terraform terraform
+
+## support-cli (agentsync)
+export DOPPLER_TOKEN="$(doppler configure get token --plain)"
+export HOMEBREW_GITHUB_API_TOKEN="$(gh auth token)"
+export AUTH_USER_EMAIL=bryan.smith@agentsync.io

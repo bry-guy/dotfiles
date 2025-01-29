@@ -26,7 +26,7 @@ en.utf-8.add
 
 TODO.md
 - [?] _0_plugins.vim
-- [ ] _ai.lua
+- [x] _ai.lua
 - [x] _completion.lua
 - [?] _dap.lua
     - [ ] go (dap-go)
@@ -50,7 +50,7 @@ TODO.md
 - [x] _octo.lua
 - [ ] _plugindev.lua
 - [x] _prose.vim
-- [ ] _snippets.lua
+- [x] _snippets.lua
 - [x] _telescope.lua
 - [ ] _test.lua
 - [x] _theme.vim

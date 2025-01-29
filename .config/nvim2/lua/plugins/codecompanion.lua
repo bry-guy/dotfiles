@@ -1,11 +1,21 @@
 M = {
   "olimorris/codecompanion.nvim",
   dependencies = {
-    "github/copilot.vim",
+    {
+      "github/copilot.vim",
+      init = function()
+        vim.g.copilot_filetypes = {
+          ["*"] = false,
+        }
+      end
+    },
     "nvim-lua/plenary.nvim",
     "nvim-treesitter/nvim-treesitter",
     { "MeanderingProgrammer/render-markdown.nvim", ft = { "markdown", "codecompanion" } },
   },
+  init = function()
+    require("config.keymaps").codecompanion_hotkeys()
+  end,
   config = true,
   lazy = false,
   -- TODO: Use "cmd" to load API keys from 1password

@@ -22,6 +22,7 @@
 !.tool-versions
 !.detect_os
 !.detect_arch
+!.brewfile
 
 !.local/
 !.local/.gitignore

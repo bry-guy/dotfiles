@@ -21,7 +21,7 @@
 
 
         re = recent
-        rere = recent-remote
+        rerem = recent-remote
 [core]
 		excludesFile = ~/.local/.gitignore
 [init]

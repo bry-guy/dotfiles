@@ -100,7 +100,7 @@ M.tab_hotkeys = function()
   vim.keymap.set("n", "<C-t>S-h", "<CMD>-tabmove<CR>", { desc = "Move tab to previous" })
 end
 
--- completion (nvim-cmp)
+-- completion (nvim-cmp) TODO: Uhhh what do
 M.cmp_hotkeys = {
 }
 
@@ -140,5 +140,28 @@ end
 M.goyo_hotkeys = function()
   vim.keymap.set('n', '<leader>g', '<CMD>Goyo<CR>', { desc = "Toggle Goyo"})
 end
+
+-- codecompanion (ai)
+M.codecompanion_hotkeys = function()
+  vim.keymap.set("n", "<leader>aa", "<cmd>CodeCompanionActions<cr>", { desc = "AI actions" })
+  vim.keymap.set("v", "<leader>aa", "<cmd>CodeCompanionActions<cr>", { desc = "AI actions" })
+  vim.keymap.set("n", "<leader>ac", "<cmd>CodeCompanionChat Toggle<cr>", { desc = "AI chat" })
+  vim.keymap.set("v", "<leader>ac", "<cmd>CodeCompanionChat Toggle<cr>", { desc = "AI chat" })
+  vim.keymap.set("v", "<leader>ap", "<cmd>CodeCompanionChat Add<cr>", { desc = "AI push (add)" })
+
+  -- Expand 'cc' into 'CodeCompanion' in the command line
+  vim.cmd([[cab cc CodeCompanion]])
+end
+
+-- snippets
+M.snippets_hotkeys = {
+  is = {
+    ['<leader>s'] = 'expand_or_advance',
+    ['<leader>S'] = 'previous',
+  },
+  nx = {
+    ['<leader>x'] = 'cut_text',
+  },
+}
 
 return M
