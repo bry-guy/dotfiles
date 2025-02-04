@@ -1,8 +1,16 @@
+# ===============================
+# Source Architecture-Specific Configurations
+# ===============================
+
+if [ -f "$HOME/.zsh_arch" ]; then
+    source "$HOME/.zsh_arch"
+else
+    echo "Warning: ~/.zsh_arch not found. Please run ./script/setup."
+fi
+
 # Path configurations
 export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
-export PATH="/usr/local/bin:$PATH"
-export PATH="/usr/local/Cellar:$PATH"
 export PATH="/usr/local/opt/mysql@5.7/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="/usr/local/sbin:$PATH"
@@ -31,7 +39,8 @@ export PATH=$PATH:$(go env GOPATH)/bin
 # zmodload zsh/zprof # debug enable
 
 # Source zplug
-source ~/.zplug/init.zsh
+export ZPLUG_HOME=/usr/local/opt/zplug
+source $ZPLUG_HOME/init.zsh
 
 # Define plugins
 zplug "joshskidmore/zsh-fzf-history-search"
