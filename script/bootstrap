@@ -87,11 +87,4 @@ if [ -n "$OS_LINUX" ]; then
 		fi
 fi
 
-## Install Ansible
-
-if [ -z "$(which ansible)" ]; then
-		echo "INFO: (brew) Install ansible."
-		brew install ansible
-fi
-
 

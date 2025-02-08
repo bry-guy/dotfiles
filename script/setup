@@ -2,6 +2,7 @@
 
 set -e
 
+
 # ===============================
 # Architecture Detection
 # ===============================
@@ -79,6 +80,7 @@ echo "Please log in to 1Password and enable the SSH Agent."
 echo "1Password > Sign-in > Preferences > Developer"
 read -p "After completing the above steps, press Enter to continue..."
 
+# TODO: Use chezmoi
 # ===============================
 # Create Home Directories
 # ===============================
