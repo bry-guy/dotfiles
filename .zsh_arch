@@ -1,0 +1,5 @@
+
+export HOMEBREW_PREFIX="/usr/local"
+export HOMEBREW_CELLAR="/usr/local/Cellar"
+export PATH="/usr/local/bin:/Users/brain/.rd/bin:/usr/local/sbin:/Users/brain/.local/bin:/usr/local/opt/mysql@5.7/bin:/usr/local/opt/coreutils/libexec/gnubin:/usr/local/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/bin"
+

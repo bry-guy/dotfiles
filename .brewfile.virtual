@@ -1,0 +1,4 @@
+brew "lima"
+brew "colima"
+brew "qemu"
+cask "rancher"
