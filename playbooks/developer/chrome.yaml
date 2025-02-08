@@ -1,6 +1,0 @@
-- name: Install Chrome
-  when: ansible_os_family == "Darwin"
-  community.general.homebrew_cask:
-    name: google-chrome
-    state: present
-    accept_external_apps: true

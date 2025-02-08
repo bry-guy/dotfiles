@@ -1,5 +1,0 @@
-- name: Install Amethyst
-  when: ansible_os_family == "Darwin"
-  community.general.homebrew_cask:
-    name: amethyst
-    state: latest
