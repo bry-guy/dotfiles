@@ -52,6 +52,34 @@ EOL
 source $ARCH_FILE
 
 # ===============================
+# Install Core Homebrew Dependencies
+# ===============================
+
+# Define Brewfile paths
+echo "Installing homebrew core deps..."
+BREWFILE_DIR="$PWD"
+CORE_BREWFILE="$BREWFILE_DIR/.brewfile.core"
+
+# Verify Brewfiles exist
+if [ ! -f "$CORE_BREWFILE" ]; then
+    echo "Core Brewfile ($CORE_BREWFILE) not found."
+    exit 1
+fi
+
+brew bundle --verbose --file="$CORE_BREWFILE"
+
+echo "Successfully installed core packages."
+
+
+# ===============================
+# Prompt to Login to 1Password and Enable SSH Agent
+# ===============================
+
+echo "Please log in to 1Password and enable the SSH Agent."
+echo "1Password > Sign-in > Preferences > Developer"
+read -p "After completing the above steps, press Enter to continue..."
+
+# ===============================
 # Create Home Directories
 # ===============================
 
@@ -86,10 +114,11 @@ set +e
 dotfiles_files=(
 	".aliases"
 	".asdfrc"
-	".brewfile"
+	".brewfile.ai"
 	".brewfile.core"
 	".brewfile.dev"
 	".brewfile.me"
+	".brewfile.virtual"
 	".brewfile.work"
 	".detect_arch"
 	".detect_os"
@@ -134,34 +163,6 @@ for dir in "${dotfile_dirs[@]}"; do
 done
 set -e
 
-
-# ===============================
-# Install Core Homebrew Dependencies
-# ===============================
-
-# Define Brewfile paths
-echo "Installing homebrew core deps..."
-BREWFILE_DIR="$PWD"
-CORE_BREWFILE="$BREWFILE_DIR/.brewfile.core"
-
-# Verify Brewfiles exist
-if [ ! -f "$CORE_BREWFILE" ]; then
-    echo "Core Brewfile ($CORE_BREWFILE) not found."
-    exit 1
-fi
-
-brew bundle --file="$CORE_BREWFILE"
-
-echo "Successfully installed core packages."
-
-
-# ===============================
-# Prompt to Login to 1Password and Enable SSH Agent
-# ===============================
-
-echo "Please log in to 1Password and enable the SSH Agent."
-echo "1Password > Sign-in > Preferences > Developer"
-read -p "After completing the above steps, press Enter to continue..."
 
 # ===============================
 # Apply macOS Defaults
