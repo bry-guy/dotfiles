@@ -80,91 +80,12 @@ echo "Please log in to 1Password and enable the SSH Agent."
 echo "1Password > Sign-in > Preferences > Developer"
 read -p "After completing the above steps, press Enter to continue..."
 
-# TODO: Use chezmoi
 # ===============================
-# Create Home Directories
-# ===============================
-
-echo "Creating necessary home directories..."
-
-directories=(
-    "$HOME/.local"
-    "$HOME/.local/lib"
-    "$HOME/.local/bin" "$HOME/.local/src" "$HOME/.local/artifacts" "$HOME/.config" "$HOME/.git" "$HOME/.ssh"
-    "$HOME/dev"
-    "$HOME/second-brain"
-)
-
-for dir in "${directories[@]}"; do
-    if [ ! -d "$dir" ]; then
-        mkdir -p "$dir"
-        chmod 700 "$dir"
-        echo "Created directory: $dir"
-    else
-        echo "Directory already exists: $dir"
-    fi
-done
-
-# ===============================
-# Unpack Dotfiles
+# Apply dotfiles
 # ===============================
 
-echo "Unpacking dotfiles..."
-
-set +e
-# Copy individual dotfiles (exclude directories)
-dotfiles_files=(
-	".aliases"
-	".asdfrc"
-	".brewfile.ai"
-	".brewfile.core"
-	".brewfile.dev"
-	".brewfile.me"
-	".brewfile.virtual"
-	".brewfile.work"
-	".detect_arch"
-	".detect_os"
-	".fns"
-	".gitconfig"
-	".gitignore"
-	".osx"
-	".tmate.conf"
-	".tmux.conf"
-	".tool-versions"
-	".zprofile"
-	".zsh_arch"
-	".zshenv"
-	".zshrc"
-)
-for file in "${dotfiles_files[@]}"; do
-    if [ -f "./$file" ]; then
-        cp "./$file" "$HOME/"
-        echo "Copied $file to $HOME/"
-    else
-        echo "File not found: ../$file. Skipping."
-    fi
-done
-
-rm -rf "$HOME/.git"
-
-# Copy dotfile directories
-dotfile_dirs=(
-    ".config"
-    ".git"
-    ".local"
-    ".ssh"
-)
-
-for dir in "${dotfile_dirs[@]}"; do
-    if [ -d "./$dir" ]; then
-        cp -R "./$dir" "$HOME/"
-        echo "Copied directory $dir to $HOME/"
-    else
-        echo "Directory not found: ./$dir. Skipping."
-    fi
-done
-set -e
-
+chezmoi init https://github.com/bry-guy/dotfiles
+chezmoi apply
 
 # ===============================
 # Apply macOS Defaults
@@ -177,23 +98,6 @@ if [ "$ARCH_ARM" == "1" ] || [ "$ARCH_X86" == "1" ]; then
         echo "macOS defaults applied."
     else
         echo "macOS defaults file ~/.osx not found. Skipping."
-    fi
-fi
-
-# ===============================
-# Copy Amethyst Preferences
-# ===============================
-
-if [ "$ARCH_ARM" == "1" ] || [ "$ARCH_X86" == "1" ]; then
-    amethyst_config_src="$HOME/.config/amethyst"
-    amethyst_prefs_dest="$HOME/Library/Preferences/"
-
-    if [ -d "$amethyst_config_src" ]; then
-        echo "Copying Amethyst preferences..."
-        cp "$amethyst_config_src/"* "$amethyst_prefs_dest"
-        echo "Amethyst preferences copied to $amethyst_prefs_dest."
-    else
-        echo "Amethyst configuration directory $amethyst_config_src not found. Skipping."
     fi
 fi
 
