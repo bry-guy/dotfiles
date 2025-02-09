@@ -88,6 +88,11 @@ zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' # match case-insensiti
 # ===============================
 fpath=(~/.zsh/completions $fpath)
 
+GIT_COMPLETION="/usr/local/etc/bash_completion.d/git-completion.bash"
+if [ -f "$GIT_COMPLETION" ]; then
+    source "$GIT_COMPLETION"
+fi
+
 autoload -Uz compinit bashcompinit promptinit colors
 compdump="$HOME/.zcompdump"
 if [[ -f "$compdump" && -n "$(find "$compdump" -mtime -7)" ]]; then
