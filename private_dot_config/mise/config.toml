@@ -2,3 +2,7 @@
 
 [settings.python]
 compile = false
+
+[tools]
+go = "1.23.6"
+uv = "latest"

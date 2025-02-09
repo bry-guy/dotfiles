@@ -1,3 +1,5 @@
+zmodload zsh/zprof
+
 # ===============================
 # Source Architecture-Specific Configurations
 # ===============================
@@ -8,72 +10,61 @@ else
     echo "Warning: ~/.zsh_arch not found. Please run ./script/setup."
 fi
 
-# Path configurations
-export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
-export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
-export PATH="/usr/local/opt/mysql@5.7/bin:$PATH"
+# ===============================
+# PATH Configurations
+# ===============================
 export PATH="$HOME/.local/bin:$PATH"
-export PATH="/usr/local/sbin:$PATH"
-export PATH="$HOME/.rd/bin:$PATH"
-export FZF_DEFAULT_COMMAND='rg --files --hidden --smart-case'
-export AICHAT_ROLES_FILE="$HOME/.config/aichat/roles.yaml"
-export PG_HOME="$(brew --prefix)/var/postgres"
 export HOMEBREW_BREWFILE="$HOME/.brewfile"
-
+# HOMEBREW_PREFIX="$(brew --prefix)"
+# export PATH="$HOMEBREW_PREFIX/opt/coreutils/libexec/gnubin:$PATH"
+# export MANPATH="$HOMEBREW_PREFIX/opt/coreutils/libexec/gnuman:$MANPATH"
+# export AICHAT_ROLES_FILE="$HOME/.config/aichat/roles.yaml"
 
 # ===============================
 # Mise En Place
 # ===============================
 
 eval "$(mise activate zsh)"
-
 # asdf
 # ASDF_FORCE_PREPEND=yes . $(brew --prefix asdf)/libexec/asdf.sh
 
-## golang
+# ===============================
+# Golang
+# ===============================
+if command -v go &>/dev/null; then
+    export GOPATH=$(go env GOPATH)
+    export PATH="$GOPATH/bin:$PATH"
+fi
+export PATH=$PATH:$(go env GOPATH)/bin
 # . ~/.asdf/plugins/golang/set-env.zsh
 # export GOPATH=$(asdf where golang)/packages
 # export GOROOT=$(asdf where golang)/go
 # export GOMODCACHE=$(asdf where golang)/packages/pkg/mod
-export PATH=$PATH:$(go env GOPATH)/bin
 
-## java 
+# ===============================
+# Java
+# ===============================
 # . ~/.asdf/plugins/java/set-java-home.zsh
 
 
-# zmodload zsh/zprof # debug enable
+# ===============================
+# Antidote Plugin Setup
+# ===============================
+source $HOMEBREW_PREFIX/opt/antidote/share/antidote/antidote.zsh
+antidote load ${ZDOTDIR:-$HOME}/.zsh_plugins.txt
 
-# Source zplug
-export ZPLUG_HOME=/usr/local/opt/zplug
-source $ZPLUG_HOME/init.zsh
-
-# Define plugins
-zplug "joshskidmore/zsh-fzf-history-search"
-
-# Check if the plugins are installed and install them if they are not
-if ! zplug check --verbose; then
-    printf "Install? [y/N]: "
-    if read -q; then
-        echo; zplug install
-    else
-        echo; echo "Skipping plugin installation."
-    fi
-fi
-
-# Load the plugins
-zplug load
-
-## bind vi keys
-bindkey -v
-
+## ==============================
 ## zsh-fzf-history-search
+## ==============================
 ## Make sure to use double quotes
 # export ZSH_FZF_HISTORY_SEARCH_BIND="^R"
 export ZSH_FZF_HISTORY_SEARCH_EVENT_NUMBERS=0
 export ZSH_FZF_HISTORY_SEARCH_DATES_IN_SEARCH=0
 export ZSH_FZF_HISTORY_SEARCH_REMOVE_DUPLICATES=1
 
-## history
+## ==============================
+## ZSH History
+## ==============================
 HISTFILE=~/.histfile
 HISTSIZE=10000
 SAVEHIST=10000
@@ -91,30 +82,41 @@ unsetopt beep
 zstyle :compinstall filename '/home/brain/.zshrc'
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' # match case-insensitive 
 
-## zsh completions
-# fpath=(${ASDF_DIR}/completions $fpath)
+
+# ===============================
+# Prompt, Completions, Colors, Etc
+# ===============================
 fpath=(~/.zsh/completions $fpath)
 
-
-
-### https://medium.com/@dannysmith/little-thing-2-speeding-up-zsh-f1860390f92
 autoload -Uz compinit bashcompinit promptinit colors
-rm -f ~/.zcompdump(N.mh+24)
-compinit
+compdump="$HOME/.zcompdump"
+if [[ -f "$compdump" && -n "$(find "$compdump" -mtime -7)" ]]; then
+    compinit -C
+else
+    compinit
+fi
 bashcompinit
 promptinit
 colors
 
-## detect OS and arch
+bindkey -v
+
+# ===============================
+# Detect OS and Arch
+# ===============================
 [ -f $HOME/.detect_os ] && source $HOME/.detect_os
 [ -f $HOME/.detect_arch ] && source $HOME/.detect_arch
 
-## config files
+# ===============================
+# Shortcuts
+# ===============================
 [ -f $HOME/.secrets ] && . $HOME/.secrets
 [ -f $HOME/.aliases ] && . $HOME/.aliases
 [ -f $HOME/.fns ] && . $HOME/.fns
 
-## Theming
+# ===============================
+# Theming
+# ===============================
 ## Prompt customization functions and settings
 function git_branch() {
     git symbolic-ref --short HEAD 2> /dev/null
@@ -176,6 +178,9 @@ function zle-line-finish {
 }
 zle -N zle-line-finish
 
+# ===============================
+# Misc
+# ===============================
 ## direnv
 eval "$(direnv hook zsh)"
 
@@ -183,3 +188,7 @@ eval "$(direnv hook zsh)"
 eval "$(op completion zsh)"; compdef _op op
 
 export HOMEBREW_GITHUB_API_TOKEN="$(gh auth token)"
+export FZF_DEFAULT_COMMAND='rg --files --hidden --smart-case'
+
+zprof
+
