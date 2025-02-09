@@ -1,4 +1,4 @@
-zmodload zsh/zprof
+# zmodload zsh/zprof
 
 # ===============================
 # Source Architecture-Specific Configurations
@@ -195,5 +195,5 @@ eval "$(op completion zsh)"; compdef _op op
 export HOMEBREW_GITHUB_API_TOKEN="$(gh auth token)"
 export FZF_DEFAULT_COMMAND='rg --files --hidden --smart-case'
 
-zprof
+# zprof
 
