@@ -3,20 +3,13 @@ alias vimdiff='nvim -d'
 alias grep='rg'
 alias g='git'
 alias ls='LC_COLLATE=C ls --color=auto'
-alias k='kubectl'
 alias hg='history -1 | grep'
 alias python='python3'
-alias d='docker'
-alias dc="docker compose"
-alias dp='doppler'
 
 alias ignore='vim ~/.config/git/ignore'
 alias brew-unlock='rm -rf /usr/local/var/homebrew/locks'
 alias nvim-log='~/.local/share/nvim/log'
 alias pry-clean="git status | grep 'modified' | awk '{ print \"$2\" }' | xargs gsed -i '/binding.pry/d'"
-
-alias open-rancher="open -a /Applications/Rancher\ Desktop.app"
-alias open-colima="colima start --cpu 4 --memory 8 --vm-type=vz --vz-rosetta --mount-type=virtiofs --network-address --ssh-agent"
 
 alias t="tmux" 
 alias ts="tmux new-session -A -t"
@@ -30,5 +23,3 @@ alias wt="wiki today"
 alias wt="wiki brag"
 
 alias fzcd='eval "cd $(fzf | xargs dirname)"'
-
-alias doppler-token="export DOPPLER_TOKEN=\"$(doppler configure get token --plain)\""

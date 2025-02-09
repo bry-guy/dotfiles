@@ -1,37 +1,51 @@
+# ===============================
+# Source Architecture-Specific Configurations
+# ===============================
+
+if [ -f "$HOME/.zsh_arch" ]; then
+    source "$HOME/.zsh_arch"
+else
+    echo "Warning: ~/.zsh_arch not found. Please run ./script/setup."
+fi
+
 # Path configurations
 export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
-export PATH="/usr/local/bin:$PATH"
-export PATH="/usr/local/Cellar:$PATH"
 export PATH="/usr/local/opt/mysql@5.7/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="/usr/local/sbin:$PATH"
 export PATH="$HOME/.rd/bin:$PATH"
 export FZF_DEFAULT_COMMAND='rg --files --hidden --smart-case'
-export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@1.1)"
-export AICHAT_CONFIG_DIR="$HOME/.config/aichat/"
 export AICHAT_ROLES_FILE="$HOME/.config/aichat/roles.yaml"
 export PG_HOME="$(brew --prefix)/var/postgres"
 export HOMEBREW_BREWFILE="$HOME/.brewfile"
 
+
+# ===============================
+# Mise En Place
+# ===============================
+
+eval "$(mise activate zsh)"
+
 # asdf
-ASDF_FORCE_PREPEND=yes . $(brew --prefix asdf)/libexec/asdf.sh
+# ASDF_FORCE_PREPEND=yes . $(brew --prefix asdf)/libexec/asdf.sh
 
 ## golang
-. ~/.asdf/plugins/golang/set-env.zsh
-export GOPATH=$(asdf where golang)/packages
-export GOROOT=$(asdf where golang)/go
-export GOMODCACHE=$(asdf where golang)/packages/pkg/mod
+# . ~/.asdf/plugins/golang/set-env.zsh
+# export GOPATH=$(asdf where golang)/packages
+# export GOROOT=$(asdf where golang)/go
+# export GOMODCACHE=$(asdf where golang)/packages/pkg/mod
 export PATH=$PATH:$(go env GOPATH)/bin
 
 ## java 
-. ~/.asdf/plugins/java/set-java-home.zsh
+# . ~/.asdf/plugins/java/set-java-home.zsh
 
 
 # zmodload zsh/zprof # debug enable
 
 # Source zplug
-source ~/.zplug/init.zsh
+export ZPLUG_HOME=/usr/local/opt/zplug
+source $ZPLUG_HOME/init.zsh
 
 # Define plugins
 zplug "joshskidmore/zsh-fzf-history-search"
@@ -78,7 +92,7 @@ zstyle :compinstall filename '/home/brain/.zshrc'
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' # match case-insensitive 
 
 ## zsh completions
-fpath=(${ASDF_DIR}/completions $fpath)
+# fpath=(${ASDF_DIR}/completions $fpath)
 fpath=(~/.zsh/completions $fpath)
 
 
@@ -168,10 +182,4 @@ eval "$(direnv hook zsh)"
 ## onepass
 eval "$(op completion zsh)"; compdef _op op
 
-## terraform
-complete -o nospace -C /opt/homebrew/bin/terraform terraform
-
-## support-cli (agentsync)
-export DOPPLER_TOKEN="$(doppler configure get token --plain)"
 export HOMEBREW_GITHUB_API_TOKEN="$(gh auth token)"
-export AUTH_USER_EMAIL=bryan.smith@agentsync.io

@@ -1,0 +1,48 @@
+#!/bin/bash
+
+set -e
+
+# Usage information
+usage() {
+    echo "Usage: $0 {dev|me|work}"
+    exit 1
+}
+
+
+# Ensure Homebrew is installed
+if ! command -v brew &>/dev/null; then
+    echo "Homebrew is not installed. Please run script/bootstrap first."
+    exit 1
+fi
+
+# Check for exactly one argument
+if [ "$#" -ne 1 ]; then
+    usage
+fi
+
+ENV="$1"
+
+# Validate environment argument
+case "$ENV" in
+    dev|me|work)
+        ;;
+    *)
+        echo "Invalid environment: $ENV"
+        usage
+        ;;
+esac
+
+# Define Brewfile paths
+BREWFILE_DIR="$PWD"
+ENV_BREWFILE="$BREWFILE_DIR/.brewfile.$ENV"
+
+if [ ! -f "$ENV_BREWFILE" ]; then
+    echo "Environment Brewfile ($ENV_BREWFILE) not found."
+    exit 1
+fi
+
+# Install from Brewfile
+brew bundle --verbose --file="$ENV_BREWFILE"
+
+echo "Successfully installed '$ENV' packages."
+

@@ -1,19 +1,135 @@
 #!/bin/bash
 
-# Log dotfiles setup
-mkdir $HOME/log
-# exec > >(tee -i $HOME/log/dotfiles_setup.log)
-# exec 2>&1
+set -e
 
-## Run ansible for all playbooks
 
-if [ -n "$(which ansible-galaxy)" ]; then
-		ansible-galaxy collection install community.general
+# ===============================
+# Architecture Detection
+# ===============================
+
+# Source the .detect_arch file to set ARCH_ARM or ARCH_X86
+if [ -f ".detect_arch" ]; then
+    source .detect_arch
+else
+    echo "error: .detect_arch file not found."
+    exit 1
 fi
 
-## Run ansible for all playbooks
+# ===============================
+# Homebrew Path Configuration
+# ===============================
 
-if [ -n "$(which ansible-playbook)" ]; then
-		echo "INFO: Running all playbooks."
-		ansible-playbook -K playbooks/_all.yaml
+echo "Configuring Homebrew paths based on architecture..."
+
+if [ "$ARCH_ARM" == "1" ]; then
+    echo "Apple Silicon (ARM) detected."
+    HOMEBREW_PREFIX="/opt/homebrew"
+elif [ "$ARCH_X86" == "1" ]; then
+    echo "Intel (x86_64) architecture detected."
+    HOMEBREW_PREFIX="/usr/local"
+else
+    echo "Architecture not supported."
+    exit 1
 fi
+
+# ===============================
+# Homebrew Environment Variables
+# ===============================
+
+ARCH_FILE="./.zsh_arch"
+
+# Initialize the .zsh_arch file
+> "$ARCH_FILE"
+
+# Append Homebrew environment variables to .zsh_arch
+cat <<EOL >> "$ARCH_FILE"
+
+export HOMEBREW_PREFIX="$HOMEBREW_PREFIX"
+export HOMEBREW_CELLAR="$HOMEBREW_PREFIX/Cellar"
+export PATH="$HOMEBREW_PREFIX/bin:$PATH"
+
+EOL
+
+source $ARCH_FILE
+
+# ===============================
+# Install Core Homebrew Dependencies
+# ===============================
+
+# Define Brewfile paths
+echo "Installing homebrew core deps..."
+BREWFILE_DIR="$PWD"
+CORE_BREWFILE="$BREWFILE_DIR/.brewfile.core"
+
+# Verify Brewfiles exist
+if [ ! -f "$CORE_BREWFILE" ]; then
+    echo "Core Brewfile ($CORE_BREWFILE) not found."
+    exit 1
+fi
+
+brew bundle --verbose --file="$CORE_BREWFILE"
+
+echo "Successfully installed core packages."
+
+
+# ===============================
+# Prompt to Login to 1Password and Enable SSH Agent
+# ===============================
+
+echo "Please log in to 1Password and enable the SSH Agent."
+echo "1Password > Sign-in > Preferences > Developer"
+read -p "After completing the above steps, press Enter to continue..."
+
+# ===============================
+# Apply dotfiles
+# ===============================
+
+chezmoi init https://github.com/bry-guy/dotfiles
+chezmoi apply
+
+# ===============================
+# Apply macOS Defaults
+# ===============================
+
+if [ "$ARCH_ARM" == "1" ] || [ "$ARCH_X86" == "1" ]; then
+    if [ -f "$HOME/.osx" ]; then
+        echo "Applying macOS defaults from ~/.osx..."
+        source "$HOME/.osx"
+        echo "macOS defaults applied."
+    else
+        echo "macOS defaults file ~/.osx not found. Skipping."
+    fi
+fi
+
+# ===============================
+# Link 1Password SSH Key
+# ===============================
+
+if [ "$ARCH_ARM" == "1" ] || [ "$ARCH_X86" == "1" ]; then
+    echo "Linking 1Password SSH key..."
+    mkdir -p "$HOME/.1password"
+    ln -sf "$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock" "$HOME/.1password/agent.sock"
+    echo "1Password SSH key linked at $HOME/.1password/agent.sock."
+fi
+
+# ===============================
+# Accept SSH Fingerprints
+# ===============================
+
+echo "Adding SSH fingerprints to known_hosts..."
+
+ssh_hosts=(
+    "github.com"
+)
+
+for host in "${ssh_hosts[@]}"; do
+    ssh-keyscan -H "$host" >> "$HOME/.ssh/known_hosts"
+    echo "Added $host to ~/.ssh/known_hosts."
+done
+
+# ===============================
+# Final Message
+# ===============================
+
+echo "Setup complete! Your MacBook configuration is now up to date."
+

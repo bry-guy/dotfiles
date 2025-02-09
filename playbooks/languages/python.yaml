@@ -1,4 +1,0 @@
-- name: Add Python asdf plugin
-  ansible.builtin.shell: 
-    cmd: asdf plugin-add python
-    creates: ~/.asdf/plugins/python/
