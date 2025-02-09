@@ -1,0 +1,1 @@
+joshskidmore/zsh-fzf-history-search
