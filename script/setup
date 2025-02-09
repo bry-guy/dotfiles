@@ -37,21 +37,17 @@ fi
 # Homebrew Environment Variables
 # ===============================
 
-ARCH_FILE="./.zsh_arch"
+ARCH_FILE="$HOME/.zsh_arch"
 
-# Initialize the .zsh_arch file
-> "$ARCH_FILE"
-
-# Append Homebrew environment variables to .zsh_arch
-cat <<EOL >> "$ARCH_FILE"
+echo "Generating .zsh_arch based on system architecture..."
+cat > "$ARCH_FILE" <<EOL
 
 export HOMEBREW_PREFIX="$HOMEBREW_PREFIX"
-export HOMEBREW_CELLAR="$HOMEBREW_PREFIX/Cellar"
-export PATH="$HOMEBREW_PREFIX/bin:$PATH"
-
+export HOMEBREW_CELLAR="\$HOMEBREW_PREFIX/Cellar"
+export PATH="\$HOMEBREW_PREFIX/bin:\$PATH"
 EOL
 
-source $ARCH_FILE
+echo "✅ .zsh_arch successfully generated."
 
 # ===============================
 # Install Core Homebrew Dependencies
