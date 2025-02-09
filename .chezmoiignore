@@ -1,4 +1,5 @@
 linux/
 .git/
+script/
 README.md
 TODO.md

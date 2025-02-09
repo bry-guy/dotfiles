@@ -3,8 +3,8 @@
 ## Setup
 
 Test the following under a new macOS user. Don't ruin my current setup!
-- [ ] Include chezmoi in setup scripts
-- [ ] (chezmoi) Ignore linux folder on darwin machines
+- [x] Include chezmoi in setup scripts
+- [x] (chezmoi) Ignore linux folder on darwin machines
 - [ ] (chezmoi) Ignore \_work files on non-work machines
 
 ## Linux
