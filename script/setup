@@ -2,6 +2,7 @@
 
 set -e
 
+DOTFILES_DIR="$(git rev-parse --show-toplevel)"
 
 # ===============================
 # Architecture Detection
@@ -58,8 +59,7 @@ source $ARCH_FILE
 
 # Define Brewfile paths
 echo "Installing homebrew core deps..."
-BREWFILE_DIR="$PWD"
-CORE_BREWFILE="$BREWFILE_DIR/.brewfile.core"
+CORE_BREWFILE="$DOTFILES_DIR/.brewfile.core"
 
 # Verify Brewfiles exist
 if [ ! -f "$CORE_BREWFILE" ]; then
@@ -84,21 +84,12 @@ read -p "After completing the above steps, press Enter to continue..."
 # Apply dotfiles
 # ===============================
 
-chezmoi init https://github.com/bry-guy/dotfiles
-chezmoi apply
-
-# ===============================
-# Apply macOS Defaults
-# ===============================
-
-if [ "$ARCH_ARM" == "1" ] || [ "$ARCH_X86" == "1" ]; then
-    if [ -f "$HOME/.osx" ]; then
-        echo "Applying macOS defaults from ~/.osx..."
-        source "$HOME/.osx"
-        echo "macOS defaults applied."
-    else
-        echo "macOS defaults file ~/.osx not found. Skipping."
-    fi
+if chezmoi source-path >/dev/null 2>&1; then
+    echo "✅ Chezmoi is already initialized. Applying dotfiles..."
+    chezmoi apply
+else
+    echo "⚠️ Chezmoi is not initialized. Initializing now..."
+    chezmoi init --apply bry-guy
 fi
 
 # ===============================
@@ -116,16 +107,36 @@ fi
 # Accept SSH Fingerprints
 # ===============================
 
-echo "Adding SSH fingerprints to known_hosts..."
+echo "Adding SSH fingerprints to known_hosts if not already present..."
 
 ssh_hosts=(
     "github.com"
 )
 
 for host in "${ssh_hosts[@]}"; do
-    ssh-keyscan -H "$host" >> "$HOME/.ssh/known_hosts"
-    echo "Added $host to ~/.ssh/known_hosts."
+    if ! ssh-keygen -F "$host" >/dev/null; then
+        echo "Adding $host to ~/.ssh/known_hosts..."
+        ssh-keyscan -H "$host" >> "$HOME/.ssh/known_hosts"
+        echo "✅ Added $host to ~/.ssh/known_hosts."
+    else
+        echo "✅ $host is already in ~/.ssh/known_hosts. Skipping."
+    fi
 done
+
+# ===============================
+# Apply macOS Defaults
+# ===============================
+
+if [ "$ARCH_ARM" == "1" ] || [ "$ARCH_X86" == "1" ]; then
+    if [ -f "$DOTFILES/.osx" ]; then
+        echo "Applying macOS defaults from ~/.osx..."
+	source $DOTFILES_DIR/.osx
+	echo "macOS defaults applied."
+    else
+        echo "macOS defaults file $DOTFILES/.osx not found. Skipping."
+    fi
+fi
+
 
 # ===============================
 # Final Message
