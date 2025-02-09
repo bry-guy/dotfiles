@@ -1,5 +1,7 @@
 # bry-guy's dotfiles
 
+## Bootstrap and Setup
+
 My configuration depends on a few core apps:
 - `chezmoi`: dotfiles management
 - `1password`: secrets management
@@ -13,6 +15,8 @@ script/setup
 
 `bootstrap` installs the core dependencies to run `setup`.
 
+## Installing Apps
+
 Apps are namespaced via usage (WIP). Each machine has it's own `.brewfile`, which is *not tracked by chezmoi*. Instead, to "commit" an app, it must be added to one of the following:
 ```
 .brewfile.core
@@ -21,8 +25,9 @@ Apps are namespaced via usage (WIP). Each machine has it's own `.brewfile`, whic
 .brewfile.virtual
 .brewfile.work
 ```
-
 Brew namespaces can be installed via `script/install {namespace}`.
+
+Use `brew-diff` to check for local changes not tracked in namespaced brewfiles.
 
 ## Unified macOS / popOS Hotkeys
 
