@@ -28,5 +28,10 @@ import = [
     "~/.config/alacritty/themes/themes/moonfly.toml"
 ]
 
+[keyboard]
+bindings = [
+		{ key = "W", mods = "Command", action = "None" },
+]
+
 [window]
 option_as_alt = "OnlyLeft"
