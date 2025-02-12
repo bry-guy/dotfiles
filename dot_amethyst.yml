@@ -117,9 +117,9 @@ focus-ccw:
 
 #### NOTE: Does not work! Set manually! ####
 # # Focus the next window in the list going clockwise.
-# focus-cw:
-#   mod: mod1 
-#   key: Tab
+focus-cw:
+  mod: mod1 
+  key: tab
 
 # Focus the main window in the list.
 focus-main:
@@ -162,14 +162,106 @@ swap-main:
   key: <NONE>
 
 # Move focus to the n-th screen in the list; e.g., focus-screen-3 will move mouse focus to the 3rd screen. Note that the main window in the given screen will be focused.
-focus-screen-n:
- focus-screen-<screen-number>:
-   mod: <NONE>
-   key: <NONE>
+focus-screen-1:
+  mod: <NONE>
+  key: <NONE>
+focus-screen-2:
+  mod: <NONE>
+  key: <NONE>
+focus-screen-3:
+  mod: <NONE>
+  key: <NONE>
+focus-screen-4:
+  mod: <NONE>
+  key: <NONE>
+focus-screen-5:
+  mod: <NONE>
+  key: <NONE>
+focus-screen-6:
+  mod: <NONE>
+  key: <NONE>
+focus-screen-7:
+  mod: <NONE>
+  key: <NONE>
+focus-screen-8:
+  mod: <NONE>
+  key: <NONE>
+focus-screen-9:
+  mod: <NONE>
+  key: <NONE>
+focus-screen-10:
+  mod: <NONE>
+  key: <NONE>
 
 # Move the currently focused window to the n-th screen; e.g., throw-screen-3 will move the window to the 3rd screen.
-throw-screen-n:
-throw-screen-<screen-number>:
+throw-space-1:
+  mod: mod2
+  key: 1
+throw-space-2:
+  mod: mod2
+  key: 2
+throw-space-3:
+  mod: mod2
+  key: 3
+throw-space-4:
+  mod: mod2
+  key: 4
+throw-space-5:
+  mod: mod2
+  key: 5
+throw-space-6:
+  mod: mod2
+  key: 6
+throw-space-7:
+  mod: <NONE>
+  key: <NONE>
+throw-space-8:
+  mod: <NONE>
+  key: <NONE>
+throw-space-9:
+  mod: <NONE>
+  key: <NONE>
+throw-space-10:
+  mod: <NONE>
+  key: <NONE>
+
+throw-screen-1:
+  mod: <NONE>
+  key: <NONE>
+
+throw-screen-2:
+  mod: <NONE>
+  key: <NONE>
+
+throw-screen-3:
+  mod: <NONE>
+  key: <NONE>
+
+throw-screen-4:
+  mod: <NONE>
+  key: <NONE>
+
+throw-screen-5:
+  mod: <NONE>
+  key: <NONE>
+
+throw-screen-6:
+  mod: <NONE>
+  key: <NONE>
+
+throw-screen-7:
+  mod: <NONE>
+  key: <NONE>
+
+throw-screen-8:
+  mod: <NONE>
+  key: <NONE>
+
+throw-screen-9:
+  mod: <NONE>
+  key: <NONE>
+
+throw-screen-10:
   mod: <NONE>
   key: <NONE>
 
