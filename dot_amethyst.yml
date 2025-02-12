@@ -91,56 +91,60 @@ decrease-main:
   key: '.'
 
 # General purpose command for custom layouts. Functionality is layout-dependent.
-# command1:
-#   mod: <NONE>
-#   key: <NONE>
+command1:
+  mod: <NONE>
+  key: <NONE>
+
 # General purpose command for custom layouts. Functionality is layout-dependent.
-# command2:
-#   mod: <NONE>
-#   key: <NONE>
+command2:
+  mod: <NONE>
+  key: <NONE>
+
 # General purpose command for custom layouts. Functionality is layout-dependent.
-# command3:
-#   mod: <NONE>
-#   key: <NONE>
+command3:
+  mod: <NONE>
+  key: <NONE>
+
 # General purpose command for custom layouts. Functionality is layout-dependent.
-# command4:
-#   mod: <NONE>
-#   key: <NONE>
+command4:
+  mod: <NONE>
+  key: <NONE>
 
-# # Focus the next window in the list going counter-clockwise.
-# focus-ccw:
-#   mod: mod1
-#   key: j
+# Focus the next window in the list going counter-clockwise.
+focus-ccw:
+  mod: <NONE>
+  key: <NONE>
 
-# Focus the next window in the list going clockwise.
-focus-cw:
-  mod: mod1
-  key: tab
+#### NOTE: Does not work! Set manually! ####
+# # Focus the next window in the list going clockwise.
+# focus-cw:
+#   mod: mod1 
+#   key: Tab
 
-# # Focus the main window in the list.
-# focus-main:
-#   mod: mod1
-#   key: m
+# Focus the main window in the list.
+focus-main:
+  mod: <NONE>
+  key: <NONE>
 
-# # Focus the next screen in the list going counter-clockwise.
-# focus-screen-ccw:
-#   mod: mod1
-#   key: p
+# Focus the next screen in the list going counter-clockwise.
+focus-screen-ccw:
+  mod: <NONE>
+  key: <NONE>
 
-# # Focus the next screen in the list going clockwise.
-# focus-screen-cw:
-#   mod: mod1
-#   key: n
+# Focus the next screen in the list going clockwise.
+focus-screen-cw:
+  mod: <NONE>
+  key: <NONE>
 
-# # Move the currently focused window onto the next screen in the list going counter-clockwise.
-# swap-screen-ccw:
-#   mod: mod2
-#   key: h
+# Move the currently focused window onto the next screen in the list going counter-clockwise.
+swap-screen-ccw:
+  mod: <NONE>
+  key: <NONE>
 
-# # Move the currently focused window onto the next screen in the list going clockwise.
-# swap-screen-cw:
-#   mod: mod2
-#   key: l
+# Move the currently focused window onto the next screen in the list going clockwise.
+swap-screen-cw:
+  mod: <NONE>
+  key: <NONE>
 
 # Swap the position of the currently focused window with the next window in the list going counter-clockwise.
 swap-ccw:
@@ -153,44 +157,46 @@ swap-cw:
   key: k
 
 # Swap the position of the currently focused window with the main window in the list.
-# swap-main:
-#   mod: mod1
-#   key: enter
+swap-main:
+  mod: <NONE>
+  key: <NONE>
 
 # Move focus to the n-th screen in the list; e.g., focus-screen-3 will move mouse focus to the 3rd screen. Note that the main window in the given screen will be focused.
-#focus-screen-n:
-# focus-screen-<screen-number>:
-#   mod: mod1
-#   key: y
+focus-screen-n:
+ focus-screen-<screen-number>:
+   mod: <NONE>
+   key: <NONE>
+
 # Move the currently focused window to the n-th screen; e.g., throw-screen-3 will move the window to the 3rd screen.
-# throw-screen-n:
-# throw-screen-<screen-number>:
-#   mod: mod1
-#   key: u
+throw-screen-n:
+throw-screen-<screen-number>:
+  mod: <NONE>
+  key: <NONE>
+
 # Move the currently focused window to the n-th space; e.g., throw-space-3 will move the window to the 3rd space.
-# throw-space-<screen-number>:
-#   mod: mod1
-#   key: i
+throw-space-<screen-number>:
+  mod: <NONE>
+  key: <NONE>
 
-# # Select tall layout
-# select-tall-layout:
-#   mod: mod1
-#   key: a
+# Select tall layout
+select-tall-layout:
+  mod: <NONE>
+  key: <NONE>
 
-# # Select wide layout
-# select-wide-layout:
-#   mod: mod1
-#   key: s
+# Select wide layout
+select-wide-layout:
+  mod: <NONE>
+  key: <NONE>
 
-# # Select fullscreen layout
-# select-fullscreen-layout:
-#   mod: mod1
-#   key: d
+# Select fullscreen layout
+select-fullscreen-layout:
+  mod: <NONE>
+  key: <NONE>
 
-# # Select column layout
-# select-column-layout:
-#   mod: mod1
-#   key: f
+# Select column layout
+select-column-layout:
+  mod: <NONE>
+  key: <NONE>
 
 # Move the currently focused window to the space to the left.
 throw-space-left:
@@ -207,10 +213,10 @@ toggle-float:
   mod: mod1
   key: f
 
-# # Display the layout HUD with the current layout on each screen.
-# display-current-layout:
-#   mod: mod1
-#   key: i
+# Display the layout HUD with the current layout on each screen.
+display-current-layout:
+  mod: <NONE>
+  key: <NONE>
 
 # Turn on or off tiling entirely.
 toggle-tiling:
@@ -222,15 +228,15 @@ reevaluate-windows:
   mod: mod1
   key: z
 
-# # Turn on or off focus-follows-mouse.
-# toggle-focus-follows-mouse:
-#   mod: mod2
-#   key: x
+# Turn on or off focus-follows-mouse.
+toggle-focus-follows-mouse:
+  mod: <NONE>
+  key: <NONE>
 
-# # Automatically quit and reopen Amethyst.
-# relaunch-amethyst:
-#   mod: mod2
-#   key: z
+# Automatically quit and reopen Amethyst.
+relaunch-amethyst:
+  mod: <NONE>
+  key: <NONE>
 
 # disable screen padding on builtin display
 disable-padding-on-builtin-display: true
