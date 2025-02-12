@@ -35,7 +35,6 @@ if command -v go &>/dev/null; then
     export GOPATH=$(go env GOPATH)
     export PATH="$GOPATH/bin:$PATH"
 fi
-export PATH=$PATH:$(go env GOPATH)/bin
 # . ~/.asdf/plugins/golang/set-env.zsh
 # export GOPATH=$(asdf where golang)/packages
 # export GOROOT=$(asdf where golang)/go
