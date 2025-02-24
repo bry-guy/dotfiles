@@ -74,6 +74,8 @@ ssh_hosts=(
     "github.com"
 )
 
+mkdir -p $HOME/.ssh
+
 for host in "${ssh_hosts[@]}"; do
     if ! ssh-keygen -F "$host" >/dev/null; then
         echo "Adding $host to ~/.ssh/known_hosts..."
