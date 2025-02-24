@@ -104,27 +104,17 @@ end
 M.cmp_hotkeys = {
 }
 
--- obsidian
-M.obsidian_hotkeys = function()
-  vim.keymap.set('n', '<leader>wn', "<Cmd>ObsidianNew<CR>")
-  vim.keymap.set('n', '<leader>wf', "<Cmd>ObsidianQuickSwitch<CR>")
-  vim.keymap.set('n', '<leader>ws', "<Cmd>ObsidianSearch<CR>")
-  vim.keymap.set('n', '<leader>wt', "<Cmd>ObsidianToday<CR>")
-  vim.keymap.set('n', '<leader>wb', "<Cmd>ObsidianBacklinks<CR>")
-  vim.keymap.set('v', '<leader>wl', "<Cmd>ObsidianLink<CR>")
-  vim.keymap.set('n', '<leader>wl', "<Cmd>ObsidianLinkNew<CR>")
-  vim.keymap.set('n', '<leader>wg', "<Cmd>ObsidianFollowLink<CR>")
 
-  vim.keymap.set('n', '<CR>',
-  function()
-    if require('obsidian').util.cursor_on_markdown_link() then
-      return "<cmd>ObsidianFollowLink<CR>"
-    else
-      return "<CR>"
-    end
-  end,
-  { noremap = false, expr = true })
-end
+M.obsidian_hotkeys = {
+  { "<leader>wn", "<Cmd>ObsidianNew<CR>" },
+  { "<leader>wf", "<Cmd>ObsidianQuickSwitch<CR>" },
+  { "<leader>ws", "<Cmd>ObsidianSearch<CR>" },
+  { "<leader>wt", "<Cmd>ObsidianToday<CR>" },
+  { "<leader>wb", "<Cmd>ObsidianBacklinks<CR>" },
+  { "<leader>wl", "<Cmd>ObsidianLink<CR>" },
+  { "<leader>wL", "<Cmd>ObsidianLinkNew<CR>" },
+  { "<leader>wg", "<Cmd>ObsidianFollowLink<CR>" },
+}
 
 -- render-markdown
 M.rendermarkdown_hotkeys = function()

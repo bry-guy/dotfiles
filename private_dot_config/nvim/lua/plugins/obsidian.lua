@@ -11,11 +11,11 @@ end
 
 local M = {
   "epwalsh/obsidian.nvim",
-  lazy = false,
+  lazy = true,
   init = function()
-    require("config.keymaps").obsidian_hotkeys()
     vim.opt.conceallevel = 1
   end,
+  keys = require("config.keymaps").obsidian_hotkeys
   opts = function()
     local obsidian = require("obsidian")
     return {
@@ -31,23 +31,7 @@ local M = {
       daily_notes = {
         folder = "dailies",
       },
-      mappings = {
-        -- TODO: Figure out how to do mappings + hotkeys (see also: telescope)
-        -- Overrides the 'gf' mapping to work on markdown/wiki links within your vault.
-        ["gf"] = {
-          action = function()
-            return obsidian.util.gf_passthrough()
-          end,
-          opts = { noremap = false, expr = true, buffer = true },
-        },
-        -- Toggle check-boxes.
-        ["<leader>wc"] = {
-          action = function()
-            return obsidian.util.toggle_checkbox()
-          end,
-          opts = { buffer = true },
-        },
-      },
+      mappings = {},
       note_id_func = note_id_fn,
       note_frontmatter_func = function(note)
         local out = {
