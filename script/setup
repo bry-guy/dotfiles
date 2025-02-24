@@ -39,6 +39,10 @@ export PATH="$HOMEBREW_PREFIX/bin:$PATH"
 export SSH_AUTH_SOCK=$SSH_AUTH_SOCK
 EOL
 
+if [ -z "CLOUD" ]; then
+		echo "export SSH_AUTH_SOCK=$SSH_AUTH_SOCK" >> $ARCH_FILE
+fi
+
 echo "✅ .zsh_arch successfully generated."
 
 # ===============================
