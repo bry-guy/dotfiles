@@ -15,30 +15,22 @@ fi
 # ===============================
 export PATH="$HOME/.local/bin:$PATH"
 export HOMEBREW_BREWFILE="$HOME/.brewfile"
-# HOMEBREW_PREFIX="$(brew --prefix)"
-# export PATH="$HOMEBREW_PREFIX/opt/coreutils/libexec/gnubin:$PATH"
-# export MANPATH="$HOMEBREW_PREFIX/opt/coreutils/libexec/gnuman:$MANPATH"
-# export AICHAT_ROLES_FILE="$HOME/.config/aichat/roles.yaml"
 
 # ===============================
 # Mise En Place
 # ===============================
 
-eval "$(mise activate zsh)"
-# asdf
-# ASDF_FORCE_PREPEND=yes . $(brew --prefix asdf)/libexec/asdf.sh
+if [ -n "$(command -v mise)" ]; then
+		eval "$(mise activate zsh)"
+fi
 
 # ===============================
 # Golang
 # ===============================
-if command -v go &>/dev/null; then
+if [ -n "$(command -v go)" ]; then
     export GOPATH=$(go env GOPATH)
     export PATH="$GOPATH/bin:$PATH"
 fi
-# . ~/.asdf/plugins/golang/set-env.zsh
-# export GOPATH=$(asdf where golang)/packages
-# export GOROOT=$(asdf where golang)/go
-# export GOMODCACHE=$(asdf where golang)/packages/pkg/mod
 
 # ===============================
 # Java
@@ -49,14 +41,15 @@ fi
 # ===============================
 # Antidote Plugin Setup
 # ===============================
-source $HOMEBREW_PREFIX/opt/antidote/share/antidote/antidote.zsh
-antidote load ${ZDOTDIR:-$HOME}/.zsh_plugins.txt
+if [ -n "$(command -v antidote)" ]; then
+		source $HOMEBREW_PREFIX/opt/antidote/share/antidote/antidote.zsh
+		antidote load ${ZDOTDIR:-$HOME}/.zsh_plugins.txt
+fi
 
 ## ==============================
 ## zsh-fzf-history-search
 ## ==============================
 ## Make sure to use double quotes
-# export ZSH_FZF_HISTORY_SEARCH_BIND="^R"
 export ZSH_FZF_HISTORY_SEARCH_EVENT_NUMBERS=0
 export ZSH_FZF_HISTORY_SEARCH_DATES_IN_SEARCH=0
 export ZSH_FZF_HISTORY_SEARCH_REMOVE_DUPLICATES=1
@@ -180,14 +173,21 @@ zle -N zle-line-finish
 # ===============================
 # Misc
 # ===============================
-## direnv
-eval "$(direnv hook zsh)"
+if [ -n "$(command -v direnv)" ]; then
+		eval "$(direnv hook zsh)"
+fi
 
-## onepass
-eval "$(op completion zsh)"; compdef _op op
+if [ -n "$(command -v op)" ]; then
+		eval "$(op completion zsh)"; compdef _op op
+fi
 
-export HOMEBREW_GITHUB_API_TOKEN="$(gh auth token)"
-export FZF_DEFAULT_COMMAND='rg --files --hidden --smart-case'
+if [ -n "$(command -v gh)" ]; then
+		export HOMEBREW_GITHUB_API_TOKEN="$(gh auth token)"
+fi
+
+if [ -n "$(command -v rg)" ]; then
+		export FZF_DEFAULT_COMMAND='rg --files --hidden --smart-case'
+fi
 
 # zprof
 
