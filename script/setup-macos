@@ -81,6 +81,9 @@ if [ -z "CLOUD"]; then
 		mkdir -p "$HOME/.1password"
 		ln -sf "$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock" "$HOME/.1password/agent.sock"
 		echo "1Password SSH key linked at $HOME/.1password/agent.sock."
+
+		SSH_AUTH_SOCK=~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock
+
 fi
 
 # ===============================
