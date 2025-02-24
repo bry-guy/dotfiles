@@ -78,38 +78,33 @@ bindkey "^[[A" history-beginning-search-backward
 bindkey "^[[B" history-beginning-search-forward
 
 unsetopt beep
-zstyle :compinstall filename '/home/brain/.zshrc'
-zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' # match case-insensitive 
-
 
 # ===============================
 # Prompt, Completions, Colors, Etc
 # ===============================
-GIT_COMPLETION="/usr/local/etc/bash_completion.d/git-completion.bash"
-if [ -f "$GIT_COMPLETION" ]; then
-    source "$GIT_COMPLETION"
-fi
-
+# Add your custom completions directory (e.g. containing the official _git) to your fpath
 fpath=(~/.zsh $fpath)
 
-autoload -Uz compinit bashcompinit promptinit colors
+# Set compinstall filename and match style
+zstyle :compinstall filename "$HOME/.zshrc"
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+
+# Load only native zsh completions (no bash completions)
+autoload -Uz compinit promptinit colors
+
+# Use a cached dump if available for faster startup
 compdump="$HOME/.zcompdump"
 if [[ -f "$compdump" && -n "$(find "$compdump" -mtime -7)" ]]; then
     compinit -C
 else
     compinit
 fi
-bashcompinit
+
+# Initialize prompt and colors
 promptinit
 colors
 
 bindkey -v
-
-# ===============================
-# Detect OS and Arch
-# ===============================
-[ -f $HOME/.detect_os ] && source $HOME/.detect_os
-[ -f $HOME/.detect_arch ] && source $HOME/.detect_arch
 
 # ===============================
 # Shortcuts
