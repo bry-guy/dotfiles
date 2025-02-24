@@ -4,14 +4,14 @@ set -e
 
 # Usage information
 usage() {
-    echo "Usage: $0 {dev|me|work}"
+    echo "Usage: $0 {env}"
     exit 1
 }
 
 
 # Ensure Homebrew is installed
 if ! command -v brew &>/dev/null; then
-    echo "Homebrew is not installed. Please run script/bootstrap first."
+    echo "Homebrew is not installed. Please run script/setup first."
     exit 1
 fi
 
@@ -21,16 +21,6 @@ if [ "$#" -ne 1 ]; then
 fi
 
 ENV="$1"
-
-# Validate environment argument
-case "$ENV" in
-    dev|me|work)
-        ;;
-    *)
-        echo "Invalid environment: $ENV"
-        usage
-        ;;
-esac
 
 # Define Brewfile paths
 BREWFILE_DIR="$PWD"

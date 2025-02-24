@@ -89,6 +89,25 @@ for host in "${ssh_hosts[@]}"; do
     fi
 done
 
+if [ -z "CLOUD"]; then
+		# ===============================
+		# Install Cloud Deps
+		# ===============================
+		
+		echo "Installing homebrew cloud deps..."
+		CLOUD_BREWFILE="$DOTFILES_DIR/.brewfile.cloud"
+
+		# Verify Brewfiles exist
+		if [ ! -f "$CLOUD_BREWFILE" ]; then
+			echo "cloud Brewfile ($CLOUD_BREWFILE) not found."
+			exit 1
+		fi
+
+		brew bundle --verbose --file="$CLOUD_BREWFILE"
+
+		echo "Successfully installed cloud packages."
+fi
+
 # ===============================
 # Final Message
 # ===============================
