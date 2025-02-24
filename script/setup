@@ -86,7 +86,7 @@ for host in "${ssh_hosts[@]}"; do
     fi
 done
 
-if [ -z "CLOUD"]; then
+if [ -z "CLOUD" ]; then
 		# ===============================
 		# Install Cloud Deps
 		# ===============================
