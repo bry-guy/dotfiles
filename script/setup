@@ -92,7 +92,7 @@ if [ -n "CLOUD" ]; then
 		# ===============================
 		
 		echo "Installing homebrew cloud deps..."
-		CLOUD_BREWFILE="$DOTFILES_DIR/.brewfile.cloud"
+		CLOUD_BREWFILE="$DOTFILES_DIR/dot_brewfile.cloud"
 
 		# Verify Brewfiles exist
 		if [ ! -f "$CLOUD_BREWFILE" ]; then
