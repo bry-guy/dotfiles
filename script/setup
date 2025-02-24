@@ -36,7 +36,7 @@ cat > "$ARCH_FILE" <<EOL
 export HOMEBREW_PREFIX="$HOMEBREW_PREFIX"
 export HOMEBREW_CELLAR="$HOMEBREW_PREFIX/Cellar"
 export PATH="$HOMEBREW_PREFIX/bin:$PATH"
-export SSH_AUTH_SOCK="$SSH_AUTH_SOCK/bin:$PATH"
+export SSH_AUTH_SOCK=$SSH_AUTH_SOCK
 EOL
 
 echo "✅ .zsh_arch successfully generated."
