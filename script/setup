@@ -61,13 +61,8 @@ echo "Successfully installed core packages."
 # Apply dotfiles
 # ===============================
 
-if chezmoi source-path >/dev/null 2>&1; then
-    echo "Chezmoi is already initialized. Applying dotfiles..."
-    chezmoi apply
-else
-    echo "Chezmoi is not initialized. Initializing now..."
-    chezmoi init --apply bry-guy
-fi
+echo "Applying dotfiles."
+chezmoi init --apply bry-guy
 
 # ===============================
 # Accept SSH Fingerprints
