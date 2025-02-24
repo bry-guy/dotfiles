@@ -1,5 +1,6 @@
 local M = {
   "NeogitOrg/neogit",
+  enabled = false,
   lazy = false,
   dependencies = {
     "nvim-lua/plenary.nvim",

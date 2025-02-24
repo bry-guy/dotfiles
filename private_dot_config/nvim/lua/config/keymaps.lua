@@ -128,12 +128,12 @@ end
 
 -- render-markdown
 M.rendermarkdown_hotkeys = function()
-  vim.keymap.set('n', '<leader>re', '<CMD>RenderMarkdown enable<CR>', { desc = "Enable this plugin" })
-  vim.keymap.set('n', '<leader>rd', '<CMD>RenderMarkdown disable<CR>', { desc = "Disable this plugin" })
-  vim.keymap.set('n', '<leader>rt', '<CMD>RenderMarkdown toggle<CR>', { desc = "Switch between enabling & disabling this plugin" })
-  vim.keymap.set('n', '<leader>rl', '<CMD>RenderMarkdown log<CR>', { desc = "Opens the log file for this plugin" })
-  vim.keymap.set('n', '<leader>re', '<CMD>RenderMarkdown expand<CR>', { desc = "Increase anti-conceal margin above and below by 1" })
-  vim.keymap.set('n', '<leader>rc', '<CMD>RenderMarkdown contract<CR>', { desc = "Decrease anti-conceal margin above and below by 1" })
+  vim.keymap.set('n', '<leader>me', '<CMD>RenderMarkdown enable<CR>', { desc = "Enable this plugin" })
+  vim.keymap.set('n', '<leader>md', '<CMD>RenderMarkdown disable<CR>', { desc = "Disable this plugin" })
+  vim.keymap.set('n', '<leader>mt', '<CMD>RenderMarkdown toggle<CR>', { desc = "Switch between enabling & disabling this plugin" })
+  vim.keymap.set('n', '<leader>ml', '<CMD>RenderMarkdown log<CR>', { desc = "Opens the log file for this plugin" })
+  vim.keymap.set('n', '<leader>me', '<CMD>RenderMarkdown expand<CR>', { desc = "Increase anti-conceal margin above and below by 1" })
+  vim.keymap.set('n', '<leader>mc', '<CMD>RenderMarkdown contract<CR>', { desc = "Decrease anti-conceal margin above and below by 1" })
 end
 
 -- goyo
@@ -162,6 +162,13 @@ M.snippets_hotkeys = {
   nx = {
     ['<leader>x'] = 'cut_text',
   },
+}
+
+-- remote (devcontainer)
+M.remote_hotkeys = {
+  { "<leader>rs", "<cmd>RemoteStart<cr>" },
+  { "<leader>rS", "<cmd>RemoteStop<cr>" },
+  { "<leader>ri", "<cmd>RemoteStop<cr>" },
 }
 
 return M
