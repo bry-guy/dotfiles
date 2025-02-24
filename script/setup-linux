@@ -1,0 +1,62 @@
+#!/bin/bash
+
+# ===============================
+# Install brew
+# ===============================
+
+echo "INFO: Install linuxbrew on Linux."
+if [ -z "$(which brew)" ]; then
+		echo "INFO: Install brew."
+
+		/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+		eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+		sudo apt install build-essential
+fi
+
+if [ -z "$(which gcc)" ]; then
+		echo "INFO: (brew) Install gcc."
+
+		brew install gcc
+fi
+
+# ===============================
+# Homebrew Path Configuration
+# ===============================
+
+echo "Configuring Homebrew path for linuxbrew."
+HOMEBREW_PREFIX="/home/linuxbrew/.linuxbrew"
+
+if [ -z "CLOUD"]; then
+		# ===============================
+		# Install 1Password via brew
+		# ===============================
+		
+		echo "Installing homebrew 1pass deps..."
+		OP_BREWFILE="$DOTFILES_DIR/.brewfile.1pass"
+
+		# Verify Brewfiles exist
+		if [ ! -f "$OP_BREWFILE" ]; then
+			echo "1pass Brewfile ($1PASS_BREWFILE) not found."
+			exit 1
+		fi
+
+		brew bundle --verbose --file="$OP_BREWFILE"
+
+		echo "Successfully installed 1pass packages."
+
+		# ===============================
+		# Prompt to Login to 1Password and Enable SSH Agent
+		# ===============================
+
+		echo "Please log in to 1Password and enable the SSH Agent."
+		echo "1Password > Sign-in > Preferences > Developer"
+		read -p "After completing the above steps, press Enter to continue..."
+
+
+		# ===============================
+		# Link 1Password SSH Key
+		# ===============================
+
+		export SSH_AUTH_SOCK=~/.1password/agent.sock
+fi

@@ -1,36 +1,27 @@
 #!/bin/bash
 
+# Log dotfiles setup
+exec > >(tee -i $HOME/log/dotfiles_install.log)
+exec 2>&1
+
 set -e
 
 DOTFILES_DIR="$(git rev-parse --show-toplevel)"
 
 # ===============================
-# Architecture Detection
+# Detect OS and Arch
 # ===============================
 
-# Source the .detect_arch file to set ARCH_ARM or ARCH_X86
-if [ -f ".detect_arch" ]; then
-    source .detect_arch
-else
-    echo "error: .detect_arch file not found."
-    exit 1
+[ -f dot_detect_os ] && source dot_detect_os
+[ -f dot_detect_arch ] && source dot_detect_arch
+[ -f dot_detect_cloud ] && source dot_detect_cloud
+
+if [ -n "$OS_MAC" ]; then
+		source "$DOTFILES_DIR/script/setup-macos"
 fi
 
-# ===============================
-# Homebrew Path Configuration
-# ===============================
-
-echo "Configuring Homebrew paths based on architecture..."
-
-if [ "$ARCH_ARM" == "1" ]; then
-    echo "Apple Silicon (ARM) detected."
-    HOMEBREW_PREFIX="/opt/homebrew"
-elif [ "$ARCH_X86" == "1" ]; then
-    echo "Intel (x86_64) architecture detected."
-    HOMEBREW_PREFIX="/usr/local"
-else
-    echo "Architecture not supported."
-    exit 1
+if [ -n "$OS_LINUX" ]; then
+		source "$DOTFILES_DIR/script/setup-linux"
 fi
 
 # ===============================
@@ -53,7 +44,6 @@ echo "✅ .zsh_arch successfully generated."
 # Install Core Homebrew Dependencies
 # ===============================
 
-# Define Brewfile paths
 echo "Installing homebrew core deps..."
 CORE_BREWFILE="$DOTFILES_DIR/.brewfile.core"
 
@@ -67,36 +57,16 @@ brew bundle --verbose --file="$CORE_BREWFILE"
 
 echo "Successfully installed core packages."
 
-
-# ===============================
-# Prompt to Login to 1Password and Enable SSH Agent
-# ===============================
-
-echo "Please log in to 1Password and enable the SSH Agent."
-echo "1Password > Sign-in > Preferences > Developer"
-read -p "After completing the above steps, press Enter to continue..."
-
 # ===============================
 # Apply dotfiles
 # ===============================
 
 if chezmoi source-path >/dev/null 2>&1; then
-    echo "✅ Chezmoi is already initialized. Applying dotfiles..."
+    echo "Chezmoi is already initialized. Applying dotfiles..."
     chezmoi apply
 else
-    echo "⚠️ Chezmoi is not initialized. Initializing now..."
+    echo "Chezmoi is not initialized. Initializing now..."
     chezmoi init --apply bry-guy
-fi
-
-# ===============================
-# Link 1Password SSH Key
-# ===============================
-
-if [ "$ARCH_ARM" == "1" ] || [ "$ARCH_X86" == "1" ]; then
-    echo "Linking 1Password SSH key..."
-    mkdir -p "$HOME/.1password"
-    ln -sf "$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock" "$HOME/.1password/agent.sock"
-    echo "1Password SSH key linked at $HOME/.1password/agent.sock."
 fi
 
 # ===============================
@@ -113,30 +83,15 @@ for host in "${ssh_hosts[@]}"; do
     if ! ssh-keygen -F "$host" >/dev/null; then
         echo "Adding $host to ~/.ssh/known_hosts..."
         ssh-keyscan -H "$host" >> "$HOME/.ssh/known_hosts"
-        echo "✅ Added $host to ~/.ssh/known_hosts."
+        echo "Added $host to ~/.ssh/known_hosts."
     else
-        echo "✅ $host is already in ~/.ssh/known_hosts. Skipping."
+        echo "$host is already in ~/.ssh/known_hosts. Skipping."
     fi
 done
-
-# ===============================
-# Apply macOS Defaults
-# ===============================
-
-if [ "$ARCH_ARM" == "1" ] || [ "$ARCH_X86" == "1" ]; then
-    if [ -f "$DOTFILES/.osx" ]; then
-        echo "Applying macOS defaults from ~/.osx..."
-	source $DOTFILES_DIR/.osx
-	echo "macOS defaults applied."
-    else
-        echo "macOS defaults file $DOTFILES/.osx not found. Skipping."
-    fi
-fi
-
 
 # ===============================
 # Final Message
 # ===============================
 
-echo "Setup complete! Your MacBook configuration is now up to date."
+echo "Setup complete."
 

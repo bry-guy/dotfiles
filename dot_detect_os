@@ -1,10 +1,12 @@
 case $(uname -s) in
   Darwin)
-    OS_MAC=1 
+    echo "Detected OS: mac"
+	OS_MAC=1
     ;;
 
   Linux)
-    OS_LINUX=1
+    echo "Detected OS: linux"
+	OS_LINUX=1
     ;;
 
   *)

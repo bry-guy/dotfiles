@@ -1,0 +1,7 @@
+#!/bin/bash
+
+if [ -n "$CODESPACE_NAME" ] || [ -n "$CODESPACES" ] || [ -n "$DEVPOD" ]; then
+    echo "Detected cloud"
+    CLOUD=1
+fi
+
