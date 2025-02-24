@@ -28,7 +28,7 @@ fi
 echo "Configuring Homebrew path for linuxbrew."
 HOMEBREW_PREFIX="/home/linuxbrew/.linuxbrew"
 
-if [ -z "CLOUD"]; then
+if [ -z "CLOUD" ]; then
 		# ===============================
 		# Install 1Password via brew
 		# ===============================
