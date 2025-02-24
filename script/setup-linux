@@ -59,5 +59,5 @@ if [ -z "CLOUD" ]; then
 		# Link 1Password SSH Key
 		# ===============================
 
-		SSH_AUTH_SOCK=~/.1password/agent.sock
+		SSH_AUTH_SOCK="$HOME/.1password/agent.sock"
 fi
