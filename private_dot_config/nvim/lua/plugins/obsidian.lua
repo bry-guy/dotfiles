@@ -15,9 +15,8 @@ local M = {
   init = function()
     vim.opt.conceallevel = 1
   end,
-  keys = require("config.keymaps").obsidian_hotkeys
+  keys = require("config.keymaps").obsidian_hotkeys,
   opts = function()
-    local obsidian = require("obsidian")
     return {
       dir = "~/second-brain",
       open_app_foreground = false,
