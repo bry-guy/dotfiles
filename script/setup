@@ -45,7 +45,7 @@ echo "✅ .zsh_arch successfully generated."
 # ===============================
 
 echo "Installing homebrew core deps..."
-CORE_BREWFILE="$DOTFILES_DIR/.brewfile.core"
+CORE_BREWFILE="$DOTFILES_DIR/dot_brewfile.core"
 
 # Verify Brewfiles exist
 if [ ! -f "$CORE_BREWFILE" ]; then
