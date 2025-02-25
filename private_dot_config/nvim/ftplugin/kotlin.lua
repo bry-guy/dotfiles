@@ -1,11 +1,11 @@
--- ftplugin/lua.lua
-vim.opt_local.shiftwidth = 2
-vim.opt_local.tabstop = 2
-vim.opt_local.softtabstop = 2
+-- ftplugin/kotlin.lua
+vim.opt_local.shiftwidth = 4
+vim.opt_local.tabstop = 4
+vim.opt_local.softtabstop = 4
 vim.opt_local.expandtab = true
 vim.opt_local.autoindent = true
 vim.opt_local.smartindent = true
 vim.opt_local.foldmethod = "indent"
 vim.opt_local.foldlevelstart = 99
-vim.opt_local.commentstring = "--%s"
+vim.opt_local.commentstring = "//%s"
 
