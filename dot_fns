@@ -94,3 +94,43 @@ brew-diff() {
     rm -f "$temp_brewfile" "$merged_brewfile" "$merged_brewfile.unsorted"
 }
 
+
+function devpod_ssh_fix() {
+  echo "Looking for a valid SSH auth socket..."
+  local original_sock="$SSH_AUTH_SOCK"
+  local found=false
+
+  # Find all potential auth-agent directories in /tmp
+  for auth_dir in /tmp/auth-agent*; do
+    if [ -d "$auth_dir" ]; then
+      local socket_path="$auth_dir/listener.sock"
+      if [ -S "$socket_path" ]; then
+        echo "Testing socket: $socket_path"
+        
+        # Temporarily set SSH_AUTH_SOCK to the candidate socket
+        export SSH_AUTH_SOCK="$socket_path"
+        
+        # List identities using ssh-add - a valid connection will not error
+        if ssh-add -l &>/dev/null; then
+          local status=$?
+          # 0 = found keys, 1 = no keys but agent works, 2 = agent not running/socket issue
+          if [ $status -eq 0 ] || [ $status -eq 1 ]; then
+            echo "✅ Found working socket: $socket_path"
+            found=true
+            break
+          fi
+        fi
+        echo "❌ Socket not working: $socket_path"
+      fi
+    fi
+  done
+
+  if [ "$found" = false ]; then
+    echo "Could not find a working socket. Restoring original SSH_AUTH_SOCK."
+    export SSH_AUTH_SOCK="$original_sock"
+    return 1
+  fi
+
+  echo "SSH_AUTH_SOCK has been set to: $SSH_AUTH_SOCK"
+  return 0
+}
