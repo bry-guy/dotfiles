@@ -44,6 +44,10 @@ vim.o.ttimeoutlen = 5
 -- Set the character encoding of the file
 vim.o.encoding = 'utf-8'
 
+-- Relative line numbering
+vim.o.number = true
+vim.o.relativenumber = true
+
 -- Enable colorscheme
 vim.opt.termguicolors = true
 vim.cmd [[colorscheme moonfly]]
