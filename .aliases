@@ -16,7 +16,7 @@ alias nvim-log='~/.local/share/nvim/log'
 alias pry-clean="git status | grep 'modified' | awk '{ print \"$2\" }' | xargs gsed -i '/binding.pry/d'"
 
 alias open-rancher="open -a /Applications/Rancher\ Desktop.app"
-alias open-colima="colima start --cpu 4 --memory 8 --vm-type=vz --vz-rosetta --mount-type=virtiofs --network-address --ssh-agent"
+alias open-colima="colima start --cpu 4 --memory 8 --vm-type=vz --vz-rosetta --mount-type=virtiofs --dns 8.8.8.8 --dns 1.1.1.1 --network-address --ssh-agent"
 
 alias t="tmux" 
 alias ts="tmux new-session -A -t"
