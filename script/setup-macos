@@ -46,13 +46,13 @@ else
     exit 1
 fi
 
-if [ -z "CLOUD"]; then
+if [ -z "$CLOUD" ]; then
 		# ===============================
 		# Install 1Password via brew
 		# ===============================
 		
 		echo "Installing homebrew 1pass deps..."
-		OP_BREWFILE="$DOTFILES_DIR/.brewfile.1pass"
+		OP_BREWFILE="$DOTFILES_DIR/dot_brewfile.1pass"
 
 		# Verify Brewfiles exist
 		if [ ! -f "$OP_BREWFILE" ]; then
