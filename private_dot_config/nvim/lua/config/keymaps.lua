@@ -35,8 +35,8 @@ M.lsp_hotkeys = function()
   vim.keymap.set("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", bufopts)
   vim.keymap.set("n", "gh", "<cmd>lua vim.lsp.buf.hover()<CR>", bufopts)
   vim.keymap.set("n", "gH", "<cmd>lua vim.lsp.buf.signature_help()<CR>", bufopts)
-  vim.keymap.set("n", "gr", "<cmd>lua vim.lsp.buf.rename()<CR>", bufopts)
-  vim.keymap.set("n", "ga", "<cmd>lua vim.lsp.buf.code_action()<CR>", bufopts)
+  vim.keymap.set("n", "gR", "<cmd>lua vim.lsp.buf.rename()<CR>", bufopts)
+  vim.keymap.set("n", "gA", "<cmd>lua vim.lsp.buf.code_action()<CR>", bufopts)
 end
 
 -- oil (navigation)
