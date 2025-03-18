@@ -17,10 +17,7 @@ local M = {
       cmp_cap
     )
 
-    lsp.jdtls.setup({
-      on_attach = require("config.keymaps").lsp_hotkeys,
-      capabilities = capabilities
-    })
+    -- jdtls / java is setup via nvim-jdtls
 
     lsp.gopls.setup{
       on_attach = require("config.keymaps").lsp_hotkeys,

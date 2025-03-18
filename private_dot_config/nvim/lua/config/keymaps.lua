@@ -1,30 +1,32 @@
 local bufopts = { noremap=true, silent=true }
+local M = {}
 
 -- TODO: Export and invoke
 -- diagnostics
 vim.keymap.set('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', bufopts) -- "next diagnostic"
 vim.keymap.set('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', bufopts)
 
--- TODO: Export and invoke
 -- dap
-vim.keymap.set('n', '<leader>dx', "<cmd>lua require'dap'.continue()<CR>", bufopts) -- "debug continue"
-vim.keymap.set('n', '<leader>ds', "<cmd>lua require'dap'.step_over()<CR>", bufopts)
-vim.keymap.set('n', '<leader>di', "<cmd>lua require'dap'.step_into()<CR>", bufopts)
-vim.keymap.set('n', '<leader>do', "<cmd>lua require'dap'.step_out()<CR>", bufopts)
-vim.keymap.set('n', '<leader>db', "<cmd>lua require'dap'.toggle_breakpoint()<CR>", bufopts)
-vim.keymap.set('n', '<leader>dB', "<cmd>lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>", bufopts)
-vim.keymap.set('n', '<leader>dp', "<cmd>lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>", bufopts)
-vim.keymap.set('n', '<leader>dr', "<cmd>lua require'dap'.repl.open()<CR>", bufopts)
-vim.keymap.set('n', '<leader>dl', "<cmd>lua require'dap'.run_last()<CR>", bufopts)
---- telescope dap
-vim.keymap.set('n', '<leader>dc', "<cmd>lua require'telescope'.extensions.dap.commands{}<CR>", bufopts)
-vim.keymap.set('n', '<leader>dg', "<cmd>lua require'telescope'.extensions.dap.configurations{}<CR>", bufopts)
-vim.keymap.set('n', '<leader>dk', "<cmd>lua require'telescope'.extensions.dap.list_breakpoints{}<CR>", bufopts)
-vim.keymap.set('n', '<leader>dv', "<cmd>lua require'telescope'.extensions.dap.variables{}<CR>", bufopts)
-vim.keymap.set('n', '<leader>df', "<cmd>lua require'telescope'.extensions.dap.frames{}<CR>", bufopts)
+M.dap_hotkeys = {
+  { "<leader>rs", "<cmd>RemoteStart<cr>" },
+  { "<leader>dx", "<cmd>lua require'dap'.continue()<CR>" },
+  { "<leader>ds", "<cmd>lua require'dap'.step_over()<CR>" },
+  { "<leader>di", "<cmd>lua require'dap'.step_into()<CR>" },
+  { "<leader>do", "<cmd>lua require'dap'.step_out()<CR>" },
+  { "<leader>db", "<cmd>lua require'dap'.toggle_breakpoint()<CR>" },
+  { "<leader>dB", "<cmd>lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>" },
+  { "<leader>dp", "<cmd>lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>" },
+  { "<leader>dr", "<cmd>lua require'dap'.repl.open()<CR>" },
+  { "<leader>dl", "<cmd>lua require'dap'.run_last()<CR>" },
+  --- telescope dap
+  { "<leader>dc", "<cmd>lua require'telescope'.extensions.dap.commands{}<CR>" },
+  { "<leader>dg", "<cmd>lua require'telescope'.extensions.dap.configurations{}<CR>" },
+  { "<leader>dk", "<cmd>lua require'telescope'.extensions.dap.list_breakpoints{}<CR>" },
+  { "<leader>dv", "<cmd>lua require'telescope'.extensions.dap.variables{}<CR>" },
+  { "<leader>df", "<cmd>lua require'telescope'.extensions.dap.frames{}<CR>" },
+}
 
 
-local M = {}
 
 -- lsp
 M.lsp_hotkeys = function()

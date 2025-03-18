@@ -1,6 +1,6 @@
 local M = {
   "mfussenegger/nvim-dap",
-  event = "BufReadPre",
+  keys = require("config.keymaps").dap_hotkeys,
   config = function()
     local dap = require("dap")
 
