@@ -9,22 +9,20 @@ mise.toml
 # OS-specific ignores
 {{ if eq .chezmoi.os "darwin" }}
 linux/
-dot_dnf.*
-dot_flatpak.*
+.dnf.*
+.flatpak.*
 script/setup-fedora
 script/fedora-ollama-install
 
 {{ else if eq .chezmoi.os "linux" }}
 .osx
-dot_osx
 .brewfile.*
-dot_brewfile.*
 
 {{ if lookPath "dnf" }}
 {{ else }}
 # This is not a Fedora/RHEL system - ignore Fedora-specific files
-dot_dnf.*
-dot_flatpak.*
+.dnf.*
+.flatpak.*
 script/setup-fedora
 script/fedora-ollama-install
 {{ end }}
