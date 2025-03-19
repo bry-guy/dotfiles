@@ -3,6 +3,7 @@ local M = {
   keys = require("config.keymaps").dap_hotkeys,
   config = function()
     local dap = require("dap")
+    dap.switchbuf = "usevisible,usetab,uselast"
 
     dap.adapters.delve = {
       type = 'server',

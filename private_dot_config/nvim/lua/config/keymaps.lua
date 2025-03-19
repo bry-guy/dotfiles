@@ -8,7 +8,7 @@ vim.keymap.set('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', bufopts)
 
 -- dap
 M.dap_hotkeys = {
-  { "<leader>rs", "<cmd>RemoteStart<cr>" },
+  { "<leader>dh", "<cmd>lua require'dap.ui.widgets'.hover()<CR>" },
   { "<leader>dx", "<cmd>lua require'dap'.continue()<CR>" },
   { "<leader>ds", "<cmd>lua require'dap'.step_over()<CR>" },
   { "<leader>di", "<cmd>lua require'dap'.step_into()<CR>" },
@@ -16,7 +16,8 @@ M.dap_hotkeys = {
   { "<leader>db", "<cmd>lua require'dap'.toggle_breakpoint()<CR>" },
   { "<leader>dB", "<cmd>lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>" },
   { "<leader>dp", "<cmd>lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>" },
-  { "<leader>dr", "<cmd>lua require'dap'.repl.open()<CR>" },
+  { "<leader>dr", "<cmd>lua require'dap'.repl.open({},'tabnew')<CR>" },
+  { "<leader>dR", "<cmd>lua require'dap'.repl.close()<CR>" },
   { "<leader>dl", "<cmd>lua require'dap'.run_last()<CR>" },
   --- telescope dap
   { "<leader>dc", "<cmd>lua require'telescope'.extensions.dap.commands{}<CR>" },

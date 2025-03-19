@@ -6,13 +6,14 @@ local M = {
     'hrsh7th/cmp-buffer',
     -- 'hrsh7th/cmp-path',
     -- 'hrsh7th/cmp-cmdline',
+    "rcarriga/cmp-dap",
     'dcampos/nvim-snippy',
   },
   lazy = false,
   init = function()
     vim.api.nvim_command('set completeopt=menu,menuone,noselect')
   end,
-  opts = function()
+  config = function()
     local cmp = require('cmp')
     local types = require('cmp.types')
     local snippy = require('snippy')
@@ -22,7 +23,19 @@ local M = {
       return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
     end
 
-    return {
+    cmp.setup({
+      enabled = function()
+        return vim.api.nvim_buf_get_option(0, "buftype") ~= "prompt"
+        or require("cmp_dap").is_dap_buffer()
+      end
+    })
+    cmp.setup.filetype({ "dap-repl", "dapui_watches", "dapui_hover" }, {
+      sources = {
+        { name = "dap" },
+      },
+    })
+
+    local opts = {
       completion = {
         autocomplete = { types.cmp.TriggerEvent.TextChanged },
       },
@@ -66,6 +79,7 @@ local M = {
         { name = 'buffer' },
       })
     }
+    cmp.setup(opts)
   end,
 }
 
