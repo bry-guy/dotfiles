@@ -15,6 +15,7 @@ script/setup-fedora
 script/fedora-ollama-install
 
 {{ else if eq .chezmoi.os "linux" }}
+.osx
 dot_osx
 .brewfile.*
 dot_brewfile.*
