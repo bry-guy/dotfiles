@@ -1,0 +1,2 @@
+github.com/go-delve/delve/cmd/dlv
+golang.org/x/tools/gopls
