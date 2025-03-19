@@ -1,0 +1,35 @@
+#!/bin/bash
+set -e
+
+# Usage information
+usage() {
+    echo "Usage: $0 {env}"
+    exit 1
+}
+
+# Check for exactly one argument
+if [ "$#" -ne 1 ]; then
+    usage
+fi
+
+ENV="$1"
+
+# Ensure Homebrew is installed
+if ! command -v brew &>/dev/null; then
+    echo "Homebrew is not installed. Please run script/setup first."
+    exit 1
+fi
+
+# Define Brewfile paths
+DOTFILES_DIR="$(git rev-parse --show-toplevel)"
+ENV_BREWFILE="$DOTFILES_DIR/.brewfile.$ENV"
+
+if [ ! -f "$ENV_BREWFILE" ]; then
+    echo "Environment Brewfile ($ENV_BREWFILE) not found."
+    exit 1
+fi
+
+# Install from Brewfile
+brew bundle --verbose --file="$ENV_BREWFILE"
+
+echo "Successfully installed '$ENV' packages via Homebrew."

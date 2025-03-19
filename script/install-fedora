@@ -1,0 +1,56 @@
+#!/bin/bash
+set -e
+
+# Usage information
+usage() {
+    echo "Usage: $0 {env}"
+    exit 1
+}
+
+# Check for exactly one argument
+if [ "$#" -ne 1 ]; then
+    usage
+fi
+
+ENV="$1"
+DOTFILES_DIR="$(git rev-parse --show-toplevel)"
+
+# ===============================
+# Install DNF Packages
+# ===============================
+
+DNF_FILE="$DOTFILES_DIR/dot_dnf.$ENV"
+if [ -f "$DNF_FILE" ]; then
+    echo "Installing DNF packages from $DNF_FILE..."
+    PACKAGES=$(grep -v "^#" "$DNF_FILE" | grep -v "^$" | tr '\n' ' ')
+    if [ -n "$PACKAGES" ]; then
+        # Handle the special exit code 100 from dnf check-update (updates available)
+        sudo dnf check-update || [ $? -eq 100 ]
+        sudo dnf install -y $PACKAGES
+    fi
+    echo "DNF packages installed successfully."
+else
+    echo "Environment DNF manifest ($DNF_FILE) not found, skipping DNF installation."
+fi
+
+# ===============================
+# Install Flatpak Applications
+# ===============================
+
+FLATPAK_FILE="$DOTFILES_DIR/dot_flatpak.$ENV"
+if [ -f "$FLATPAK_FILE" ]; then
+    echo "Installing Flatpak applications from $FLATPAK_FILE..."
+    grep -v "^#" "$FLATPAK_FILE" | grep -v "^$" | while read -r line; do
+        REPO=$(echo $line | awk '{print $1}')
+        APP=$(echo $line | awk '{print $2}')
+        if [ -n "$APP" ]; then
+            echo "Installing $APP from $REPO..."
+            flatpak install --noninteractive $REPO $APP
+        fi
+    done
+    echo "Flatpak applications installed successfully."
+else
+    echo "Environment Flatpak manifest ($FLATPAK_FILE) not found, skipping Flatpak installation."
+fi
+
+echo "Successfully installed '$ENV' packages for Fedora."

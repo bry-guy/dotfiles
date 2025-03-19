@@ -1,19 +1,12 @@
 #!/bin/bash
-
 set -e
 
 # Usage information
 usage() {
     echo "Usage: $0 {env}"
+    echo "Environments: core, dev, me, ai, virtual, cloud, work"
     exit 1
 }
-
-
-# Ensure Homebrew is installed
-if ! command -v brew &>/dev/null; then
-    echo "Homebrew is not installed. Please run script/setup first."
-    exit 1
-fi
 
 # Check for exactly one argument
 if [ "$#" -ne 1 ]; then
@@ -21,18 +14,28 @@ if [ "$#" -ne 1 ]; then
 fi
 
 ENV="$1"
+DOTFILES_DIR="$(git rev-parse --show-toplevel)"
 
-# Define Brewfile paths
-BREWFILE_DIR="$PWD"
-ENV_BREWFILE="$BREWFILE_DIR/.brewfile.$ENV"
+# ===============================
+# Detect OS and Distribution
+# ===============================
 
-if [ ! -f "$ENV_BREWFILE" ]; then
-    echo "Environment Brewfile ($ENV_BREWFILE) not found."
+# Source OS detection script
+[ -f "$DOTFILES_DIR/dot_detect_os" ] && source "$DOTFILES_DIR/dot_detect_os"
+
+if [ -n "$OS_MAC" ]; then
+    echo "Installing packages for macOS..."
+    "$DOTFILES_DIR/script/install-osx" "$ENV"
+elif [ -n "$OS_LINUX" ]; then
+    # Check if we're running Fedora
+    if [ -f /etc/fedora-release ]; then
+        echo "Installing packages for Fedora..."
+        "$DOTFILES_DIR/script/install-fedora" "$ENV"
+    else
+        echo "Installing packages for Linux (non-Fedora)..."
+        "$DOTFILES_DIR/script/install-osx" "$ENV"  # Reuse macOS script for Linuxbrew
+    fi
+else
+    echo "Unsupported operating system."
     exit 1
 fi
-
-# Install from Brewfile
-brew bundle --verbose --file="$ENV_BREWFILE"
-
-echo "Successfully installed '$ENV' packages."
-
