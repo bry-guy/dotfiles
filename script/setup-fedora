@@ -1,0 +1,101 @@
+#!/bin/bash
+
+DOTFILES_DIR="$(git rev-parse --show-toplevel)"
+
+# ===============================
+# Install System Dependencies
+# ===============================
+
+echo "Installing essential Fedora system packages..."
+sudo dnf check-update || [ $? -eq 100 ]
+sudo dnf install -y dnf-plugins-core
+
+# Enable RPM Fusion repositories (Free and Non-Free)
+if ! dnf repolist | grep -q "rpmfusion-free"; then
+    echo "Enabling RPM Fusion repositories..."
+    sudo dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
+    sudo dnf install -y https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+    echo "RPM Fusion repositories enabled."
+fi
+
+# ===============================
+# Install Flatpak
+# ===============================
+
+echo "Setting up Flatpak..."
+sudo dnf install -y flatpak
+
+# Make sure Flathub is available
+if ! flatpak remotes | grep -q "flathub"; then
+    echo "Adding Flathub repository..."
+    flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+fi
+
+# ===============================
+# Install chezmoi (manual)
+# ===============================
+
+echo "Installing chezmoi..."
+sh -c "$(curl -fsLS get.chezmoi.io)" -- -b $HOME/.local/bin
+
+# ===============================
+# Install Core DNF Packages
+# ===============================
+
+echo "Installing core system packages..."
+DNF_CORE_FILE="$DOTFILES_DIR/dot_dnf.core"
+
+if [ -f "$DNF_CORE_FILE" ]; then
+    # Filter out comments and empty lines, then install packages
+    PACKAGES=$(grep -v "^#" "$DNF_CORE_FILE" | grep -v "^$" | tr '\n' ' ')
+    sudo dnf install -y $PACKAGES
+    echo "Core system packages installed successfully."
+else
+    echo "Core DNF package list ($DNF_CORE_FILE) not found."
+    exit 1
+fi
+
+# ===============================
+# Configure ZSH Environment
+# ===============================
+
+echo "Configuring shell environment for Fedora..."
+ARCH_FILE="$HOME/.zsh_arch"
+
+cat > "$ARCH_FILE" <<EOL
+export PATH="$HOME/.local/bin:$PATH"
+EOL
+
+# Set ZSH as default shell if not already
+if [ "$SHELL" != "$(which zsh)" ]; then
+    echo "Setting ZSH as default shell..."
+    sudo chsh -s $(which zsh) $USER
+    echo "Default shell set to ZSH."
+fi
+
+if [ -z "$CLOUD" ]; then
+    # ===============================
+    # Install 1Password
+    # ===============================
+    
+    echo "Manually install 1Password via https://support.1password.com/install-linux/#fedora-or-red-hat-enterprise-linux."
+    read -p "Press Enter to continue..."
+    
+    # ===============================
+    # Prompt to Login to 1Password and Enable SSH Agent
+    # ===============================
+    
+    echo "Please log in to 1Password and enable the SSH Agent."
+    echo "1Password > Sign-in > Preferences > Developer"
+    read -p "After completing the above steps, press Enter to continue..."
+    
+    # ===============================
+    # Link 1Password SSH Key
+    # ===============================
+    
+    mkdir -p "$HOME/.1password"
+    SSH_AUTH_SOCK="$HOME/.1password/agent.sock"
+    echo "export SSH_AUTH_SOCK=$SSH_AUTH_SOCK" >> "$ARCH_FILE"
+fi
+
+echo "Fedora setup completed successfully."

@@ -29,6 +29,7 @@ if [ -z "$(which brew)" ]; then
 		fi
 fi
 
+
 # ===============================
 # Homebrew Path Configuration
 # ===============================
@@ -45,6 +46,44 @@ else
     echo "Architecture not supported."
     exit 1
 fi
+
+# ===============================
+# Homebrew Environment Variables
+# ===============================
+
+ARCH_FILE="$HOME/.zsh_arch"
+
+echo "Generating .zsh_arch based on system architecture..."
+cat > "$ARCH_FILE" <<EOL
+
+export HOMEBREW_PREFIX="$HOMEBREW_PREFIX"
+export HOMEBREW_CELLAR="$HOMEBREW_PREFIX/Cellar"
+export PATH="$HOMEBREW_PREFIX/bin:$PATH"
+export SSH_AUTH_SOCK=$SSH_AUTH_SOCK
+EOL
+
+if [ -z "CLOUD" ]; then
+                echo "export SSH_AUTH_SOCK=$SSH_AUTH_SOCK" >> $ARCH_FILE
+fi
+
+echo ".zsh_arch successfully generated."
+
+# ===============================
+# Install Core Homebrew Dependencies
+# ===============================
+
+echo "Installing homebrew core deps..."
+CORE_BREWFILE="$DOTFILES_DIR/dot_brewfile.core"
+
+# Verify Brewfiles exist
+if [ ! -f "$CORE_BREWFILE" ]; then
+    echo "Core Brewfile ($CORE_BREWFILE) not found."
+    exit 1
+fi
+
+brew bundle --verbose --file="$CORE_BREWFILE"
+
+echo "Successfully installed core packages."
 
 if [ -z "$CLOUD" ]; then
 		# ===============================

@@ -17,50 +17,20 @@ DOTFILES_DIR="$(git rev-parse --show-toplevel)"
 [ -f dot_detect_cloud ] && source dot_detect_cloud
 
 if [ -n "$OS_MAC" ]; then
-		source "$DOTFILES_DIR/script/setup-macos"
+	echo "Detected macOS. Using macOS setup."
+	source "$DOTFILES_DIR/script/setup-macos"
+elif [ -n "$OS_LINUX" ]; then
+    if [ -f /etc/fedora-release ]; then
+        echo "Detected Fedora: $(cat /etc/fedora-release)"
+        source "$DOTFILES_DIR/script/setup-fedora"
+    else
+        echo "Detected Linux (non-Fedora). Using generic Linux setup with Linuxbrew."
+        source "$DOTFILES_DIR/script/setup-linux"
+    fi
+else
+	echo "Unsupported operating system."
+	exit 1
 fi
-
-if [ -n "$OS_LINUX" ]; then
-		source "$DOTFILES_DIR/script/setup-linux"
-fi
-
-# ===============================
-# Homebrew Environment Variables
-# ===============================
-
-ARCH_FILE="$HOME/.zsh_arch"
-
-echo "Generating .zsh_arch based on system architecture..."
-cat > "$ARCH_FILE" <<EOL
-
-export HOMEBREW_PREFIX="$HOMEBREW_PREFIX"
-export HOMEBREW_CELLAR="$HOMEBREW_PREFIX/Cellar"
-export PATH="$HOMEBREW_PREFIX/bin:$PATH"
-export SSH_AUTH_SOCK=$SSH_AUTH_SOCK
-EOL
-
-if [ -z "CLOUD" ]; then
-		echo "export SSH_AUTH_SOCK=$SSH_AUTH_SOCK" >> $ARCH_FILE
-fi
-
-echo "✅ .zsh_arch successfully generated."
-
-# ===============================
-# Install Core Homebrew Dependencies
-# ===============================
-
-echo "Installing homebrew core deps..."
-CORE_BREWFILE="$DOTFILES_DIR/dot_brewfile.core"
-
-# Verify Brewfiles exist
-if [ ! -f "$CORE_BREWFILE" ]; then
-    echo "Core Brewfile ($CORE_BREWFILE) not found."
-    exit 1
-fi
-
-brew bundle --verbose --file="$CORE_BREWFILE"
-
-echo "Successfully installed core packages."
 
 # ===============================
 # Apply dotfiles
@@ -91,7 +61,7 @@ for host in "${ssh_hosts[@]}"; do
     fi
 done
 
-if [ -n "CLOUD" ]; then
+if [ -n "$CLOUD" ]; then
 		# ===============================
 		# Install Cloud Deps
 		# ===============================

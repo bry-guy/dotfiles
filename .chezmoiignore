@@ -5,3 +5,26 @@ README.md
 TODO.md
 .zsh_arch
 mise.toml
+
+# OS-specific ignores
+{{ if eq .chezmoi.os "darwin" }}
+linux/
+dot_dnf.*
+dot_flatpak.*
+script/setup-fedora
+script/fedora-ollama-install
+
+{{ else if eq .chezmoi.os "linux" }}
+dot_osx
+.brewfile.*
+
+{{ if lookPath "dnf" }}
+{{ else }}
+# This is not a Fedora/RHEL system - ignore Fedora-specific files
+dot_dnf.*
+dot_flatpak.*
+script/setup-fedora
+script/fedora-ollama-install
+{{ end }}
+{{ end }}
+
