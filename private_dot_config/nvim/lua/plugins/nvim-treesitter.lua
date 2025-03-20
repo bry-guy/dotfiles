@@ -25,10 +25,9 @@ local M = {
       pattern = '*',
       command = "normal zR"
     })
-
   end,
   config = function()
-    require'nvim-treesitter.configs'.setup {
+    require 'nvim-treesitter.configs'.setup {
       ensure_installed = {
         "ruby",
         "python",
@@ -45,13 +44,15 @@ local M = {
         "json",
         "markdown",
         "yaml",
+        "c",
+        "vimdoc"
       },
       highlight = {
         enable = true,
-      additional_vim_regex_highlighting = { "markdown" },
+        additional_vim_regex_highlighting = { "markdown" },
+      }
     }
-  }
-  vim.cmd("TSUpdate")
+    vim.cmd("TSUpdate")
   end
 }
 

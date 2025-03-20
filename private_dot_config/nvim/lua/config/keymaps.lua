@@ -1,4 +1,4 @@
-local bufopts = { noremap=true, silent=true }
+local bufopts = { noremap = true, silent = true }
 local M = {}
 
 -- TODO: Export and invoke
@@ -42,6 +42,18 @@ M.lsp_hotkeys = function()
   vim.keymap.set("n", "gA", "<cmd>lua vim.lsp.buf.code_action()<CR>", bufopts)
 end
 
+-- test
+M.test_hotkeys = {
+  { "<leader>tn", "<cmd>lua require('neotest').run.run()<CR>" },
+  { "<leader>tl", "<cmd>lua require('neotest').run.run_last()<CR>" },
+  { "<leader>tf", "<cmd>lua require('neotest').run.run(vim.fn.expand('%'))<CR>" },
+  { "<leader>td", "<cmd>lua require('neotest').run.run({strategy = 'dap'})<CR>" },
+  { "<leader>tp", "<cmd>lua require('neotest').output_panel.open()<CR>:tabnext<CR>" },
+  { "<leader>tP", "<cmd>lua require('neotest').output_panel.close()<CR>" },
+  { "<leader>tc", "<cmd>lua require('neotest').output_panel.clear()<CR>" },
+  { "<leader>to", "<cmd>lua require('neotest').output.open({ short = true, enter = true, auto_close = true })<CR>" },
+}
+
 -- oil (navigation)
 vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 M.oil_hotkeys = {
@@ -66,11 +78,11 @@ M.oil_hotkeys = {
 
 -- multicursors
 M.multicursors_hotkeys = {
-  {"<Leader>c", "<Cmd>MultipleCursorsAddMatches<CR>", mode = {"n", "x"}, desc = "Add cursors to cword"}, -- "leader cursors"
-  {"<C-k>", "<Cmd>MultipleCursorsAddUp<CR>", mode = {"n", "x"}, desc = "Add cursor and move up"},
-  {"<C-j>", "<Cmd>MultipleCursorsAddDown<CR>", mode = {"n", "x"}, desc = "Add cursor and move down"},
+  { "<Leader>c", "<Cmd>MultipleCursorsAddMatches<CR>", mode = { "n", "x" }, desc = "Add cursors to cword" }, -- "leader cursors"
+  { "<C-k>",     "<Cmd>MultipleCursorsAddUp<CR>",      mode = { "n", "x" }, desc = "Add cursor and move up" },
+  { "<C-j>",     "<Cmd>MultipleCursorsAddDown<CR>",    mode = { "n", "x" }, desc = "Add cursor and move down" },
   custom = {
-        {"n", "<Leader>ca", function() require("multiple-cursors").align() end},
+    { "n", "<Leader>ca", function() require("multiple-cursors").align() end },
   }
 }
 
@@ -87,7 +99,7 @@ M.telescope_hotkeys = function(builtin)
   vim.keymap.set('n', '<leader>fn', builtin.man_pages, {})
 
   vim.keymap.set('n', '<leader>fr', builtin.lsp_references, {})
-  -- TODO: Figure out how to use telescope to grep through auto-completion lists 
+  -- TODO: Figure out how to use telescope to grep through auto-completion lists
   -- vim.keymap.set('i', '<leader>fd', builtin.lsp_incoming_calls, {})
 
   vim.keymap.set('n', '<leader>ft', builtin.treesitter, {})
@@ -123,15 +135,18 @@ M.obsidian_hotkeys = {
 M.rendermarkdown_hotkeys = function()
   vim.keymap.set('n', '<leader>me', '<CMD>RenderMarkdown enable<CR>', { desc = "Enable this plugin" })
   vim.keymap.set('n', '<leader>md', '<CMD>RenderMarkdown disable<CR>', { desc = "Disable this plugin" })
-  vim.keymap.set('n', '<leader>mt', '<CMD>RenderMarkdown toggle<CR>', { desc = "Switch between enabling & disabling this plugin" })
+  vim.keymap.set('n', '<leader>mt', '<CMD>RenderMarkdown toggle<CR>',
+    { desc = "Switch between enabling & disabling this plugin" })
   vim.keymap.set('n', '<leader>ml', '<CMD>RenderMarkdown log<CR>', { desc = "Opens the log file for this plugin" })
-  vim.keymap.set('n', '<leader>me', '<CMD>RenderMarkdown expand<CR>', { desc = "Increase anti-conceal margin above and below by 1" })
-  vim.keymap.set('n', '<leader>mc', '<CMD>RenderMarkdown contract<CR>', { desc = "Decrease anti-conceal margin above and below by 1" })
+  vim.keymap.set('n', '<leader>me', '<CMD>RenderMarkdown expand<CR>',
+    { desc = "Increase anti-conceal margin above and below by 1" })
+  vim.keymap.set('n', '<leader>mc', '<CMD>RenderMarkdown contract<CR>',
+    { desc = "Decrease anti-conceal margin above and below by 1" })
 end
 
 -- goyo
 M.goyo_hotkeys = function()
-  vim.keymap.set('n', '<leader>g', '<CMD>Goyo<CR>', { desc = "Toggle Goyo"})
+  vim.keymap.set('n', '<leader>g', '<CMD>Goyo<CR>', { desc = "Toggle Goyo" })
 end
 
 -- codecompanion (ai)

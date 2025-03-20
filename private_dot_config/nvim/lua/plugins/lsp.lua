@@ -21,7 +21,12 @@ local M = {
 
     lsp.gopls.setup{
       on_attach = require("config.keymaps").lsp_hotkeys,
-      capabilities = capabilities
+      capabilities = capabilities,
+      settings = {
+        gopls = {
+          gofumpt = true
+        }
+      }
     }
 
     lsp.lua_ls.setup{

@@ -1,9 +1,9 @@
-- [ ] _dap.lua
+- [x] _dap.lua
     - [ ] go 
-    - [ ] java
-        - [ ] debug in-app
+    - [x] java
+        - [x] debug in-app
         - [ ] learn which type of java tests work uses
         - [ ] setup debug adapter to debug java tests
-    - [ ] telescope (dap extension)
+    - [x] telescope (dap extension)
 - [ ] test.lua
     - [ ] trial different test plugins

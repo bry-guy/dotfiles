@@ -1,2 +1,4 @@
 github.com/go-delve/delve/cmd/dlv
 golang.org/x/tools/gopls
+mvdan.cc/gofumpt
+gotest.tools/gotestsum
