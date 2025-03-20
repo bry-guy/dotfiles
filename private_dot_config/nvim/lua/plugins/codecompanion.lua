@@ -1,28 +1,30 @@
 M = {
   "olimorris/codecompanion.nvim",
   dependencies = {
-    {
-      "github/copilot.vim",
-      init = function()
-        vim.g.copilot_filetypes = {
-          ["*"] = false,
-        }
-      end
-    },
     "nvim-lua/plenary.nvim",
     "nvim-treesitter/nvim-treesitter",
     { "MeanderingProgrammer/render-markdown.nvim", ft = { "markdown", "codecompanion" } },
   },
+  keys = require("config.keymaps").ai_hotkeys,
   init = function()
-    require("config.keymaps").codecompanion_hotkeys()
+    vim.cmd([[cab cc CodeCompanion]])
   end,
-  config = true,
-  lazy = false,
-  -- TODO: Use "cmd" to load API keys from 1password
   opts = {
+    stream = false,
+    adapters = {
+      copilot = function()
+        return require("codecompanion.adapters").extend("copilot", {
+          schema = {
+            model = {
+              default = "claude-3.7-sonnet",
+            },
+          },
+        })
+      end,
+    },
     strategies = {
       chat = {
-        adapter = "anthropic",
+        adapter = "copilot",
       },
       inline = {
         adapter = "copilot",

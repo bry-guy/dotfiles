@@ -150,16 +150,11 @@ M.goyo_hotkeys = function()
 end
 
 -- codecompanion (ai)
-M.codecompanion_hotkeys = function()
-  vim.keymap.set("n", "<leader>aa", "<cmd>CodeCompanionActions<cr>", { desc = "AI actions" })
-  vim.keymap.set("v", "<leader>aa", "<cmd>CodeCompanionActions<cr>", { desc = "AI actions" })
-  vim.keymap.set("n", "<leader>ac", "<cmd>CodeCompanionChat Toggle<cr>", { desc = "AI chat" })
-  vim.keymap.set("v", "<leader>ac", "<cmd>CodeCompanionChat Toggle<cr>", { desc = "AI chat" })
-  vim.keymap.set("v", "<leader>ap", "<cmd>CodeCompanionChat Add<cr>", { desc = "AI push (add)" })
-
-  -- Expand 'cc' into 'CodeCompanion' in the command line
-  vim.cmd([[cab cc CodeCompanion]])
-end
+M.ai_hotkeys = {
+  { "<leader>aa", "<cmd>CodeCompanionActions<cr>"},
+  { "<leader>ac", "<cmd>CodeCompanionChat Toggle<cr>"},
+  { "<leader>ap", "<cmd>CodeCompanionChat Add<cr>"},
+}
 
 -- snippets
 M.snippets_hotkeys = {

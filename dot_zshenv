@@ -6,4 +6,7 @@ export EDITOR=nvim
 export VISUAL=nvim
 export MANPAGER='nvim +Man!'
 
-. "$HOME/.cargo/env"
+
+if [ -n "$(command -v cargo)" ]; then
+		. "$HOME/.cargo/env"
+fi
