@@ -6,6 +6,7 @@ gh
 jq
 just
 hugo
+marp-cli
 neovim
 pandoc
 ripgrep

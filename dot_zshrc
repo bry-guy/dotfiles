@@ -40,7 +40,7 @@ fi
 # ===============================
 # Antidote Plugin Setup
 # ===============================
-source $HOMEBREW_PREFIX/opt/antidote/share/antidote/antidote.zsh
+
 if [ -n "$(command -v antidote)" ]; then
 		antidote load ${ZDOTDIR:-$HOME}/.zsh_plugins.txt
 fi
