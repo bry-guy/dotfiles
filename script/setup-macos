@@ -38,10 +38,12 @@ echo "Configuring Homebrew paths based on architecture..."
 
 if [ "$ARCH_ARM" == "1" ]; then
     echo "Apple Silicon (ARM) detected."
-    HOMEBREW_PREFIX="/opt/homebrew"
+    export HOMEBREW_PREFIX="/opt/homebrew"
+    export HOMEBREW_CELLAR="$HOMEBREW_PREFIX/Cellar"
 elif [ "$ARCH_X86" == "1" ]; then
     echo "Intel (x86_64) architecture detected."
-    HOMEBREW_PREFIX="/usr/local"
+    export HOMEBREW_PREFIX="/usr/local"
+    export HOMEBREW_CELLAR="$HOMEBREW_PREFIX/Cellar"
 else
     echo "Architecture not supported."
     exit 1
@@ -57,9 +59,8 @@ echo "Generating .zsh_arch based on system architecture..."
 cat > "$ARCH_FILE" <<EOL
 
 export HOMEBREW_PREFIX="$HOMEBREW_PREFIX"
-export HOMEBREW_CELLAR="$HOMEBREW_PREFIX/Cellar"
+export HOMEBREW_CELLAR="$HOMEBREW_CELLAR"
 export PATH="$HOMEBREW_PREFIX/bin:$PATH"
-export SSH_AUTH_SOCK=$SSH_AUTH_SOCK
 EOL
 
 if [ -z "CLOUD" ]; then
