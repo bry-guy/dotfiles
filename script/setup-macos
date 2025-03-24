@@ -130,12 +130,10 @@ fi
 # Apply macOS Defaults
 # ===============================
 
-if [ "$ARCH_ARM" == "1" ] || [ "$ARCH_X86" == "1" ]; then
-    if [ -f "$DOTFILES/dot_osx" ]; then
-        echo "Applying macOS defaults from $DOTFILES/dot_osx..."
-	source $DOTFILES_DIR/dot_osx
-	echo "macOS defaults applied."
-    else
-        echo "macOS defaults file $DOTFILES/dot_osx not found. Skipping."
-    fi
+if [ -f "$DOTFILES_DIR/dot_osx" ]; then
+    echo "Applying macOS defaults from $DOTFILES_DIR/dot_osx..."
+    source "$DOTFILES_DIR/dot_osx"
+    echo "macOS defaults applied."
+else
+    echo "macOS defaults file $DOTFILES_DIR/dot_osx not found. Skipping."
 fi

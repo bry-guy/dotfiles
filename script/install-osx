@@ -22,7 +22,7 @@ fi
 
 # Define Brewfile paths
 DOTFILES_DIR="$(git rev-parse --show-toplevel)"
-ENV_BREWFILE="$DOTFILES_DIR/.brewfile.$ENV"
+ENV_BREWFILE="$DOTFILES_DIR/dot_brewfile.$ENV"
 
 if [ ! -f "$ENV_BREWFILE" ]; then
     echo "Environment Brewfile ($ENV_BREWFILE) not found."
