@@ -63,10 +63,6 @@ export HOMEBREW_CELLAR="$HOMEBREW_CELLAR"
 export PATH="$HOMEBREW_PREFIX/bin:$PATH"
 EOL
 
-if [ -z "CLOUD" ]; then
-                echo "export SSH_AUTH_SOCK=$SSH_AUTH_SOCK" >> $ARCH_FILE
-fi
-
 echo ".zsh_arch successfully generated."
 
 # ===============================
@@ -87,6 +83,7 @@ brew bundle --verbose --file="$CORE_BREWFILE"
 echo "Successfully installed core packages."
 
 if [ -z "$CLOUD" ]; then
+
 		# ===============================
 		# Install 1Password via brew
 		# ===============================
@@ -122,8 +119,7 @@ if [ -z "$CLOUD" ]; then
 		ln -sf "$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock" "$HOME/.1password/agent.sock"
 		echo "1Password SSH key linked at $HOME/.1password/agent.sock."
 
-		SSH_AUTH_SOCK="$HOME/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock"
-
+        echo "export SSH_AUTH_SOCK=$HOME/.1password/agent.sock" >> $ARCH_FILE
 fi
 
 # ===============================

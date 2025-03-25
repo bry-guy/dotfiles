@@ -7,7 +7,7 @@ elif [ "$(uname -m)" = 'arm64' ]; then
 		eval "$(/opt/homebrew/bin/brew shellenv)"
 		source $HOMEBREW_PREFIX/opt/antidote/share/antidote/antidote.zsh
 elif [ "$(uname -m)" = 'x86_64' ]; then
-		eval "$(/usr/local/homebrew/bin/brew shellenv)"
-		source $HOMEBREW_PREFIX/antidote/share/antidote/antidote.zsh
+		eval "$(/usr/local/bin/brew shellenv)"
+		source $HOMEBREW_PREFIX/opt/antidote/share/antidote/antidote.zsh
 fi
 
