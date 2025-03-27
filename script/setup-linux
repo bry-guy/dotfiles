@@ -26,7 +26,41 @@ fi
 # ===============================
 
 echo "Configuring Homebrew path for linuxbrew."
-HOMEBREW_PREFIX="/home/linuxbrew/.linuxbrew"
+export HOMEBREW_PREFIX="/home/linuxbrew/.linuxbrew"
+export HOMEBREW_CELLAR="$HOMEBREW_PREFIX/Cellar"
+
+# ===============================
+# Homebrew Environment Variables
+# ===============================
+
+ARCH_FILE="$HOME/.zsh_arch"
+
+echo "Generating .zsh_arch based on system architecture..."
+cat > "$ARCH_FILE" <<EOL
+
+export HOMEBREW_PREFIX="$HOMEBREW_PREFIX"
+export HOMEBREW_CELLAR="$HOMEBREW_CELLAR"
+export PATH="$HOMEBREW_PREFIX/bin:$PATH"
+EOL
+
+echo ".zsh_arch successfully generated."
+
+# ===============================
+# Install Core Homebrew Dependencies
+# ===============================
+
+echo "Installing homebrew core deps..."
+CORE_BREWFILE="$DOTFILES_DIR/dot_brewfile.core"
+
+# Verify Brewfiles exist
+if [ ! -f "$CORE_BREWFILE" ]; then
+    echo "Core Brewfile ($CORE_BREWFILE) not found."
+    exit 1
+fi
+
+brew bundle --verbose --file="$CORE_BREWFILE"
+
+echo "Successfully installed core packages."
 
 if [ -z "CLOUD" ]; then
 		# ===============================
