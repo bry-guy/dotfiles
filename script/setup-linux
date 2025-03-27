@@ -68,11 +68,11 @@ if [ -z "CLOUD" ]; then
 		# ===============================
 		
 		echo "Installing homebrew 1pass deps..."
-		OP_BREWFILE="$DOTFILES_DIR/.brewfile.1pass"
+		OP_BREWFILE="$DOTFILES_DIR/dot_brewfile.1pass"
 
 		# Verify Brewfiles exist
 		if [ ! -f "$OP_BREWFILE" ]; then
-			echo "1pass Brewfile ($1PASS_BREWFILE) not found."
+			echo "1pass Brewfile ($OP_BREWFILE) not found."
 			exit 1
 		fi
 
@@ -94,4 +94,16 @@ if [ -z "CLOUD" ]; then
 		# ===============================
 
 		SSH_AUTH_SOCK="$HOME/.1password/agent.sock"
+else
+    echo "Installing cloud deps..."
+
+    OP_BREWFILE="$DOTFILES_DIR/dot_brewfile.cloud"
+
+    # Verify Brewfiles exist
+    if [ ! -f "$OP_BREWFILE" ]; then
+        echo "1pass Brewfile ($OP_BREWFILE) not found."
+        exit 1
+    fi
+
+    brew bundle --verbose --file="$OP_BREWFILE"
 fi
