@@ -10,7 +10,3 @@ elif [ "$(uname -m)" = 'x86_64' ]; then
 		eval "$(/usr/local/bin/brew shellenv)"
 		source $HOMEBREW_PREFIX/opt/antidote/share/antidote/antidote.zsh
 fi
-
-if [[ -z "$SSH_TTY" && -z "$SSH_AUTH_SOCK" ]]; then
-  export SSH_AUTH_SOCK="~/.1password/agent.sock"
-fi

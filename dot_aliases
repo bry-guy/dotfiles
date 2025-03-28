@@ -1,16 +1,22 @@
-alias vim='nvim'
-alias vimdiff='nvim -d'
-alias vim-serve='nvim --headless --listen 0.0.0.0:6666'
-alias vim-client='nvim --server localhost:6666 --remote-ui'
-alias grep='rg'
-alias g='git'
-alias ls='LC_COLLATE=C ls --color=auto'
-alias hg='history -1 | grep'
-alias python='python3'
+alias vim="nvim"
+alias vimdiff="nvim -d"
 
-alias ignore='vim ~/.config/git/ignore'
-alias brew-unlock='rm -rf /usr/local/var/homebrew/locks'
-alias nvim-log='~/.local/share/nvim/log'
+alias grep="rg"
+alias g="git"
+alias python="python3"
+
+alias ts="tailscale"
+
+alias vc="vim-connect"
+alias vs="vim-serve"
+alias tf="ts-find"
+
+alias ls="LC_COLLATE=C ls --color=auto"
+alias hg="history -1 | grep"
+
+alias ignore="vim ~/.config/git/ignore"
+alias brew-unlock="rm -rf /usr/local/var/homebrew/locks"
+alias nvim-log="~/.local/share/nvim/log"
 alias pry-clean="git status | grep 'modified' | awk '{ print \"$2\" }' | xargs gsed -i '/binding.pry/d'"
 
 alias t="tmux" 
@@ -24,7 +30,7 @@ alias ww="wiki work"
 alias wt="wiki today"
 alias wt="wiki brag"
 
-alias fzcd='eval "cd $(fzf | xargs dirname)"'
+alias fzcd="eval 'cd $(fzf | xargs dirname)'"
 
 alias d="docker"
 alias dc="docker-compose"

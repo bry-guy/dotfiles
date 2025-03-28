@@ -16,10 +16,6 @@ fi
 
 export PATH="$HOME/.local/bin:$PATH"
 export HOMEBREW_BREWFILE="$HOME/.brewfile"
-# if [[ -z "$SSH_TTY" && -z "$SSH_AUTH_SOCK" ]]; then
-#   export SSH_AUTH_SOCK=~/.1password/agent.sock
-# fi
-
 
 # ===============================
 # Mise En Place
