@@ -29,6 +29,9 @@ M = {
       inline = {
         adapter = "copilot",
       },
+      cmd = {
+        adapter = "copilot",
+      },
     },
     display = {
       chat = {

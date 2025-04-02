@@ -1,6 +1,36 @@
 local builtin = require('telescope.builtin')
 local actions = require('telescope.actions')
 
+local select_one_or_multi = function(prompt_bufnr)
+  local picker = require("telescope.actions.state").get_current_picker(prompt_bufnr)
+  local multi = picker:get_multi_selection()
+
+  local picker_type = picker.prompt_title or ""
+
+  local is_codecompanion = string.find(picker_type, "Select file%(s%)")
+    or string.find(picker_type, "Select buffer%(s%)")
+
+  if is_codecompanion then
+    require("telescope.actions").select_default(prompt_bufnr)
+    return
+  end
+
+  if not vim.tbl_isempty(multi) then
+    require("telescope.actions").close(prompt_bufnr)
+    for _, j in pairs(multi) do
+      if j.path ~= nil then
+        if j.lnum ~= nil then
+          vim.cmd(string.format("%s %s:%s", "edit", j.path, j.lnum))
+        else
+          vim.cmd(string.format("%s %s", "edit", j.path))
+        end
+      end
+    end
+  else
+    require("telescope.actions").select_default(prompt_bufnr)
+  end
+end
+
 local M = {
   "nvim-telescope/telescope.nvim",
   tag = '0.1.8',
@@ -9,6 +39,7 @@ local M = {
     'nvim-telescope/telescope-dap.nvim',
     { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
     'sudormrfbin/cheatsheet.nvim',
+    'nvim-telescope/telescope-ui-select.nvim',
   },
   init = function()
     require("config.keymaps").telescope_hotkeys(builtin)
@@ -18,6 +49,7 @@ local M = {
     require('telescope').load_extension('fzf')
     require('telescope').load_extension('dap')
     require('telescope').load_extension('cheatsheet')
+    require('telescope').load_extension('ui-select')
   end,
   opts = {
       defaults = {
@@ -30,6 +62,7 @@ local M = {
             ['"'] = actions.select_vertical,
             ["%"] = actions.select_horizontal,
             ["Q"] = actions.send_selected_to_qflist + actions.open_qflist,
+            ["<CR>"] = select_one_or_multi,
           },
         },
         layout_strategy = 'flex',
@@ -53,6 +86,7 @@ local M = {
           additional_args = function(_)
             return {"--hidden"}
           end
+
         },
       },
       extensions = {

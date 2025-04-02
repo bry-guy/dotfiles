@@ -19,6 +19,11 @@ local M = {
 
     -- jdtls / java is setup via nvim-jdtls
 
+    lsp.ts_ls.setup{
+      on_attach = require("config.keymaps").lsp_hotkeys,
+      capabilities = capabilities,
+    }
+
     lsp.gopls.setup{
       on_attach = require("config.keymaps").lsp_hotkeys,
       capabilities = capabilities,
