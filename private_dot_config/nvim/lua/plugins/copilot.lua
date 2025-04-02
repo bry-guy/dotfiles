@@ -13,7 +13,7 @@ local M = {
         typescript = true,
         ["*"] = false, -- disable for all other filetypes and ignore default `filetypes`
     }
-    vim.g.copilot.no_tab_map = 1
+    vim.g.copilot_no_tab_map = 1
     vim.keymap.set('i', '<M-CR>', 'copilot#Accept("<CR>")', {
       expr = true,
       silent = true,
