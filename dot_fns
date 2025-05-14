@@ -66,12 +66,12 @@ ts-find() {
 
 vim-serve() {
 		local port=$1
-		tailscale serve --bg $port
 		nvim --headless --listen localhost:$port
+		tailscale serve --bg --tcp $port localhost:$port
 }
 
 vim-connect() {
 		local host=$1
 		local port=$2
-		nvim --remote-ui --server $host:$port
+		nvim --remote-ui --server $(ts-find $host):$port
 }
