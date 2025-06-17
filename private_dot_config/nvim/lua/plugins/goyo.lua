@@ -2,8 +2,8 @@ local M = {
   "junegunn/goyo.vim",
   dependencies = { "junegunn/limelight.vim" },
   ft = { 'markdown', 'mkd', 'text' },
+  keys = require("config.keymaps").goyo_hotkeys,
   init = function()
-    require("config.keymaps").goyo_hotkeys()
     vim.g['goyo_width'] = 120
     vim.g['limelight_paragraph_span'] = 1
   end,

@@ -5,6 +5,7 @@ local M = {
     'hrsh7th/cmp-nvim-lsp',
   },
   event = "BufReadPre",
+  keys = require("config.keymaps").lsp_hotkeys,
   config = function()
     local lsp = require("lspconfig")
 
@@ -20,12 +21,12 @@ local M = {
     -- jdtls / java is setup via nvim-jdtls
 
     lsp.ts_ls.setup{
-      on_attach = require("config.keymaps").lsp_hotkeys,
+      -- on_attach = require("config.keymaps").lsp_hotkeys,
       capabilities = capabilities,
     }
 
     lsp.gopls.setup{
-      on_attach = require("config.keymaps").lsp_hotkeys,
+      -- on_attach = require("config.keymaps").lsp_hotkeys,
       capabilities = capabilities,
       settings = {
         gopls = {
@@ -35,7 +36,7 @@ local M = {
     }
 
     lsp.lua_ls.setup{
-      on_attach = require("config.keymaps").lsp_hotkeys,
+      -- on_attach = require("config.keymaps").lsp_hotkeys,
       capabilities = capabilities,
       settings = {
         Lua = {

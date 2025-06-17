@@ -30,17 +30,17 @@ M.dap_hotkeys = {
 
 
 -- lsp
-M.lsp_hotkeys = function()
-  vim.keymap.set("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", bufopts) -- "go to definition"
-  vim.keymap.set("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", bufopts)
-  vim.keymap.set("n", "gt", "<cmd>lua vim.lsp.buf.type_definition()<CR>", bufopts)
-  vim.keymap.set("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", bufopts)
-  vim.keymap.set("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", bufopts)
-  vim.keymap.set("n", "gh", "<cmd>lua vim.lsp.buf.hover()<CR>", bufopts)
-  vim.keymap.set("n", "gH", "<cmd>lua vim.lsp.buf.signature_help()<CR>", bufopts)
-  vim.keymap.set("n", "gR", "<cmd>lua vim.lsp.buf.rename()<CR>", bufopts)
-  vim.keymap.set("n", "gA", "<cmd>lua vim.lsp.buf.code_action()<CR>", bufopts)
-end
+M.lsp_hotkeys = {
+  { "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", bufopts },
+  { "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", bufopts },
+  { "gt", "<cmd>lua vim.lsp.buf.type_definition()<CR>", bufopts },
+  { "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", bufopts },
+  { "gr", "<cmd>lua vim.lsp.buf.references()<CR>", bufopts },
+  { "gh", "<cmd>lua vim.lsp.buf.hover()<CR>", bufopts },
+  { "gH", "<cmd>lua vim.lsp.buf.signature_help()<CR>", bufopts },
+  { "gR", "<cmd>lua vim.lsp.buf.rename()<CR>", bufopts },
+  { "gA", "<cmd>lua vim.lsp.buf.code_action()<CR>", bufopts },
+}
 
 -- test
 M.test_hotkeys = {
@@ -87,33 +87,29 @@ M.multicursors_hotkeys = {
 }
 
 -- telescope
-M.telescope_hotkeys = function(builtin)
-  vim.keymap.set('n', '<leader>fF', builtin.find_files, {})
-  vim.keymap.set('n', '<leader>ff', builtin.git_files, {})
-  vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
-  vim.keymap.set('n', '<leader>fw', builtin.grep_string, {})
-  vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
-  vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
-  vim.keymap.set('n', '<leader>fo', builtin.oldfiles, {})
-  vim.keymap.set('n', '<leader>fm', builtin.commands, {})
-  vim.keymap.set('n', '<leader>fn', builtin.man_pages, {})
-
-  vim.keymap.set('n', '<leader>fr', builtin.lsp_references, {})
-  -- TODO: Figure out how to use telescope to grep through auto-completion lists
-  -- vim.keymap.set('i', '<leader>fd', builtin.lsp_incoming_calls, {})
-
-  vim.keymap.set('n', '<leader>ft', builtin.treesitter, {})
-end
+M.telescope_hotkeys = {
+  { "<leader>fF", "<cmd>lua require('telescope.builtin').find_files()<CR>", {} },
+  { "<leader>ff", "<cmd>lua require('telescope.builtin').git_files()<CR>", {} },
+  { "<leader>fg", "<cmd>lua require('telescope.builtin').live_grep()<CR>", {} },
+  { "<leader>fw", "<cmd>lua require('telescope.builtin').grep_string()<CR>", {} },
+  { "<leader>fb", "<cmd>lua require('telescope.builtin').buffers()<CR>", {} },
+  { "<leader>fh", "<cmd>lua require('telescope.builtin').help_tags()<CR>", {} },
+  { "<leader>fo", "<cmd>lua require('telescope.builtin').oldfiles()<CR>", {} },
+  { "<leader>fm", "<cmd>lua require('telescope.builtin').commands()<CR>", {} },
+  { "<leader>fn", "<cmd>lua require('telescope.builtin').man_pages()<CR>", {} },
+  { "<leader>fr", "<cmd>lua require('telescope.builtin').lsp_references()<CR>", {} },
+  { "<leader>ft", "<cmd>lua require('telescope.builtin').treesitter()<CR>", {} },
+}
 
 -- tabs
-M.tab_hotkeys = function()
-  vim.keymap.set("n", "<C-t>l", "<CMD>tabnext<CR>", { desc = "Next tab" })
-  vim.keymap.set("n", "<C-t>h", "<CMD>tabprev<CR>", { desc = "Previous tab" })
-  vim.keymap.set("n", "<C-t>n", "<CMD>tabnew<CR>", { desc = "New tab" })
-  vim.keymap.set("n", "<C-t>x", "<CMD>tabclose<CR>", { desc = "Close tab" })
-  vim.keymap.set("n", "<C-t>S-l", "<CMD>+tabmove<CR>", { desc = "Move tab to next" })
-  vim.keymap.set("n", "<C-t>S-h", "<CMD>-tabmove<CR>", { desc = "Move tab to previous" })
-end
+M.tab_hotkeys = {
+  { "<C-t>l", "<CMD>tabnext<CR>", { desc = "Next tab" } },
+  { "<C-t>h", "<CMD>tabprev<CR>", { desc = "Previous tab" } },
+  { "<C-t>n", "<CMD>tabnew<CR>", { desc = "New tab" } },
+  { "<C-t>x", "<CMD>tabclose<CR>", { desc = "Close tab" } },
+  { "<C-t>S-l", "<CMD>+tabmove<CR>", { desc = "Move tab to next" } },
+  { "<C-t>S-h", "<CMD>-tabmove<CR>", { desc = "Move tab to previous" } },
+}
 
 -- completion (nvim-cmp) TODO: Uhhh what do
 M.cmp_hotkeys = {
@@ -132,28 +128,35 @@ M.obsidian_hotkeys = {
 }
 
 -- render-markdown
-M.rendermarkdown_hotkeys = function()
-  vim.keymap.set('n', '<leader>me', '<CMD>RenderMarkdown enable<CR>', { desc = "Enable this plugin" })
-  vim.keymap.set('n', '<leader>md', '<CMD>RenderMarkdown disable<CR>', { desc = "Disable this plugin" })
-  vim.keymap.set('n', '<leader>mt', '<CMD>RenderMarkdown toggle<CR>',
-    { desc = "Switch between enabling & disabling this plugin" })
-  vim.keymap.set('n', '<leader>ml', '<CMD>RenderMarkdown log<CR>', { desc = "Opens the log file for this plugin" })
-  vim.keymap.set('n', '<leader>me', '<CMD>RenderMarkdown expand<CR>',
-    { desc = "Increase anti-conceal margin above and below by 1" })
-  vim.keymap.set('n', '<leader>mc', '<CMD>RenderMarkdown contract<CR>',
-    { desc = "Decrease anti-conceal margin above and below by 1" })
-end
+M.rendermarkdown_hotkeys = {
+  { "<leader>me", "<CMD>RenderMarkdown enable<CR>", { desc = "Enable this plugin" } },
+  { "<leader>md", "<CMD>RenderMarkdown disable<CR>", { desc = "Disable this plugin" } },
+  { "<leader>mt", "<CMD>RenderMarkdown toggle<CR>", { desc = "Switch between enabling & disabling this plugin" } },
+  { "<leader>ml", "<CMD>RenderMarkdown log<CR>", { desc = "Opens the log file for this plugin" } },
+  { "<leader>me", "<CMD>RenderMarkdown expand<CR>", { desc = "Increase anti-conceal margin above and below by 1" } },
+  { "<leader>mc", "<CMD>RenderMarkdown contract<CR>", { desc = "Decrease anti-conceal margin above and below by 1" } },
+}
 
 -- goyo
-M.goyo_hotkeys = function()
-  vim.keymap.set('n', '<leader>g', '<CMD>Goyo<CR>', { desc = "Toggle Goyo" })
-end
+  M.goyo_hotkeys = {
+    { "<leader>g", "<CMD>Goyo<CR>", { desc = "Toggle Goyo" } },
+  }
 
 -- codecompanion (ai)
 M.ai_hotkeys = {
   { "<leader>aa", "<cmd>CodeCompanionActions<cr>"},
   { "<leader>ac", "<cmd>CodeCompanionChat Toggle<cr>"},
   { "<leader>ap", "<cmd>CodeCompanionChat Add<cr>"},
+}
+
+-- codecompanion diff (ai)
+M.ai_diff_hotkeys = {
+  { "<leader>a",
+    function() require("codecompanion").diff.accept() end,
+    bufopts, desc = "Accept CodeCompanion diff" },
+  { "<leader>r",
+    function() require("codecompanion").diff.reject() end,
+    bufopts, desc = "Reject CodeCompanion diff" },
 }
 
 -- snippets
@@ -173,5 +176,16 @@ M.remote_hotkeys = {
   { "<leader>rS", "<cmd>RemoteStop<cr>" },
   { "<leader>ri", "<cmd>RemoteStop<cr>" },
 }
+
+-- apply a table directly
+function M.apply(mappings)
+  for _, map in ipairs(mappings) do
+    local lhs, rhs, opts = map[1], map[2], map[3] or {}
+    local mode = opts.mode or "n"
+    -- remove .mode from opts so vim.keymap.set won’t choke
+    opts.mode = nil
+    vim.keymap.set(mode, lhs, rhs, opts)
+  end
+end
 
 return M

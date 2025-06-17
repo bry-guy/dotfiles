@@ -51,6 +51,9 @@ if vim.fn.filereadable(java_debug_path .. "/java-debug.jar") == 1 then
   table.insert(bundles, java_debug_path .. "/java-debug.jar")
 end
 
+local keymaps = require("config.keymaps")
+local lsp_hotkeys = keymaps.lsp_hotkeys
+
 local config = {
   cmd = {
     'java',
@@ -78,6 +81,8 @@ local config = {
   init_options = {
     bundles = bundles
   },
-  on_attach = require("config.keymaps").lsp_hotkeys,
+  on_attach = function(_,_)
+    keymaps.apply(lsp_hotkeys)
+  end,
 }
 require('jdtls').start_or_attach(config)

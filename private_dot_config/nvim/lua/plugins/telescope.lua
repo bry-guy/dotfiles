@@ -1,4 +1,3 @@
-local builtin = require('telescope.builtin')
 local actions = require('telescope.actions')
 
 local select_one_or_multi = function(prompt_bufnr)
@@ -41,9 +40,10 @@ local M = {
     'sudormrfbin/cheatsheet.nvim',
     'nvim-telescope/telescope-ui-select.nvim',
   },
-  init = function()
-    require("config.keymaps").telescope_hotkeys(builtin)
-  end,
+  -- init = function()
+  --   require("config.keymaps").telescope_hotkeys(builtin)
+  -- end,
+  keys = require("config.keymaps").telescope_hotkeys,
   config = function(_, opts)
     require('telescope').setup(opts)
     require('telescope').load_extension('fzf')
