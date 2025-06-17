@@ -4,4 +4,5 @@ alias doppler-token="export DOPPLER_TOKEN=\"$(doppler configure get token --plai
 alias d='docker'
 alias dc="docker compose"
 alias open-rancher="open -a /Applications/Rancher\ Desktop.app"
-alias open-colima="colima start --cpu 4 --memory 8 --vm-type=vz --vz-rosetta --mount-type=virtiofs --network-address --ssh-agent"
+alias open-colima="colima start --cpu 4 --memory 6 --disk 32 --vm-type=vz --vz-rosetta --mount-type=virtiofs --network-address --ssh-agent"
+alias login-artifactory="source ~/.jfrogconfig && echo $ARTIFACTORY_AUTH_TOKEN | docker login agentsync.jfrog.io -u $ARTIFACTORY_USERNAME --password-stdin"

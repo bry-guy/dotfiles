@@ -6,9 +6,9 @@ local select_one_or_multi = function(prompt_bufnr)
   local multi = picker:get_multi_selection()
 
   local picker_type = picker.prompt_title or ""
-
   local is_codecompanion = string.find(picker_type, "Select file%(s%)")
     or string.find(picker_type, "Select buffer%(s%)")
+    or string.find(picker_type, "Select symbol%(s%)")
 
   if is_codecompanion then
     require("telescope.actions").select_default(prompt_bufnr)

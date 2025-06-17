@@ -4,6 +4,10 @@ M = {
     "nvim-lua/plenary.nvim",
     "nvim-treesitter/nvim-treesitter",
     { "MeanderingProgrammer/render-markdown.nvim", ft = { "markdown", "codecompanion" } },
+    {
+      "Davidyz/VectorCode",
+      cmd = "VectorCode",
+    }
   },
   keys = require("config.keymaps").ai_hotkeys,
   init = function()
@@ -16,7 +20,8 @@ M = {
         return require("codecompanion.adapters").extend("copilot", {
           schema = {
             model = {
-              default = "claude-3.7-sonnet",
+              -- "gpt-4.1", "gpt-4o", "o1", "claude-3.5-sonnet", "claude-3.7.-sonnet", "claude-3.7-sonnet-thought", 
+              default = "gpt-4.1",
             },
           },
         })
@@ -63,9 +68,27 @@ M = {
       },
       inline = {
         adapter = "copilot",
+        keymaps = {
+          accept_change = {
+            modes = { n = "ga" },
+            description = "Accept the suggested change",
+          },
+          reject_change = {
+            modes = { n = "gr" },
+            description = "Reject the suggested change",
+          },
+        },
       },
       cmd = {
         adapter = "copilot",
+      },
+    },
+    opts = {
+      log_level = "DEBUG",
+    },
+    extensions = {
+      vectorcode = {
+        opts = { add_tool = true, add_slash_command = true, tool_opts = {} },
       },
     },
     display = {

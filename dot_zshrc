@@ -76,17 +76,20 @@ unsetopt beep
 # Prompt, Completions, Colors, Etc
 # ===============================
 # Add your custom completions directory (e.g. containing the official _git) to your fpath
-fpath=(~/.zsh $fpath)
+# fpath=(~/.zsh $fpath)
+# if type brew &>/dev/null; then
+# 		FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
+# fi
 
 # Set compinstall filename and match style
-zstyle :compinstall filename "$HOME/.zshrc"
-zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+# zstyle :compinstall filename "$HOME/.zshrc"
+# zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 
 # Load only native zsh completions (no bash completions)
 autoload -Uz compinit promptinit colors
 
 # Use a cached dump if available for faster startup
-compdump="$HOME/.zcompdump"
+# compdump="$HOME/.zcompdump"
 if [[ -f "$compdump" && -n "$(find "$compdump" -mtime -7)" ]]; then
     compinit -C
 else
@@ -99,12 +102,18 @@ colors
 
 bindkey -v
 
+
+
 # ===============================
 # Shortcuts
 # ===============================
 [ -f $HOME/.secrets ] && . $HOME/.secrets
 [ -f $HOME/.aliases ] && . $HOME/.aliases
 [ -f $HOME/.fns ] && . $HOME/.fns
+
+if [[ -n $WORK ]]; then
+		. $HOME/.aliases_work
+fi
 
 # ===============================
 # Theming
