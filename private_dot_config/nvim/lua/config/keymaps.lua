@@ -151,12 +151,31 @@ M.ai_hotkeys = {
 
 -- codecompanion diff (ai)
 M.ai_diff_hotkeys = {
-  { "<leader>a",
+  { "<leader>ady",
     function() require("codecompanion").diff.accept() end,
     bufopts, desc = "Accept CodeCompanion diff" },
-  { "<leader>r",
+  { "<leader>adn",
     function() require("codecompanion").diff.reject() end,
     bufopts, desc = "Reject CodeCompanion diff" },
+}
+
+-- copilot hotkeys (ai)
+M.copilot_hotkeys = {
+  suggestion = {
+    accept = "<leader>ay",
+    accept_word = false,
+    accept_line = false,
+    next = "<leader>as",
+    prev = false,
+    dismiss = "<leader>aS",
+  },
+  panel = {
+    jump_prev = "[[",
+    jump_next = "]]",
+    accept = "<CR>",
+    refresh = "gr",
+    open = false,
+  }
 }
 
 -- snippets

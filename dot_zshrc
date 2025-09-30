@@ -179,6 +179,7 @@ function zle-line-finish {
 }
 zle -N zle-line-finish
 
+
 # ===============================
 # Misc
 # ===============================

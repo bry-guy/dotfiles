@@ -16,16 +16,18 @@ M = {
   opts = {
     stream = false,
     adapters = {
-      copilot = function()
-        return require("codecompanion.adapters").extend("copilot", {
-          schema = {
-            model = {
-              -- "gpt-4.1", "gpt-4o", "o1", "claude-3.5-sonnet", "claude-3.7.-sonnet", "claude-3.7-sonnet-thought", 
-              default = "gpt-4.1",
+      http = {
+        copilot = function()
+          return require("codecompanion.adapters").extend("copilot", {
+            schema = {
+              model = {
+                -- "gpt-4.1", "gpt-4o", "o1", "claude-3.5-sonnet", "claude-3.7.-sonnet", "claude-3.7-sonnet-thought", 
+                default = "claude-sonnet-4",
+              },
             },
-          },
-        })
-      end,
+          })
+        end,
+      },
     },
     strategies = {
       chat = {
