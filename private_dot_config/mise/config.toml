@@ -1,0 +1,10 @@
+[settings]
+
+[settings.python]
+compile = false
+
+[tools]
+go = "1.23.6"
+"pipx:vectorcode" = "latest"
+python = "latest"
+uv = "latest"

@@ -179,6 +179,11 @@ function zle-line-finish {
 }
 zle -N zle-line-finish
 
+# ===============================
+# AI
+# ===============================
+export OPENCODE_DISABLE_LSP_DOWNLOAD=true
+
 
 # ===============================
 # Misc

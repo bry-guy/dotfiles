@@ -20,6 +20,20 @@ local M = {
 
     -- jdtls / java is setup via nvim-jdtls
 
+    local jsonls_cap = capabilities
+    jsonls_cap.textDocument.completion.completionItem.snippetSupport = true
+
+    lsp.jsonls.setup{
+      -- on_attach = require("config.keymaps").lsp_hotkeys,
+      capabilities = jsonls_cap,
+      cmd = { "vscode-json-languageserver", "--stdio" }
+    }
+
+    lsp.eslint.setup{
+      -- on_attach = require("config.keymaps").lsp_hotkeys,
+      capabilities = capabilities,
+    }
+
     lsp.ts_ls.setup{
       -- on_attach = require("config.keymaps").lsp_hotkeys,
       capabilities = capabilities,
