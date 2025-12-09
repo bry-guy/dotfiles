@@ -1,9 +1,17 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "model": "github-copilot/claude-sonnet-4",
+  "model": "opencode-zen/grok-code",
   "theme": "matrix",
   "keybinds": {
     "leader": "\\",
+  },
+  "disabled_providers": ["openai", "anthropic"],
+  "provider": {
+    "google": {
+      "options": {
+        "apiKey": "{env:GEMINI_API_KEY}"
+      }
+    }
   },
   "lsp": {
     "json": {
@@ -16,11 +24,6 @@
     },
   },
   "mcp": {
-    "tailscale-monitor": {
-      "type": "local",
-      "command": ["tailscale-mcp-server-binary"],
-      "enabled": false
-    },
     "github": {
       "type": "remote",
       "url": "https://api.githubcopilot.com/mcp/",
@@ -29,166 +32,9 @@
         "Authorization": "Bearer {env:GITHUB_MCP_PAT}" 
       }
     },
-    "atlassian": {
-      "type": "local",
-      "command": ["npx", "-y", "mcp-remote", "https://mcp.atlassian.com/v1/sse"],
-      "enabled": true
-    }
   },
   "tools": {
     "github*": false,
-    "atlassian*": false,
-  },
-  "agent": {
-    "architect": {
-      "mode": "subagent",
-      "model": "github-copilot/claude-sonnet-4",
-      "reasoningEffort": "medium",
-      "textVerbosity": "medium",
-      "prompt": "You are a software architect. Your job is to create implementation plans using knowledge of one or many projects, which can be accomplished by engineers. You create markdown task lists, where each task is a ticket with acceptance criteria, specifications, and examples. You write your plans using the 'write' tool. You do not write code changes to any repositories. You can use todo lists from the 'todo' tool to break down how you want to build your plan, but you always finish by producing written markdown plans. You always ask before you write your markdown plan. When you need to use GitHub, you delegate to the GitHub agent. When you need to use Atlassian, you delegate to the Atlassian agent.",
-      "tools": {
-        "bash": true,
-        "edit": true,
-        "write": true,
-        "read": true,
-        "grep": true,
-        "glob": true,
-        "list": true,
-        "patch": false,
-        "todowrite": true,
-        "todoread": true,
-        "webfetch": true,
-      },
-      "permission": {
-        "bash": "ask",
-        "edit": "ask",
-        "write": "ask",
-        "read": "allow",
-        "grep": "allow",
-        "glob": "allow",
-        "list": "allow",
-        "patch": "allow",
-        "todowrite": "allow",
-        "todoread": "allow",
-        "webfetch": "allow",
-      }
-    },
-    "senior": {
-      "mode": "subagent",
-      "model": "github-copilot/claude-sonnet-4",
-      "reasoningEffort": "medium",
-      "textVerbosity": "medium",
-      "prompt": "You are a senior engineer, deciding which tasks can be parallelized and assigning tasks to @peon, which is a junior engineer agent. Review the changes before you accept them, and ensure they meet the requirements. If you have questions about changes that have been made that you're unsure of, ask me, but make sure you first do a review loop yourself before doing so. When using an existing set of tasks, continue from where we left our progress. When you need to use GitHub, you delegate to the GitHub agent. When you need to use Atlassian, you delgate to the Atlassian agent.",
-      "tools": {
-        "bash": true,
-        "edit": true,
-        "write": true,
-        "read": true,
-        "grep": true,
-        "glob": true,
-        "list": true,
-        "patch": false,
-        "todowrite": true,
-        "todoread": true,
-        "webfetch": true
-      },
-      "permission": {
-        "bash": "ask",
-        "edit": "ask",
-        "write": "ask",
-        "read": "allow",
-        "grep": "allow",
-        "glob": "allow",
-        "list": "allow",
-        "patch": "allow",
-        "todowrite": "allow",
-        "todoread": "allow",
-        "webfetch": "allow"
-      }
-    },
-    "peon": {
-      "description": "We pretend to work, and they pretend to pay us.",
-      "mode": "subagent",
-      "model": "github-copilot/gpt-5-mini",
-      "reasoningEffort": "medium",
-      "textVerbosity": "low",
-      "prompt": "You are a junior software engineer. Your job is to accept tasks and implement them as software changes. Use the 'write' tool to implement those changes after you've decided what changes you want to make.",
-      "tools": {
-        "bash": true,
-        "edit": true,
-        "write": true,
-        "read": true,
-        "grep": true,
-        "glob": true,
-        "list": true,
-        "patch": true,
-        "todowrite": true,
-        "todoread": true,
-        "webfetch": true
-      },
-      "permission": {
-        "bash": "allow",
-        "edit": "allow",
-        "write": "allow",
-        "read": "allow",
-        "grep": "allow",
-        "glob": "allow",
-        "list": "allow",
-        "patch": "allow",
-        "todowrite": "allow",
-        "todoread": "allow",
-        "webfetch": "allow"
-      }
-    },
-    "atlassian": {
-      "mode": "subagent",
-      "model": "github-copilot/gpt-5-mini",
-      "reasoningEffort": "medium",
-      "textVerbosity": "low",
-      "prompt": "You are an Atlassian Confluence and JIRA Admin. Your job is to accept requests to operate Atlassian products. You receive requests with Atlassian context, such as JIRA tickets are Confluence document names, or descriptions. When writing to JIRA or Confluence, you always ask for confirmation.",
-      "tools": {
-        "bash": false,
-        "edit": false,
-        "write": false,
-        "read": true,
-        "grep": true,
-        "glob": true,
-        "list": true,
-        "patch": false,
-        "todowrite": false,
-        "todoread": false,
-        "webfetch": true,
-        "atlassian*": true
-      },
-      "permission": {
-        "webfetch": "allow",
-        "atlassian*": "allow"
-      }
-    },
-    "github": {
-      "mode": "subagent",
-      "model": "github-copilot/gpt-5-mini",
-      "reasoningEffort": "medium",
-      "textVerbosity": "low",
-      "prompt": "You are a GitHub Admin. Your job is to accept requests to operate GitHub products. You receive requests with GitHub context, such as repositories or issues. When writing changes to GitHub, you always ask for confirmation. When using GitHub Actions, you always ask for confirmation when taking actions for environments 'sandbox' and 'prod'.",
-      "tools": {
-        "bash": false,
-        "edit": false,
-        "write": false,
-        "read": true,
-        "grep": true,
-        "glob": true,
-        "list": true,
-        "patch": false,
-        "todowrite": false,
-        "todoread": false,
-        "webfetch": true,
-        "github*": true
-      },
-      "permission": {
-        "webfetch": "allow",
-        "github*": "allow"
-      }
-    }
+    "webfetch": true,
   }
 }

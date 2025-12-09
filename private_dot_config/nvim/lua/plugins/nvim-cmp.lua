@@ -29,6 +29,9 @@ local M = {
         or require("cmp_dap").is_dap_buffer()
       end
     })
+    cmp.setup.filetype({ "markdown" }, {
+      enabled = false,
+    })
     cmp.setup.filetype({ "dap-repl", "dapui_watches", "dapui_hover" }, {
       sources = {
         { name = "dap" },

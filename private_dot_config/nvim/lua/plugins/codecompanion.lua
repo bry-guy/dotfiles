@@ -22,7 +22,16 @@ M = {
             schema = {
               model = {
                 -- "gpt-4.1", "gpt-4o", "o1", "claude-3.5-sonnet", "claude-3.7.-sonnet", "claude-3.7-sonnet-thought", 
-                default = "claude-sonnet-4",
+                default = "claude-sonnet-4.5",
+              },
+            },
+          })
+        end,
+        gemini = function()
+          return require("codecompanion.adapters").extend("gemini", {
+            schema = {
+              model = {
+                default = "gemini-2.5-flash",
               },
             },
           })
@@ -31,7 +40,7 @@ M = {
     },
     strategies = {
       chat = {
-        adapter = "copilot",
+        adapter = "gemini",
         slash_commands = {
           ["buffer"] = {
             callback = "strategies.chat.slash_commands.buffer",
@@ -69,7 +78,7 @@ M = {
         },
       },
       inline = {
-        adapter = "copilot",
+        adapter = "gemini",
         keymaps = {
           accept_change = {
             modes = { n = "ga" },
@@ -82,7 +91,7 @@ M = {
         },
       },
       cmd = {
-        adapter = "copilot",
+        adapter = "gemini",
       },
     },
     opts = {

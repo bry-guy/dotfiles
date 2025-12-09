@@ -1,2 +1,6 @@
 [tools]
+node = "lts"
+"npm:vscode-json-languageserver" = "latest"
+"npm:vscode-langservers-extracted" = "latest"
+"aqua:LuaLS/lua-language-server" = "latest"
 lua-language-server = '3.7.4'

@@ -204,5 +204,11 @@ if [ -n "$(command -v rg)" ]; then
 		export FZF_DEFAULT_COMMAND='rg --files --hidden --smart-case'
 fi
 
+if [ -n "$(command -v fnox)" ]; then
+		eval "$(fnox activate zsh)"
+		export FNOX_AGE_KEY=$(cat ~/.config/fnox/age.txt | grep "AGE-SECRET-KEY")
+fi
+
+
 # zprof
 
