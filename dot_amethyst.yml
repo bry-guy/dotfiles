@@ -189,9 +189,36 @@ focus-screen-8:
 focus-screen-9:
   mod: <NONE>
   key: <NONE>
-focus-screen-10:
-  mod: <NONE>
-  key: <NONE>
+
+# Move focus to the n-th space in the list; e.g., focus-space-3 will move mouse focus to the 3rd space.
+# EDIT THE MISSION CONTROL KEYBOARD SHORTCUTS (apple sucks)
+# focus-space-1:
+#   mod: mod1
+#   key: 1
+# focus-space-2:
+#   mod: mod1
+#   key: 2
+# focus-space-3:
+#   mod: mod1
+#   key: 3
+# focus-space-4:
+#   mod: mod1
+#   key: 4
+# focus-space-5:
+#   mod: mod1
+#   key: 5
+# focus-space-6:
+#   mod: mod1
+#   key: 6
+# focus-space-7:
+#   mod: mod1
+#   key: 7
+# focus-space-8:
+#   mod: mod1
+#   key: 8
+# focus-space-9:
+#   mod: mod1
+#   key: 9
 
 # Move the currently focused window to the n-th screen; e.g., throw-screen-3 will move the window to the 3rd screen.
 throw-space-1:
@@ -293,16 +320,16 @@ select-column-layout:
 # Move the currently focused window to the space to the left.
 throw-space-left:
   mod: mod2
-  key: left 
+  key: h 
 
 # Move currently the focused window to the space to the right.
 throw-space-right:
   mod: mod2
-  key: right
+  key: l
 
 # Toggle the floating state of the currently focused window; i.e., if it was floating make it tiled and if it was tiled make it floating.
 toggle-float:
-  mod: mod2
+  mod: mod1
   key: f
 
 # Display the layout HUD with the current layout on each screen.
@@ -312,12 +339,12 @@ display-current-layout:
 
 # Turn on or off tiling entirely.
 toggle-tiling:
-  mod: mod2
+  mod: mod1
   key: x
 
 # Rerun the current layout's algorithm.
 reevaluate-windows:
-  mod: mod2
+  mod: mod1
   key: z
 
 # Turn on or off focus-follows-mouse.
