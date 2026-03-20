@@ -1,57 +1,59 @@
-local bufopts = { noremap = true, silent = true }
 local M = {}
 
--- TODO: Export and invoke
+-- TODO: Export and invoke the vim.keymaps below
+-- overwrites
+vim.keymap.set('v', 'Y', '"+y', { desc = "Yank selection (Clipboard)" })
+
 -- diagnostics
-vim.keymap.set('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', bufopts) -- "next diagnostic"
-vim.keymap.set('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', bufopts)
+vim.keymap.set('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', { desc = "Diagnostic Next" })
+vim.keymap.set('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', { desc = "Diagnostic Prev" })
 
 -- dap
 M.dap_hotkeys = {
-  { "<leader>dh", "<cmd>lua require'dap.ui.widgets'.hover()<CR>" },
-  { "<leader>dx", "<cmd>lua require'dap'.continue()<CR>" },
-  { "<leader>ds", "<cmd>lua require'dap'.step_over()<CR>" },
-  { "<leader>di", "<cmd>lua require'dap'.step_into()<CR>" },
-  { "<leader>do", "<cmd>lua require'dap'.step_out()<CR>" },
-  { "<leader>db", "<cmd>lua require'dap'.toggle_breakpoint()<CR>" },
-  { "<leader>dB", "<cmd>lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>" },
-  { "<leader>dp", "<cmd>lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>" },
-  { "<leader>dr", "<cmd>lua require'dap'.repl.open({},'tabnew')<CR>" },
-  { "<leader>dR", "<cmd>lua require'dap'.repl.close()<CR>" },
-  { "<leader>dl", "<cmd>lua require'dap'.run_last()<CR>" },
+  { "<leader>dh", "<cmd>lua require'dap.ui.widgets'.hover()<CR>", desc = "DAP Hover" },
+  { "<leader>dx", "<cmd>lua require'dap'.continue()<CR>", desc = "DAP Continue" },
+  { "<leader>ds", "<cmd>lua require'dap'.step_over()<CR>", desc = "DAP Step Over" },
+  { "<leader>di", "<cmd>lua require'dap'.step_into()<CR>", desc = "DAP Step Into" },
+  { "<leader>do", "<cmd>lua require'dap'.step_out()<CR>", desc = "DAP Step Out" },
+  { "<leader>db", "<cmd>lua require'dap'.toggle_breakpoint()<CR>", desc = "DAP Toggle Breakpoint" },
+  { "<leader>dB", "<cmd>lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>", desc = "DAP Conditional Breakpoint" },
+  { "<leader>dp", "<cmd>lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>", desc = "DAP Log Point" },
+  { "<leader>dr", "<cmd>lua require'dap'.repl.open({},'tabnew')<CR>", desc = "DAP Open REPL" },
+  { "<leader>dR", "<cmd>lua require'dap'.repl.close()<CR>", desc = "DAP Close REPL" },
+  { "<leader>dl", "<cmd>lua require'dap'.run_last()<CR>", desc = "DAP Run Last" },
   --- telescope dap
-  { "<leader>dc", "<cmd>lua require'telescope'.extensions.dap.commands{}<CR>" },
-  { "<leader>dg", "<cmd>lua require'telescope'.extensions.dap.configurations{}<CR>" },
-  { "<leader>dk", "<cmd>lua require'telescope'.extensions.dap.list_breakpoints{}<CR>" },
-  { "<leader>dv", "<cmd>lua require'telescope'.extensions.dap.variables{}<CR>" },
-  { "<leader>df", "<cmd>lua require'telescope'.extensions.dap.frames{}<CR>" },
+  { "<leader>dc", "<cmd>lua require'telescope'.extensions.dap.commands{}<CR>", desc = "Tele DAP Commands" },
+  { "<leader>dg", "<cmd>lua require'telescope'.extensions.dap.configurations{}<CR>", desc = "Tele DAP Configs" },
+  { "<leader>dk", "<cmd>lua require'telescope'.extensions.dap.list_breakpoints{}<CR>", desc = "Tele DAP Breakpoints" },
+  { "<leader>dv", "<cmd>lua require'telescope'.extensions.dap.variables{}<CR>", desc = "Tele DAP Variables" },
+  { "<leader>df", "<cmd>lua require'telescope'.extensions.dap.frames{}<CR>", desc = "Tele DAP Frames" },
 }
 
 
 
 -- lsp
 M.lsp_hotkeys = {
-  { "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", bufopts },
-  { "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", bufopts },
-  { "gt", "<cmd>lua vim.lsp.buf.type_definition()<CR>", bufopts },
-  { "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", bufopts },
-  { "gr", "<cmd>lua vim.lsp.buf.references()<CR>", bufopts },
-  { "gh", "<cmd>lua vim.lsp.buf.hover()<CR>", bufopts },
-  { "gH", "<cmd>lua vim.lsp.buf.signature_help()<CR>", bufopts },
-  { "gR", "<cmd>lua vim.lsp.buf.rename()<CR>", bufopts },
-  { "gA", "<cmd>lua vim.lsp.buf.code_action()<CR>", bufopts },
+  { "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", { desc = "LSP Definition" } },
+  { "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", { desc = "LSP Declaration" } },
+  { "gt", "<cmd>lua vim.lsp.buf.type_definition()<CR>", { desc = "LSP Type Definition" } },
+  { "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", { desc = "LSP Implementation" } },
+  { "gr", "<cmd>lua vim.lsp.buf.references()<CR>", { desc = "LSP References" } },
+  { "gh", "<cmd>lua vim.lsp.buf.hover()<CR>", { desc = "LSP Hover" } },
+  { "gH", "<cmd>lua vim.lsp.buf.signature_help()<CR>", { desc = "LSP Signature Help" } },
+  { "gR", "<cmd>lua vim.lsp.buf.rename()<CR>", { desc = "LSP Rename" } },
+  { "gA", "<cmd>lua vim.lsp.buf.code_action()<CR>", { desc = "LSP Code Action" } },
 }
 
 -- test
 M.test_hotkeys = {
-  { "<leader>tn", "<cmd>lua require('neotest').run.run()<CR>" },
-  { "<leader>tl", "<cmd>lua require('neotest').run.run_last()<CR>" },
-  { "<leader>tf", "<cmd>lua require('neotest').run.run(vim.fn.expand('%'))<CR>" },
-  { "<leader>td", "<cmd>lua require('neotest').run.run({strategy = 'dap'})<CR>" },
-  { "<leader>tp", "<cmd>lua require('neotest').output_panel.open()<CR>:tabnext<CR>" },
-  { "<leader>tP", "<cmd>lua require('neotest').output_panel.close()<CR>" },
-  { "<leader>tc", "<cmd>lua require('neotest').output_panel.clear()<CR>" },
-  { "<leader>to", "<cmd>lua require('neotest').output.open({ short = true, enter = true, auto_close = true })<CR>" },
+  { "<leader>tn", "<cmd>lua require('neotest').run.run()<CR>", desc = "Test Run Nearest" },
+  { "<leader>tl", "<cmd>lua require('neotest').run.run_last()<CR>", desc = "Test Run Last" },
+  { "<leader>tf", "<cmd>lua require('neotest').run.run(vim.fn.expand('%'))<CR>", desc = "Test Run File" },
+  { "<leader>td", "<cmd>lua require('neotest').run.run({strategy = 'dap'})<CR>", desc = "Test Debug Nearest" },
+  { "<leader>tp", "<cmd>lua require('neotest').output_panel.open()<CR>:tabnext<CR>", desc = "Test Output Panel" },
+  { "<leader>tP", "<cmd>lua require('neotest').output_panel.close()<CR>", desc = "Test Close Panel" },
+  { "<leader>tc", "<cmd>lua require('neotest').output_panel.clear()<CR>", desc = "Test Clear Panel" },
+  { "<leader>to", "<cmd>lua require('neotest').output.open({ short = true, enter = true, auto_close = true })<CR>", desc = "Test Show Output" },
 }
 
 -- oil (navigation)
@@ -78,27 +80,28 @@ M.oil_hotkeys = {
 
 -- multicursors
 M.multicursors_hotkeys = {
-  { "<Leader>c", "<Cmd>MultipleCursorsAddMatches<CR>", mode = { "n", "x" }, desc = "Add cursors to cword" }, -- "leader cursors"
-  { "<C-k>",     "<Cmd>MultipleCursorsAddUp<CR>",      mode = { "n", "x" }, desc = "Add cursor and move up" },
-  { "<C-j>",     "<Cmd>MultipleCursorsAddDown<CR>",    mode = { "n", "x" }, desc = "Add cursor and move down" },
+  { "<Leader>c", "<Cmd>MultipleCursorsAddMatches<CR>", mode = { "n", "x" }, desc = "Multicursors add cursors to cword" }, -- "leader cursors"
+  { "<C-k>",     "<Cmd>MultipleCursorsAddUp<CR>",      mode = { "n", "x" }, desc = "Multicursors add cursor and move up" },
+  { "<C-j>",     "<Cmd>MultipleCursorsAddDown<CR>",    mode = { "n", "x" }, desc = "Multicursors add cursor and move down" },
   custom = {
-    { "n", "<Leader>ca", function() require("multiple-cursors").align() end },
+    { "n", "<Leader>ca", function() require("multiple-cursors").align() end, { desc = "Multicursors align" } },
   }
 }
 
 -- telescope
 M.telescope_hotkeys = {
-  { "<leader>fF", "<cmd>lua require('telescope.builtin').find_files()<CR>", {} },
-  { "<leader>ff", "<cmd>lua require('telescope.builtin').git_files()<CR>", {} },
-  { "<leader>fg", "<cmd>lua require('telescope.builtin').live_grep()<CR>", {} },
-  { "<leader>fw", "<cmd>lua require('telescope.builtin').grep_string()<CR>", {} },
-  { "<leader>fb", "<cmd>lua require('telescope.builtin').buffers()<CR>", {} },
-  { "<leader>fh", "<cmd>lua require('telescope.builtin').help_tags()<CR>", {} },
-  { "<leader>fo", "<cmd>lua require('telescope.builtin').oldfiles()<CR>", {} },
-  { "<leader>fm", "<cmd>lua require('telescope.builtin').commands()<CR>", {} },
-  { "<leader>fn", "<cmd>lua require('telescope.builtin').man_pages()<CR>", {} },
-  { "<leader>fr", "<cmd>lua require('telescope.builtin').lsp_references()<CR>", {} },
-  { "<leader>ft", "<cmd>lua require('telescope.builtin').treesitter()<CR>", {} },
+  { "<leader>fF", "<cmd>lua require('telescope.builtin').find_files()<CR>", { desc = "Tele Find All Files" } },
+  { "<leader>ff", "<cmd>lua require('telescope.builtin').git_files()<CR>", { desc = "Tele Git Files" } },
+  { "<leader>fg", "<cmd>lua require('telescope.builtin').live_grep()<CR>", { desc = "Tele Live Grep" } },
+  { "<leader>fw", "<cmd>lua require('telescope.builtin').grep_string()<CR>", { desc = "Tele Grep Word" } },
+  { "<leader>fb", "<cmd>lua require('telescope.builtin').buffers()<CR>", { desc = "Tele Buffers" } },
+  { "<leader>fh", "<cmd>lua require('telescope.builtin').help_tags()<CR>", { desc = "Tele Help Tags" } },
+  { "<leader>fo", "<cmd>lua require('telescope.builtin').oldfiles()<CR>", { desc = "Tele Old Files" } },
+  { "<leader>fc", "<cmd>lua require('telescope.builtin').commands()<CR>", { desc = "Tele Commands" } },
+  { "<leader>fm", "<cmd>lua require('telescope.builtin').man_pages()<CR>", { desc = "Tele Man Pages" } },
+  { "<leader>fl", "<cmd>lua require('telescope.builtin').lsp_references()<CR>", { desc = "Tele LSP References" } },
+  { "<leader>ft", "<cmd>lua require('telescope.builtin').treesitter()<CR>", { desc = "Tele Treesitter Symbols" } },
+  { "<leader>fl", "<cmd>lua require('telescope.builtin').registers()<CR>", { desc = "Tele Registers" } },
 }
 
 -- tabs
@@ -117,14 +120,14 @@ M.cmp_hotkeys = {
 
 
 M.obsidian_hotkeys = {
-  { "<leader>wn", "<Cmd>ObsidianNew<CR>" },
-  { "<leader>wf", "<Cmd>ObsidianQuickSwitch<CR>" },
-  { "<leader>ws", "<Cmd>ObsidianSearch<CR>" },
-  { "<leader>wt", "<Cmd>ObsidianToday<CR>" },
-  { "<leader>wb", "<Cmd>ObsidianBacklinks<CR>" },
-  { "<leader>wl", "<Cmd>ObsidianLink<CR>" },
-  { "<leader>wL", "<Cmd>ObsidianLinkNew<CR>" },
-  { "<leader>wg", "<Cmd>ObsidianFollowLink<CR>" },
+  { "<leader>wn", "<Cmd>ObsidianNew<CR>", { desc = "Wiki New Note" } },
+  { "<leader>wf", "<Cmd>ObsidianQuickSwitch<CR>", { desc = "Wiki Quick Switch" } },
+  { "<leader>ws", "<Cmd>ObsidianSearch<CR>", { desc = "Wiki Search" } },
+  { "<leader>wt", "<Cmd>ObsidianToday<CR>", { desc = "Wiki Today" } },
+  { "<leader>wb", "<Cmd>ObsidianBacklinks<CR>", { desc = "Wiki Backlinks" } },
+  { "<leader>wl", "<Cmd>ObsidianLink<CR>", { desc = "Wiki Link" } },
+  { "<leader>wL", "<Cmd>ObsidianLinkNew<CR>", { desc = "Wiki Link New" } },
+  { "<leader>wg", "<Cmd>ObsidianFollowLink<CR>", { desc = "Wiki Follow Link" } },
 }
 
 -- render-markdown
@@ -139,24 +142,20 @@ M.rendermarkdown_hotkeys = {
 
 -- goyo
   M.goyo_hotkeys = {
-    { "<leader>g", "<CMD>Goyo<CR>", { desc = "Toggle Goyo" } },
+    { "<leader>g", "<CMD>Goyo<CR>", { desc = "Goyo Toggle" } },
   }
 
 -- codecompanion (ai)
 M.ai_hotkeys = {
-  { "<leader>aa", "<cmd>CodeCompanionActions<cr>"},
-  { "<leader>ac", "<cmd>CodeCompanionChat Toggle<cr>"},
-  { "<leader>ap", "<cmd>CodeCompanionChat Add<cr>"},
+  { "<leader>aa", "<cmd>CodeCompanionActions<cr>", desc = "AI Actions" },
+  { "<leader>ac", "<cmd>CodeCompanionChat Toggle<cr>", desc = "AI Chat Toggle" },
+  { "<leader>ap", "<cmd>CodeCompanionChat Add<cr>", desc = "AI Chat Add" },
 }
 
 -- codecompanion diff (ai)
 M.ai_diff_hotkeys = {
-  { "<leader>ady",
-    function() require("codecompanion").diff.accept() end,
-    bufopts, desc = "Accept CodeCompanion diff" },
-  { "<leader>adn",
-    function() require("codecompanion").diff.reject() end,
-    bufopts, desc = "Reject CodeCompanion diff" },
+  { "<leader>ady", function() require("codecompanion").diff.accept() end, { desc = "AI Accept Diff" } },
+  { "<leader>adn", function() require("codecompanion").diff.reject() end, { desc = "AI Reject Diff" } },
 }
 
 -- copilot hotkeys (ai)
@@ -191,9 +190,19 @@ M.snippets_hotkeys = {
 
 -- remote (devcontainer)
 M.remote_hotkeys = {
-  { "<leader>rs", "<cmd>RemoteStart<cr>" },
-  { "<leader>rS", "<cmd>RemoteStop<cr>" },
-  { "<leader>ri", "<cmd>RemoteStop<cr>" },
+  { "<leader>rs", "<cmd>RemoteStart<cr>", desc = "Remote Start" },
+  { "<leader>rS", "<cmd>RemoteStop<cr>", desc = "Remote Stop" },
+  { "<leader>ri", "<cmd>RemoteInfo<cr>", desc = "Remote Info" },
+}
+
+M.whichkey_hotkeys = {
+  {
+    "<leader>?",
+    function()
+      require("which-key").show({ global = false })
+    end,
+    desc = "Buffer Local Keymaps (which-key)",
+  },
 }
 
 -- apply a table directly

@@ -1,13 +1,9 @@
-M = {
+local M = {
   "olimorris/codecompanion.nvim",
   dependencies = {
     "nvim-lua/plenary.nvim",
     "nvim-treesitter/nvim-treesitter",
     { "MeanderingProgrammer/render-markdown.nvim", ft = { "markdown", "codecompanion" } },
-    {
-      "Davidyz/VectorCode",
-      cmd = "VectorCode",
-    }
   },
   keys = require("config.keymaps").ai_hotkeys,
   init = function()
@@ -15,97 +11,48 @@ M = {
   end,
   opts = {
     stream = false,
-    adapters = {
-      http = {
-        copilot = function()
-          return require("codecompanion.adapters").extend("copilot", {
-            schema = {
-              model = {
-                -- "gpt-4.1", "gpt-4o", "o1", "claude-3.5-sonnet", "claude-3.7.-sonnet", "claude-3.7-sonnet-thought", 
-                default = "claude-sonnet-4.5",
-              },
-            },
-          })
-        end,
-        gemini = function()
-          return require("codecompanion.adapters").extend("gemini", {
-            schema = {
-              model = {
-                default = "gemini-2.5-flash",
-              },
-            },
-          })
-        end,
-      },
-    },
-    strategies = {
+    -- adapters = {
+    --   gemini = function()
+    --     return require("codecompanion.adapters").extend("gemini", {
+    --       schema = {
+    --         model = {
+    --           default = "gemini-3-flash-preview",
+    --         },
+    --       },
+    --     })
+    --   end,
+    -- },
+    interactions = {
       chat = {
-        adapter = "gemini",
+        adapter = {
+          name = "gemini",
+          model = "gemini-3-flash-preview",
+        },
         slash_commands = {
-          ["buffer"] = {
-            callback = "strategies.chat.slash_commands.buffer",
-            description = "Insert open buffers",
-            opts = {
-              contains_code = true,
-              provider = "telescope",
-            },
-          },
-          ["file"] = {
-            callback = "strategies.chat.slash_commands.file",
-            description = "Insert a file",
-            opts = {
-              contains_code = true,
-              max_lines = 1000,
-              provider = "telescope",
-            },
-          },
-          ["help"] = {
-            callback = "strategies.chat.slash_commands.help",
-            description = "Insert content from help tags",
-            opts = {
-              contains_code = false,
-              provider = "telescope",
-            },
-          },
-          ["symbols"] = {
-            callback = "strategies.chat.slash_commands.symbols",
-            description = "Insert symbols for a selected file",
-            opts = {
-              contains_code = true,
-              provider = "telescope",
-            },
-          },
+          ["buffer"] = { opts = { provider = "telescope" } },
+          ["file"] = { opts = { provider = "telescope", max_lines = 1000 } },
+          ["help"] = { opts = { provider = "telescope" } },
+          ["symbols"] = { opts = { provider = "telescope" } },
         },
       },
       inline = {
         adapter = "gemini",
         keymaps = {
-          accept_change = {
-            modes = { n = "ga" },
-            description = "Accept the suggested change",
-          },
-          reject_change = {
-            modes = { n = "gr" },
-            description = "Reject the suggested change",
-          },
+          accept_change = { modes = { n = "ga" }, description = "Accept change" },
+          reject_change = { modes = { n = "gr" }, description = "Reject change" },
         },
       },
       cmd = {
         adapter = "gemini",
       },
     },
-    opts = {
-      log_level = "DEBUG",
-    },
-    extensions = {
-      vectorcode = {
-        opts = { add_tool = true, add_slash_command = true, tool_opts = {} },
-      },
-    },
     display = {
       chat = {
         render_headers = false,
       }
+    },
+    opts = {
+      log_level = "DEBUG",
     },
   }
 }

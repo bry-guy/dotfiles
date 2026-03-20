@@ -196,7 +196,7 @@ if [ -n "$(command -v op)" ]; then
 		eval "$(op completion zsh)"; compdef _op op
 fi
 
-if [ -n "$(command -v gh)" ]; then
+if [ -n "$(command -v gh auth token)" ]; then
 		export HOMEBREW_GITHUB_API_TOKEN="$(gh auth token)"
 fi
 
@@ -204,11 +204,7 @@ if [ -n "$(command -v rg)" ]; then
 		export FZF_DEFAULT_COMMAND='rg --files --hidden --smart-case'
 fi
 
-if [ -n "$(command -v fnox)" ]; then
-		eval "$(fnox activate zsh)"
-		export FNOX_AGE_KEY=$(cat ~/.config/fnox/age.txt | grep "AGE-SECRET-KEY")
-fi
-
+# fnox activation is project-local via direnv/.envrc
 
 # zprof
 
