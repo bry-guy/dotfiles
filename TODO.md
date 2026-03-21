@@ -11,6 +11,15 @@ Test the following under a new macOS user. Don't ruin my current setup!
 
 - [ ] Use kinto.sh
 
+## Identity
+
+- [ ] Finalize work machine identity
+  - [ ] Create a dedicated 1Password SSH key item for work (`git-work` or similar)
+  - [ ] Decide work git name/email/username defaults
+  - [ ] Update `script/identity-apply work` defaults once work details are known
+  - [ ] Decide whether the personal legacy key item `brainbook.local` should be renamed to `git-personal` in the 1Password app
+  - [ ] Test work identity on a real work-scoped machine before using it broadly
+
 ## Neovim
 
 ### LSPs
