@@ -1,0 +1,162 @@
+#!/bin/bash
+set -euo pipefail
+
+usage() {
+    echo "Usage: $0 [profile]" >&2
+    exit 1
+}
+
+if [ "$#" -gt 1 ]; then
+    usage
+fi
+
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/brew/lib.sh"
+
+profile="$(resolve_profile "${1:-}")"
+BREW_BIN="$(brew_bin)"
+WANTED_FILE="$(mktemp)"
+PROFILE_PATH="$(profile_path "$profile")"
+
+cleanup() {
+    rm -f "$WANTED_FILE"
+}
+trap cleanup EXIT
+
+"$SCRIPT_DIR/brew-wanted" "$profile" > "$WANTED_FILE"
+
+if PROFILE="$profile" PROFILE_PATH="$PROFILE_PATH" MANIFEST_DIR="$BREW_MANIFEST_DIR" WANTED_FILE="$WANTED_FILE" BREW_BIN="$BREW_BIN" python3 - <<'PY'
+import os
+import re
+import subprocess
+import sys
+from collections import defaultdict
+from pathlib import Path
+
+profile = os.environ["PROFILE"]
+profile_path = Path(os.environ["PROFILE_PATH"])
+manifest_dir = Path(os.environ["MANIFEST_DIR"])
+wanted_file = Path(os.environ["WANTED_FILE"])
+brew_bin = os.environ["BREW_BIN"]
+rename_hints = {"tailscale": "tailscale-app"}
+entry_re = re.compile(r'^(tap|brew|cask|mas|vscode)\s+"([^"]+)"')
+
+
+def load_profile_manifests(path: Path):
+    manifests = []
+    for raw in path.read_text().splitlines():
+        line = raw.strip()
+        if not line or line.startswith("#"):
+            continue
+        manifests.append(line)
+    return manifests
+
+
+def parse_entries(lines):
+    entries = {"tap": set(), "brew": set(), "cask": set(), "mas": set(), "vscode": set()}
+    for raw in lines:
+        line = raw.strip()
+        if not line or line.startswith("#"):
+            continue
+        match = entry_re.match(line)
+        if match:
+            kind, name = match.groups()
+            entries[kind].add(name)
+    return entries
+
+
+wanted_entries = parse_entries(wanted_file.read_text().splitlines())
+profile_manifests = load_profile_manifests(profile_path)
+manifest_declarations = defaultdict(list)
+
+for manifest in profile_manifests:
+    manifest_file = manifest_dir / f"{manifest}.Brewfile"
+    if not manifest_file.exists():
+        print(f"Profile '{profile}' references missing manifest: {manifest_file}", file=sys.stderr)
+        sys.exit(2)
+    entries = parse_entries(manifest_file.read_text().splitlines())
+    for kind, names in entries.items():
+        for name in names:
+            manifest_declarations[(kind, name)].append(manifest)
+
+formula_info = subprocess.check_output([brew_bin, "info", "--json=v2", "--installed"], text=True)
+formula_data = __import__("json").loads(formula_info)
+requested_formulae = set()
+for formula in formula_data.get("formulae", []):
+    installed = formula.get("installed", [])
+    if any(item.get("installed_on_request") for item in installed):
+        requested_formulae.add(formula["name"])
+
+actual_entries = {
+    "tap": set(subprocess.check_output([brew_bin, "tap"], text=True).split()),
+    "brew": requested_formulae,
+    "cask": set(subprocess.check_output([brew_bin, "list", "--cask"], text=True).split()),
+    "mas": set(),
+    "vscode": set(),
+}
+
+issues_found = False
+
+for kind, label in [("tap", "taps"), ("brew", "formulae"), ("cask", "casks")]:
+    installed_untracked = sorted(actual_entries[kind] - wanted_entries[kind])
+    tracked_missing = sorted(wanted_entries[kind] - actual_entries[kind])
+
+    hints = []
+    for name in installed_untracked:
+        replacement = rename_hints.get(name)
+        if replacement and replacement in tracked_missing:
+            hints.append((name, replacement))
+
+    if installed_untracked:
+        issues_found = True
+        print(f"Installed but untracked {label}:")
+        for name in installed_untracked:
+            print(f"  - {name}")
+        print()
+
+    if tracked_missing:
+        issues_found = True
+        print(f"Tracked but missing {label}:")
+        for name in tracked_missing:
+            print(f"  - {name}")
+        print()
+
+    if hints:
+        issues_found = True
+        print("Rename hints:")
+        for old, new in hints:
+            print(f"  - installed '{old}' but tracked '{new}'")
+        print()
+
+
+duplicates = []
+for (kind, name), manifests in sorted(manifest_declarations.items()):
+    if len(manifests) > 1:
+        duplicates.append((kind, name, manifests))
+
+if duplicates:
+    issues_found = True
+    print("Duplicate manifest declarations:")
+    for kind, name, manifests in duplicates:
+        joined = ", ".join(manifests)
+        print(f"  - {kind} '{name}' in: {joined}")
+    print()
+
+if issues_found:
+    sys.exit(1)
+
+print(f"Brew audit is clean for profile '{profile}'.")
+PY
+then
+    status=0
+else
+    status=$?
+fi
+
+if [ "$status" -eq 0 ]; then
+    ensure_state_dir
+    rm -f "$BREW_DIRTY_FILE"
+    date +%s > "$BREW_LAST_RUN_FILE"
+fi
+
+exit "$status"

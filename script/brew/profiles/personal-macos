@@ -1,0 +1,11 @@
+auth.1password
+base.core
+base.desktop-macos
+dev.common
+infra.common
+infra.personal
+ai.common
+ai.personal
+virtual.colima
+apps.common
+apps.personal

@@ -1,0 +1,22 @@
+#!/bin/bash
+set -euo pipefail
+
+usage() {
+    echo "Usage: $0 <manifest> [manifest ...]" >&2
+    exit 1
+}
+
+[ "$#" -ge 1 ] || usage
+
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/brew/lib.sh"
+
+BREW_BIN="$(brew_bin)"
+
+for manifest in "$@"; do
+    manifest_file="$(manifest_path "$manifest")"
+    [ -f "$manifest_file" ] || error "Manifest '$manifest' not found at $manifest_file"
+
+    echo "Applying brew manifest '$manifest'..."
+    DOTFILES_BREW_NO_DIRTY=1 "$BREW_BIN" bundle --verbose --file="$manifest_file"
+done

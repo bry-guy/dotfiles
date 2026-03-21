@@ -1,0 +1,6 @@
+tap "aws/tap"
+brew "aws-vault"
+brew "awscli"
+brew "kubectl"
+brew "sops"
+brew "terragrunt"

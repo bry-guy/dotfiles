@@ -1,12 +1,16 @@
 #!/bin/bash
 
+if [ -z "${DOTFILES_DIR:-}" ]; then
+    DOTFILES_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+fi
+
 # ===============================
 # Install xcode
 # ===============================
 
 if [ -z "$(xcode-select -p)" ]; then
-		echo "INFO: Install developer tools."
-		xcode-select --install
+        echo "INFO: Install developer tools."
+        xcode-select --install
 fi
 
 
@@ -16,17 +20,17 @@ fi
 
 echo "INFO: Install brew on MacOS."
 if [ -z "$(which brew)" ]; then
-		/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-		if [ -n "$ARCH_ARM" ]; then
-				echo "INFO: Invoke brew shellenv (M1)."
+        if [ -n "${ARCH_ARM:-}" ]; then
+                echo "INFO: Invoke brew shellenv (M1)."
 
-				eval "$(/opt/homebrew/bin/brew shellenv)"
-		elif [ -n "$ARCH_X86" ]; then 
-				echo "INFO: Invoke brew shellenv (Intel)."
+                eval "$(/opt/homebrew/bin/brew shellenv)"
+        elif [ -n "${ARCH_X86:-}" ]; then 
+                echo "INFO: Invoke brew shellenv (Intel)."
 
-				eval "$(/usr/local/homebrew/bin/brew shellenv)"
-		fi
+                eval "$(/usr/local/homebrew/bin/brew shellenv)"
+        fi
 fi
 
 
@@ -36,11 +40,11 @@ fi
 
 echo "Configuring Homebrew paths based on architecture..."
 
-if [ "$ARCH_ARM" == "1" ]; then
+if [ "${ARCH_ARM:-}" = "1" ]; then
     echo "Apple Silicon (ARM) detected."
     export HOMEBREW_PREFIX="/opt/homebrew"
     export HOMEBREW_CELLAR="$HOMEBREW_PREFIX/Cellar"
-elif [ "$ARCH_X86" == "1" ]; then
+elif [ "${ARCH_X86:-}" = "1" ]; then
     echo "Intel (x86_64) architecture detected."
     export HOMEBREW_PREFIX="/usr/local"
     export HOMEBREW_CELLAR="$HOMEBREW_PREFIX/Cellar"
@@ -70,56 +74,40 @@ echo ".zsh_arch successfully generated."
 # ===============================
 
 echo "Installing homebrew core deps..."
-CORE_BREWFILE="$DOTFILES_DIR/dot_brewfile.core"
-
-# Verify Brewfiles exist
-if [ ! -f "$CORE_BREWFILE" ]; then
-    echo "Core Brewfile ($CORE_BREWFILE) not found."
-    exit 1
-fi
-
-brew bundle --verbose --file="$CORE_BREWFILE"
+"$DOTFILES_DIR/script/brew-apply-manifest" base.core
 
 echo "Successfully installed core packages."
 
-if [ -z "$CLOUD" ]; then
+if [ -z "${CLOUD:-}" ]; then
 
-		# ===============================
-		# Install 1Password via brew
-		# ===============================
-		
-		echo "Installing homebrew 1pass deps..."
-		OP_BREWFILE="$DOTFILES_DIR/dot_brewfile.1pass"
+        # ===============================
+        # Install 1Password via brew
+        # ===============================
+        
+        echo "Installing homebrew 1pass deps..."
+        "$DOTFILES_DIR/script/brew-apply-manifest" auth.1password
 
-		# Verify Brewfiles exist
-		if [ ! -f "$OP_BREWFILE" ]; then
-			echo "1pass Brewfile ($1PASS_BREWFILE) not found."
-			exit 1
-		fi
+        echo "Successfully installed 1pass packages."
 
-		brew bundle --verbose --file="$OP_BREWFILE"
+        # ===============================
+        # Prompt to Login to 1Password and Enable SSH Agent
+        # ===============================
 
-		echo "Successfully installed 1pass packages."
-
-		# ===============================
-		# Prompt to Login to 1Password and Enable SSH Agent
-		# ===============================
-
-		echo "Please log in to 1Password and enable the SSH Agent."
-		echo "1Password > Sign-in > Preferences > Developer"
-		read -p "After completing the above steps, press Enter to continue..."
+        echo "Please log in to 1Password and enable the SSH Agent."
+        echo "1Password > Sign-in > Preferences > Developer"
+        read -p "After completing the above steps, press Enter to continue..."
 
 
-		# ===============================
-		# Link 1Password SSH Key
-		# ===============================
+        # ===============================
+        # Link 1Password SSH Key
+        # ===============================
 
-		echo "Linking 1Password SSH key..."
-		mkdir -p "$HOME/.1password"
-		ln -sf "$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock" "$HOME/.1password/agent.sock"
-		echo "1Password SSH key linked at $HOME/.1password/agent.sock."
+        echo "Linking 1Password SSH key..."
+        mkdir -p "$HOME/.1password"
+        ln -sf "$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock" "$HOME/.1password/agent.sock"
+        echo "1Password SSH key linked at $HOME/.1password/agent.sock."
 
-        echo "export SSH_AUTH_SOCK=$HOME/.1password/agent.sock" >> $ARCH_FILE
+        echo "export SSH_AUTH_SOCK=$HOME/.1password/agent.sock" >> "$ARCH_FILE"
 fi
 
 # ===============================

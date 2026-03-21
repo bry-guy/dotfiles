@@ -1,0 +1,5 @@
+cask "discord"
+cask "moonlight"
+cask "obsidian"
+cask "signal"
+cask "steam"

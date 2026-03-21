@@ -3,6 +3,5 @@ source ~/.aliases_work
 ## terraform
 complete -o nospace -C /opt/homebrew/bin/terraform terraform
 
-## support-cli (agentsync)
+## work secrets
 export DOPPLER_TOKEN="$(doppler configure get token --plain)"
-export AUTH_USER_EMAIL=bryan.smith@agentsync.io

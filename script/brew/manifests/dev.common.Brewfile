@@ -1,0 +1,8 @@
+brew "httpie"
+brew "hugo"
+brew "jj"
+brew "libpq"
+brew "marp-cli"
+brew "pandoc"
+brew "ruby-build"
+cask "postman"

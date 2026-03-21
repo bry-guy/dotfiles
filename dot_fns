@@ -5,7 +5,7 @@ wiki() {
 		local file="."
 
 		if [[ "$1" == "as" ]] || [[ "$1" == "work" ]]; then
-			file="AgentSync/"
+			file="Work/"
 			cmd="+Goyo"
 		fi
 
@@ -23,7 +23,7 @@ wiki() {
 		fi
 
 		if [[ "$1" == "brag" ]]; then
-			file="AgentSync/agentsync-brag.md"
+			file="Work/work-brag.md"
 			cmd="+Goyo"
 		fi
 
@@ -32,31 +32,10 @@ wiki() {
 }
 
 brew-diff() {
-    local temp_brewfile merged_brewfile brewfile_dir
-    temp_brewfile=$(mktemp)
-    merged_brewfile=$(mktemp)
-    brewfile_dir="$HOME"
+    local dotfiles_dir
 
-    echo "📢 Generating a temporary Brewfile from the current Homebrew state..."
-    brew bundle dump --file="$temp_brewfile" --force | tee /dev/tty
-    echo "✅ Temporary Brewfile created: $temp_brewfile"
-
-    echo "📢 Merging individual Brewfiles..."
-    cat "$brewfile_dir/.brewfile."* | sort -u > "$merged_brewfile.unsorted"
-
-    echo "📢 Sorting merged Brewfile for consistency..."
-    {
-        grep '^tap ' "$merged_brewfile.unsorted" | sort
-        grep '^brew ' "$merged_brewfile.unsorted" | sort
-        grep '^cask ' "$merged_brewfile.unsorted" | sort
-        grep '^vscode ' "$merged_brewfile.unsorted" | sort
-    } > "$merged_brewfile"
-    
-    echo "✅ Sorted and merged Brewfile created: $merged_brewfile"
-
-    diff -U 0 "$merged_brewfile" "$temp_brewfile"
-
-    rm -f "$temp_brewfile" "$merged_brewfile" "$merged_brewfile.unsorted"
+    dotfiles_dir="$(chezmoi source-path 2>/dev/null || echo "$HOME/.local/share/chezmoi")"
+    "$dotfiles_dir/script/brew-audit" "$@"
 }
 
 ts-find() {

@@ -1,0 +1,18 @@
+#!/bin/bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/brew/lib.sh"
+
+profile="$(resolve_profile "${1:-}")"
+manifest_files=()
+
+while IFS= read -r manifest; do
+    manifest_files+=("$(manifest_path "$manifest")")
+done < <(profile_manifests "$profile")
+
+if [ "${#manifest_files[@]}" -eq 0 ]; then
+    error "Profile '$profile' does not reference any manifests."
+fi
+
+normalize_brewfile "${manifest_files[@]}"

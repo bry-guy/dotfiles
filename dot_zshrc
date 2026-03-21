@@ -107,7 +107,6 @@ bindkey -v
 # ===============================
 # Shortcuts
 # ===============================
-[ -f $HOME/.secrets ] && . $HOME/.secrets
 [ -f $HOME/.aliases ] && . $HOME/.aliases
 [ -f $HOME/.fns ] && . $HOME/.fns
 
@@ -194,14 +193,76 @@ fi
 
 if [ -n "$(command -v op)" ]; then
 		eval "$(op completion zsh)"; compdef _op op
+
+		if [ -z "${GEMINI_API_KEY:-}" ]; then
+				GEMINI_API_KEY_VALUE="$(op read --no-newline 'op://bry-guy/GEMINI_API_KEY/credential' 2>/dev/null || true)"
+				if [ -n "$GEMINI_API_KEY_VALUE" ]; then
+						export GEMINI_API_KEY="$GEMINI_API_KEY_VALUE"
+						unset GEMINI_API_KEY_VALUE
+				fi
+		fi
 fi
 
-if [ -n "$(command -v gh auth token)" ]; then
+if [ -n "$(command -v gh)" ]; then
 		export HOMEBREW_GITHUB_API_TOKEN="$(gh auth token)"
 fi
 
 if [ -n "$(command -v rg)" ]; then
 		export FZF_DEFAULT_COMMAND='rg --files --hidden --smart-case'
+fi
+
+if [[ -o interactive ]] && [ -n "$(command -v brew)" ]; then
+		export DOTFILES_BREW_STATE_DIR="$HOME/.local/state/dotfiles"
+		export DOTFILES_BREW_DIRTY_FILE="$DOTFILES_BREW_STATE_DIR/brew-dirty"
+		export DOTFILES_BREW_LAST_RUN_FILE="$DOTFILES_BREW_STATE_DIR/brew-audit-last-run"
+
+		brew() {
+				local cmd command_status
+				cmd="${1:-}"
+
+				command brew "$@"
+				command_status=$?
+
+				if [ "$command_status" -eq 0 ] && [ -z "${DOTFILES_BREW_NO_DIRTY:-}" ]; then
+						case "$cmd" in
+							install|reinstall|uninstall|tap|untap|upgrade)
+								mkdir -p "$DOTFILES_BREW_STATE_DIR"
+								touch "$DOTFILES_BREW_DIRTY_FILE"
+								;;
+						esac
+				fi
+
+				return "$command_status"
+		}
+
+		dotfiles_brew_reminder_precmd() {
+				local dotfiles_dir profile command reminder
+
+				if [ -n "${DOTFILES_BREW_REMINDER_SHOWN:-}" ]; then
+						return
+				fi
+
+				dotfiles_dir="$(chezmoi source-path 2>/dev/null || echo "$HOME/.local/share/chezmoi")"
+				profile="$("$dotfiles_dir/script/brew-profile" 2>/dev/null || true)"
+				if [ -n "$profile" ]; then
+						command="script/brew-audit $profile"
+				else
+						command="script/brew-audit <profile>"
+				fi
+
+				if [ -f "$DOTFILES_BREW_DIRTY_FILE" ]; then
+						reminder="brew changed; run $command"
+				elif [ ! -f "$DOTFILES_BREW_LAST_RUN_FILE" ] || [[ -n "$(find "$DOTFILES_BREW_LAST_RUN_FILE" -mtime +7 -print 2>/dev/null)" ]]; then
+						reminder="brew audit overdue; run $command"
+				fi
+
+				if [ -n "${reminder:-}" ]; then
+						print -P "%F{yellow}$reminder%f"
+						export DOTFILES_BREW_REMINDER_SHOWN=1
+				fi
+		}
+
+		add-zsh-hook precmd dotfiles_brew_reminder_precmd
 fi
 
 # fnox activation is project-local via direnv/.envrc

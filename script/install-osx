@@ -1,35 +1,18 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
-# Usage information
 usage() {
-    echo "Usage: $0 {env}"
+    echo "Usage: $0 profile <profile> | $0 <manifest> [manifest ...]" >&2
     exit 1
 }
 
-# Check for exactly one argument
-if [ "$#" -ne 1 ]; then
-    usage
+[ "$#" -ge 1 ] || usage
+
+DOTFILES_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+
+if [ "$1" = "profile" ]; then
+    [ "$#" -eq 2 ] || usage
+    exec "$DOTFILES_DIR/script/brew-apply-profile" "$2"
 fi
 
-ENV="$1"
-
-# Ensure Homebrew is installed
-if ! command -v brew &>/dev/null; then
-    echo "Homebrew is not installed. Please run script/setup first."
-    exit 1
-fi
-
-# Define Brewfile paths
-DOTFILES_DIR="$(git rev-parse --show-toplevel)"
-ENV_BREWFILE="$DOTFILES_DIR/dot_brewfile.$ENV"
-
-if [ ! -f "$ENV_BREWFILE" ]; then
-    echo "Environment Brewfile ($ENV_BREWFILE) not found."
-    exit 1
-fi
-
-# Install from Brewfile
-brew bundle --verbose --file="$ENV_BREWFILE"
-
-echo "Successfully installed '$ENV' packages via Homebrew."
+exec "$DOTFILES_DIR/script/brew-apply-manifest" "$@"

@@ -1,0 +1,25 @@
+#!/bin/bash
+set -euo pipefail
+
+usage() {
+    echo "Usage: $0 [profile]" >&2
+    exit 1
+}
+
+if [ "$#" -gt 1 ]; then
+    usage
+fi
+
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/brew/lib.sh"
+
+profile="$(resolve_profile "${1:-}")"
+BREW_BIN="$(brew_bin)"
+
+while IFS= read -r manifest; do
+    manifest_file="$(manifest_path "$manifest")"
+    [ -f "$manifest_file" ] || error "Manifest '$manifest' not found at $manifest_file"
+
+    echo "Applying brew manifest '$manifest' for profile '$profile'..."
+    DOTFILES_BREW_NO_DIRTY=1 "$BREW_BIN" bundle --verbose --file="$manifest_file"
+done < <(profile_manifests "$profile")

@@ -1,10 +1,11 @@
 #!/bin/bash
+set -euo pipefail
+
+mkdir -p "$HOME/log"
 
 # Log dotfiles setup
-exec > >(tee -i $HOME/log/dotfiles_install.log)
+exec > >(tee -i "$HOME/log/dotfiles_install.log")
 exec 2>&1
-
-set -e
 
 DOTFILES_DIR="$(git rev-parse --show-toplevel)"
 
@@ -16,10 +17,10 @@ DOTFILES_DIR="$(git rev-parse --show-toplevel)"
 [ -f dot_detect_arch ] && source dot_detect_arch
 [ -f dot_detect_cloud ] && source dot_detect_cloud
 
-if [ -n "$OS_MAC" ]; then
-	echo "Detected macOS. Using macOS setup."
-	source "$DOTFILES_DIR/script/setup-macos"
-elif [ -n "$OS_LINUX" ]; then
+if [ -n "${OS_MAC:-}" ]; then
+    echo "Detected macOS. Using macOS setup."
+    source "$DOTFILES_DIR/script/setup-macos"
+elif [ -n "${OS_LINUX:-}" ]; then
     if [ -f /etc/fedora-release ]; then
         echo "Detected Fedora: $(cat /etc/fedora-release)"
         source "$DOTFILES_DIR/script/setup-fedora"
@@ -28,8 +29,8 @@ elif [ -n "$OS_LINUX" ]; then
         source "$DOTFILES_DIR/script/setup-linux"
     fi
 else
-	echo "Unsupported operating system."
-	exit 1
+    echo "Unsupported operating system."
+    exit 1
 fi
 
 # ===============================
@@ -49,7 +50,7 @@ ssh_hosts=(
     "github.com"
 )
 
-mkdir -p $HOME/.ssh
+mkdir -p "$HOME/.ssh"
 
 for host in "${ssh_hosts[@]}"; do
     if ! ssh-keygen -F "$host" >/dev/null; then
@@ -61,23 +62,13 @@ for host in "${ssh_hosts[@]}"; do
     fi
 done
 
-if [ -n "$CLOUD" ]; then
-		# ===============================
-		# Install Cloud Deps
-		# ===============================
-		
-		echo "Installing homebrew cloud deps..."
-		CLOUD_BREWFILE="$DOTFILES_DIR/dot_brewfile.cloud"
-
-		# Verify Brewfiles exist
-		if [ ! -f "$CLOUD_BREWFILE" ]; then
-			echo "cloud Brewfile ($CLOUD_BREWFILE) not found."
-			exit 1
-		fi
-
-		brew bundle --verbose --file="$CLOUD_BREWFILE"
-
-		echo "Successfully installed cloud packages."
+if [ -n "${CLOUD:-}" ]; then
+        # ===============================
+        # Install Cloud Deps
+        # ===============================
+        
+        echo "Installing cloud development manifests..."
+        "$DOTFILES_DIR/script/brew-apply-manifest" dev.common infra.common
 fi
 
 # ===============================
@@ -85,4 +76,3 @@ fi
 # ===============================
 
 echo "Setup complete."
-

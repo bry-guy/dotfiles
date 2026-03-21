@@ -1,3 +1,2 @@
-[tools]
-1password-cli = "latest"
-opentofu = "latest"
+# Intentionally empty.
+# Prefer Brew for machine-global tools and project-local mise.toml files for project tooling.

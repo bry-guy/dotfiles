@@ -1,41 +1,57 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
-# Usage information
 usage() {
-    echo "Usage: $0 {env}"
-    echo "Environments: core, dev, me, ai, virtual, cloud, work"
+    cat >&2 <<'EOF'
+Usage:
+  script/install profile <profile>
+  script/install manifest <manifest> [manifest ...]
+  script/install <fedora-env>
+EOF
     exit 1
 }
 
-# Check for exactly one argument
-if [ "$#" -ne 1 ]; then
-    usage
-fi
+[ "$#" -ge 1 ] || usage
 
-ENV="$1"
-DOTFILES_DIR="$(git rev-parse --show-toplevel)"
-
-# ===============================
-# Detect OS and Distribution
-# ===============================
-
-# Source OS detection script
+DOTFILES_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 [ -f "$DOTFILES_DIR/dot_detect_os" ] && source "$DOTFILES_DIR/dot_detect_os"
 
-if [ -n "$OS_MAC" ]; then
-    echo "Installing packages for macOS..."
-    "$DOTFILES_DIR/script/install-osx" "$ENV"
-elif [ -n "$OS_LINUX" ]; then
-    # Check if we're running Fedora
+if [ -n "${OS_MAC:-}" ]; then
+    case "$1" in
+        profile)
+            [ "$#" -eq 2 ] || usage
+            exec "$DOTFILES_DIR/script/brew-apply-profile" "$2"
+            ;;
+        manifest)
+            shift
+            [ "$#" -ge 1 ] || usage
+            exec "$DOTFILES_DIR/script/brew-apply-manifest" "$@"
+            ;;
+        *)
+            exec "$DOTFILES_DIR/script/brew-apply-manifest" "$@"
+            ;;
+    esac
+elif [ -n "${OS_LINUX:-}" ]; then
     if [ -f /etc/fedora-release ]; then
-        echo "Installing packages for Fedora..."
-        "$DOTFILES_DIR/script/install-fedora" "$ENV"
-    else
-        echo "Installing packages for Linux (non-Fedora)..."
-        "$DOTFILES_DIR/script/install-osx" "$ENV"  # Reuse macOS script for Linuxbrew
+        [ "$#" -eq 1 ] || usage
+        exec "$DOTFILES_DIR/script/install-fedora" "$1"
     fi
+
+    case "$1" in
+        profile)
+            [ "$#" -eq 2 ] || usage
+            exec "$DOTFILES_DIR/script/brew-apply-profile" "$2"
+            ;;
+        manifest)
+            shift
+            [ "$#" -ge 1 ] || usage
+            exec "$DOTFILES_DIR/script/brew-apply-manifest" "$@"
+            ;;
+        *)
+            exec "$DOTFILES_DIR/script/brew-apply-manifest" "$@"
+            ;;
+    esac
 else
-    echo "Unsupported operating system."
+    echo "Unsupported operating system." >&2
     exit 1
 fi

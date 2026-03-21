@@ -1,0 +1,8 @@
+cask "alacritty"
+cask "amethyst"
+cask "font-hack-nerd-font"
+cask "karabiner-elements"
+cask "linearmouse"
+cask "monitorcontrol"
+cask "tailscale-app"
+cask "visual-studio-code"
