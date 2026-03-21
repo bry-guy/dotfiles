@@ -1,18 +1,42 @@
 # bry-guy's dotfiles
 
-## Bootstrap and Setup
-
-My setup still uses:
-- `chezmoi` for dotfile application
-- `1Password` for secrets and SSH
+This repo manages my machine setup with:
+- `chezmoi` for applying dotfiles
 - `brew` for machine-global packages and apps
+- `1Password` for secrets, SSH, and identity material
 
-On a fresh macOS machine, run:
+A machine should be reproducible, composable, and scoped to a domain like `personal` or `work`.
+
+## Important model
+
+There are two different layers here:
+
+1. **Repo/source layer**
+   - the chezmoi source repo
+   - contains bootstrap/setup scripts under `script/`
+   - contains Brew manifests and profiles
+2. **Applied target layer**
+   - the actual files in `$HOME`
+   - managed by `chezmoi apply`
+
+The `script/` directory is part of the repo/source layer. It is **not** applied into `$HOME` by chezmoi.
+That means fresh-machine bootstrap should be run from the repo/source checkout, not from an applied home-directory file.
+
+## Bootstrap and setup
+
+On a fresh macOS machine:
+
 ```sh
 script/setup
 ```
 
-`setup` bootstraps Homebrew, installs the baseline Brew manifests, and applies chezmoi.
+`script/setup` currently does the following:
+- installs Homebrew if needed
+- installs baseline Brew manifests
+- installs 1Password dependencies
+- applies chezmoi
+
+After that, Homebrew package state is managed through the manifest/profile system below.
 
 ## Brew manifests and profiles
 
@@ -22,9 +46,24 @@ Homebrew state is tracked via small reusable manifests under:
 Machine profiles are tracked under:
 - `script/brew/profiles/`
 
-Current profiles:
+### Current profiles
 - `personal-macos`
 - `work-macos`
+
+### Current manifest layout
+- `auth.1password`
+- `base.core`
+- `base.desktop-macos`
+- `dev.common`
+- `infra.common`
+- `infra.personal`
+- `infra.work`
+- `ai.common`
+- `ai.personal`
+- `ai.work`
+- `virtual.colima`
+- `apps.common`
+- `apps.personal`
 
 ### Useful commands
 
@@ -33,7 +72,7 @@ Apply a full profile:
 script/brew-apply-profile personal-macos
 ```
 
-Apply one or more manifests:
+Apply one or more manifests directly:
 ```sh
 script/brew-apply-manifest base.core ai.common ai.personal
 ```
@@ -48,43 +87,124 @@ Audit installed Homebrew state against a profile:
 script/brew-audit personal-macos
 ```
 
-## Remembering Brew drift
-
-Interactive shells wrap `brew` and mark package state dirty after successful mutating commands.
-When that happens, the shell reminds me to run `script/brew-audit`.
-
+### Current local machine selection
 To avoid passing a profile every time, set one of:
 - `DOTFILES_BREW_PROFILE=personal-macos`, or
 - `~/.config/dotfiles/brew-profile` containing `personal-macos`
 
+On this machine, the local profile file is used.
+
+## Remembering Brew drift
+
+Interactive shells wrap `brew` and mark package state dirty after successful mutating commands such as:
+- `brew install`
+- `brew uninstall`
+- `brew tap`
+- `brew upgrade`
+
+When state is dirty, the shell reminds me to run:
+
+```sh
+script/brew-audit
+```
+
+The intended workflow is:
+1. install something normally when needed
+2. run `script/brew-audit`
+3. classify it into the right manifest if it should stay
+4. uninstall it if it was temporary or accidental
+
 ## Package ownership
 
-- **Brew** owns machine-global CLI tools, GUI apps, and workstation utilities.
-- **mise** is preferred for project-local tooling and versioned project runtimes.
+### Brew owns
+- machine-global CLI tools
+- GUI apps
+- workstation utilities
+- machine-level infra / AI / virtualization tools
+
+### mise owns
+- project-local tooling
+- versioned project runtimes
+- repo-specific development toolchains
+
+Global `mise` usage is intentionally minimized in favor of Brew for machine-global tools.
 
 ## Identity selection
 
 Machine identity is selected locally, not committed.
 
+### Commands
 Apply the personal identity:
 ```sh
 script/identity-apply personal
 ```
 
-Inspect the current identity files:
+Inspect the current generated identity files:
 ```sh
 script/identity-current
 ```
 
+### What identity apply writes locally
+- `~/.config/dotfiles/identity-profile`
+- `~/.gitconfig.identity.local`
+- `~/.ssh/config.identity`
+- `~/.ssh/git-personal.pub` or `~/.ssh/git-work.pub`
+
+Tracked git config includes `~/.gitconfig.identity.local`, so machine identity can change without changing the committed repo.
+
+Tracked SSH config includes `~/.ssh/config.identity` and uses the 1Password SSH agent.
+
+### Personal identity
+Personal identity currently resolves to:
+- git name: `Bryan Smith`
+- git email: `bryan@bry-guy.net`
+- git username: `bry-guy`
+
 Personal identity expects a 1Password SSH key item titled `git-personal` in the `Private` vault.
-For now, the helper also falls back to the legacy item title `brainbook.local`, while materializing it locally as `~/.ssh/git-personal.pub`.
-When you later add a work key, apply it with:
+For now, the helper also falls back to the legacy item title `brainbook.local`.
+
+### Work identity
+Work identity support exists structurally, but it is **not finalized yet**.
+When work details are known, this will be completed by:
+- creating a dedicated work SSH key in 1Password
+- deciding work git name/email/username defaults
+- updating `script/identity-apply work` defaults
+
+Today, you can still apply work identity manually by supplying explicit environment variables:
 ```sh
 DOTFILES_IDENTITY_WORK_NAME='Your Name' \
 DOTFILES_IDENTITY_WORK_EMAIL='you@work.example' \
 DOTFILES_IDENTITY_WORK_USERNAME='your-work-handle' \
 script/identity-apply work
 ```
+
+## Secrets
+
+Secrets should live in 1Password, not in a sourced `~/.secrets` file.
+
+Current shell behavior already loads some secrets from 1Password when available. For example, `GEMINI_API_KEY` is now loaded from:
+
+```text
+op://bry-guy/GEMINI_API_KEY/credential
+```
+
+The direction is:
+- no new secrets in `~/.secrets`
+- prefer `op read`, `op run`, or targeted shell loading
+- keep machine-global secrets in the appropriate 1Password vault
+
+## Current repo status / future work
+
+Current major improvements already in place:
+- composable Brew manifests and profiles
+- profile-aware Brew audit flow
+- machine-local identity selection
+- initial migration away from `~/.secrets`
+
+Known future work is tracked in `TODO.md`, especially:
+- finalizing work identity
+- improving non-work exclusion of work-only files
+- expanding personal/work infra manifests
 
 ## Unified macOS / popOS Hotkeys
 
