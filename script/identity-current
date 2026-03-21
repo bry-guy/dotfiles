@@ -1,0 +1,26 @@
+#!/bin/bash
+set -euo pipefail
+
+profile_file="$HOME/.config/dotfiles/identity-profile"
+gitconfig_file="$HOME/.gitconfig.identity.local"
+ssh_file="$HOME/.ssh/config.identity"
+
+if [ -f "$profile_file" ]; then
+    echo "profile: $(cat "$profile_file")"
+else
+    echo "profile: unset"
+fi
+
+echo "--- git identity ---"
+if [ -f "$gitconfig_file" ]; then
+    cat "$gitconfig_file"
+else
+    echo "missing: $gitconfig_file"
+fi
+
+echo "--- ssh identity ---"
+if [ -f "$ssh_file" ]; then
+    cat "$ssh_file"
+else
+    echo "missing: $ssh_file"
+fi

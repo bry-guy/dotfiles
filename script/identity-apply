@@ -1,0 +1,87 @@
+#!/bin/bash
+set -euo pipefail
+
+usage() {
+    cat >&2 <<'EOF'
+Usage: script/identity-apply <personal|work>
+
+Environment overrides for work:
+  DOTFILES_IDENTITY_WORK_NAME
+  DOTFILES_IDENTITY_WORK_EMAIL
+  DOTFILES_IDENTITY_WORK_USERNAME
+  DOTFILES_IDENTITY_WORK_KEY_VAULT
+  DOTFILES_IDENTITY_WORK_KEY_TITLE
+EOF
+    exit 1
+}
+
+[ "$#" -eq 1 ] || usage
+
+profile="$1"
+mkdir -p "$HOME/.config/dotfiles" "$HOME/.ssh"
+
+case "$profile" in
+    personal)
+        key_vault="${DOTFILES_IDENTITY_PERSONAL_KEY_VAULT:-Private}"
+        key_title="${DOTFILES_IDENTITY_PERSONAL_KEY_TITLE:-git-personal}"
+        legacy_key_title="brainbook.local"
+        key_file="$HOME/.ssh/git-personal.pub"
+        git_name="${DOTFILES_IDENTITY_PERSONAL_NAME:-Bryan Smith}"
+        git_email="${DOTFILES_IDENTITY_PERSONAL_EMAIL:-bryan@bry-guy.net}"
+        git_username="${DOTFILES_IDENTITY_PERSONAL_USERNAME:-bry-guy}"
+        ;;
+    work)
+        key_vault="${DOTFILES_IDENTITY_WORK_KEY_VAULT:-Private}"
+        key_title="${DOTFILES_IDENTITY_WORK_KEY_TITLE:-git-work}"
+        key_file="$HOME/.ssh/git-work.pub"
+        git_name="${DOTFILES_IDENTITY_WORK_NAME:-}"
+        git_email="${DOTFILES_IDENTITY_WORK_EMAIL:-}"
+        git_username="${DOTFILES_IDENTITY_WORK_USERNAME:-}"
+
+        [ -n "$git_name" ] || { echo "Set DOTFILES_IDENTITY_WORK_NAME before applying work identity." >&2; exit 1; }
+        [ -n "$git_email" ] || { echo "Set DOTFILES_IDENTITY_WORK_EMAIL before applying work identity." >&2; exit 1; }
+        [ -n "$git_username" ] || { echo "Set DOTFILES_IDENTITY_WORK_USERNAME before applying work identity." >&2; exit 1; }
+        ;;
+    *)
+        usage
+        ;;
+esac
+
+public_key="$(op read --no-newline "op://$key_vault/$key_title/public key" 2>/dev/null || true)"
+
+if [ -z "$public_key" ] && [ "$profile" = "personal" ] && [ -n "${legacy_key_title:-}" ]; then
+    public_key="$(op read --no-newline "op://$key_vault/$legacy_key_title/public key" 2>/dev/null || true)"
+    if [ -n "$public_key" ]; then
+        key_title="$legacy_key_title"
+    fi
+fi
+
+if [ -z "$public_key" ] && [ "$profile" = "personal" ]; then
+    public_key="$(SSH_AUTH_SOCK="$HOME/.1password/agent.sock" ssh-add -L 2>/dev/null | awk 'NR==1 { print $1" "$2 }')"
+fi
+
+[ -n "$public_key" ] || {
+    echo "Unable to resolve public key for '$key_title' from vault '$key_vault'. Unlock 1Password or set up the agent and try again." >&2
+    exit 1
+}
+
+printf '%s\n' "$profile" > "$HOME/.config/dotfiles/identity-profile"
+printf '%s\n' "$public_key" > "$key_file"
+chmod 600 "$key_file"
+
+cat > "$HOME/.gitconfig.identity.local" <<EOF
+[user]
+	name = $git_name
+	email = $git_email
+	user = $git_username
+EOF
+
+cat > "$HOME/.ssh/config.identity" <<EOF
+Host github.com
+	IdentitiesOnly yes
+	IdentityFile $key_file
+EOF
+
+chmod 600 "$HOME/.gitconfig.identity.local" "$HOME/.ssh/config.identity"
+
+echo "Applied '$profile' git identity using key '$key_title' from vault '$key_vault'."

@@ -62,6 +62,30 @@ To avoid passing a profile every time, set one of:
 - **Brew** owns machine-global CLI tools, GUI apps, and workstation utilities.
 - **mise** is preferred for project-local tooling and versioned project runtimes.
 
+## Identity selection
+
+Machine identity is selected locally, not committed.
+
+Apply the personal identity:
+```sh
+script/identity-apply personal
+```
+
+Inspect the current identity files:
+```sh
+script/identity-current
+```
+
+Personal identity expects a 1Password SSH key item titled `git-personal` in the `Private` vault.
+For now, the helper also falls back to the legacy item title `brainbook.local`, while materializing it locally as `~/.ssh/git-personal.pub`.
+When you later add a work key, apply it with:
+```sh
+DOTFILES_IDENTITY_WORK_NAME='Your Name' \
+DOTFILES_IDENTITY_WORK_EMAIL='you@work.example' \
+DOTFILES_IDENTITY_WORK_USERNAME='your-work-handle' \
+script/identity-apply work
+```
+
 ## Unified macOS / popOS Hotkeys
 
 I use macOS hotkeys everywhere. In Linux, use kinto.sh. Rolling my own config is for the birds.

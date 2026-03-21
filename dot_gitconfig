@@ -1,9 +1,7 @@
 [pull]
 		ff = only
-[user]
-		email = bryan@bry-guy.net
-		user = bry-guy
-		name = Bryan Smith
+[include]
+		path = ~/.gitconfig.identity.local
 [alias]
 		co = checkout
 		br = branch
