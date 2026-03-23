@@ -27,14 +27,24 @@ That means fresh-machine bootstrap should be run from the repo/source checkout, 
 On a fresh macOS machine:
 
 ```sh
-script/setup
+script/setup personal-macos
 ```
 
-`script/setup` currently does the following:
+or for a work-scoped machine:
+
+```sh
+script/setup work-macos
+```
+
+`script/setup [brew-profile]` currently does the following:
 - installs Homebrew if needed
 - installs baseline Brew manifests
 - installs 1Password dependencies
 - applies chezmoi
+- persists the selected Brew profile to `~/.config/dotfiles/brew-profile`
+- applies the selected Brew profile if one was provided
+
+Running `script/setup` without a profile still performs the baseline bootstrap only.
 
 After that, Homebrew package state is managed through the manifest/profile system below.
 
@@ -90,8 +100,9 @@ script/brew-audit personal-macos
 ### Current local machine selection
 To avoid passing a profile every time, set one of:
 - `DOTFILES_BREW_PROFILE=personal-macos`, or
-- `~/.config/dotfiles/brew-profile` containing `personal-macos`
+- `~/.config/dotfiles/brew-profile` containing the selected profile name
 
+Normally, `script/setup personal-macos` or `script/setup work-macos` writes this file automatically.
 On this machine, the local profile file is used.
 
 ## Remembering Brew drift
@@ -165,10 +176,11 @@ For now, the helper also falls back to the legacy item title `brainbook.local`.
 
 ### Work identity
 Work identity support exists structurally, but it is **not finalized yet**.
+A dedicated work SSH key item titled `git-work` has already been created in the `Private` vault, but the work git defaults are still intentionally undecided.
 When work details are known, this will be completed by:
-- creating a dedicated work SSH key in 1Password
 - deciding work git name/email/username defaults
 - updating `script/identity-apply work` defaults
+- testing the work identity on a real work-scoped machine
 
 Today, you can still apply work identity manually by supplying explicit environment variables:
 ```sh

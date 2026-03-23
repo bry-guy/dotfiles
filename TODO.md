@@ -14,7 +14,7 @@ Test the following under a new macOS user. Don't ruin my current setup!
 ## Identity
 
 - [ ] Finalize work machine identity
-  - [ ] Create a dedicated 1Password SSH key item for work (`git-work` or similar)
+  - [x] Create a dedicated 1Password SSH key item for work (`git-work`)
   - [ ] Decide work git name/email/username defaults
   - [ ] Update `script/identity-apply work` defaults once work details are known
   - [ ] Decide whether the personal legacy key item `brainbook.local` should be renamed to `git-personal` in the 1Password app

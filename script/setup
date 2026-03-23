@@ -1,6 +1,21 @@
 #!/bin/bash
 set -euo pipefail
 
+usage() {
+    cat >&2 <<'EOF'
+Usage: script/setup [brew-profile]
+
+Examples:
+  script/setup
+  script/setup personal-macos
+  script/setup work-macos
+EOF
+    exit 1
+}
+
+[ "$#" -le 1 ] || usage
+BREW_PROFILE="${1:-}"
+
 mkdir -p "$HOME/log"
 
 # Log dotfiles setup
@@ -16,6 +31,13 @@ DOTFILES_DIR="$(git rev-parse --show-toplevel)"
 [ -f dot_detect_os ] && source dot_detect_os
 [ -f dot_detect_arch ] && source dot_detect_arch
 [ -f dot_detect_cloud ] && source dot_detect_cloud
+
+if [ -n "$BREW_PROFILE" ]; then
+    if [ ! -f "$DOTFILES_DIR/script/brew/profiles/$BREW_PROFILE" ]; then
+        echo "Unknown brew profile: $BREW_PROFILE" >&2
+        usage
+    fi
+fi
 
 if [ -n "${OS_MAC:-}" ]; then
     echo "Detected macOS. Using macOS setup."
@@ -62,7 +84,14 @@ for host in "${ssh_hosts[@]}"; do
     fi
 done
 
-if [ -n "${CLOUD:-}" ]; then
+if [ -n "$BREW_PROFILE" ]; then
+        echo "Persisting brew profile '$BREW_PROFILE'..."
+        mkdir -p "$HOME/.config/dotfiles"
+        printf '%s\n' "$BREW_PROFILE" > "$HOME/.config/dotfiles/brew-profile"
+
+        echo "Applying brew profile '$BREW_PROFILE'..."
+        "$DOTFILES_DIR/script/brew-apply-profile" "$BREW_PROFILE"
+elif [ -n "${CLOUD:-}" ]; then
         # ===============================
         # Install Cloud Deps
         # ===============================
