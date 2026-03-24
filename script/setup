@@ -16,6 +16,41 @@ EOF
 [ "$#" -le 1 ] || usage
 BREW_PROFILE="${1:-}"
 
+post_setup_checklist() {
+    cat <<EOF
+
+Post-setup checklist
+====================
+
+Automated setup is done. The following items are still worth checking manually:
+
+1. Run a final package audit
+   script/brew-audit${BREW_PROFILE:+ $BREW_PROFILE}
+
+2. Confirm 1Password setup
+   - Sign in to 1Password
+   - Enable the 1Password SSH agent
+   - For personal machines: run 'script/identity-apply personal' if needed
+   - For work machines: defer 'script/identity-apply work' until work identity details are finalized
+
+3. Review macOS appearance and shell integration
+   - Open a fresh terminal and confirm shell config loads as expected
+   - Confirm Homebrew profile selection in ~/.config/dotfiles/brew-profile
+
+4. Finish GUI-only macOS polish that is not fully automated
+   - Dock app layout/order
+   - Login Items in System Settings
+   - Menu bar settings like battery percentage and clock seconds
+   - Safari extension enablement/permissions
+
+5. Review privacy/security prompts for installed apps
+   - Accessibility permissions (e.g. Amethyst, Karabiner-Elements)
+   - Screen Recording / Full Disk Access if needed
+   - Any app-specific background item approvals
+
+EOF
+}
+
 mkdir -p "$HOME/log"
 
 # Log dotfiles setup
@@ -103,5 +138,7 @@ fi
 # ===============================
 # Final Message
 # ===============================
+
+post_setup_checklist
 
 echo "Setup complete."
