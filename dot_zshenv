@@ -11,10 +11,10 @@ if [ -n "$(command -v cargo)" ]; then
 		. "$HOME/.cargo/env"
 fi
 
-if [ -n "$(env | grep DEVPOD)" ]; then
+if [ -n "${DEVPOD:-}" ]; then
 		export SSH_TTY="DEVPOD"
 fi
 
 if [[ -z "$SSH_TTY" && -z "$SSH_AUTH_SOCK" ]]; then
-  export SSH_AUTH_SOCK="~/.1password/agent.sock"
+  export SSH_AUTH_SOCK="$HOME/.1password/agent.sock"
 fi

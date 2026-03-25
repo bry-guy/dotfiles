@@ -89,11 +89,11 @@ unsetopt beep
 autoload -Uz compinit promptinit colors
 
 # Use a cached dump if available for faster startup
-# compdump="$HOME/.zcompdump"
-if [[ -f "$compdump" && -n "$(find "$compdump" -mtime -7)" ]]; then
-    compinit -C
+compdump="$HOME/.zcompdump"
+if [[ -f "$compdump" && -z "$(find "$compdump" -mtime +7 -print 2>/dev/null)" ]]; then
+    compinit -C -d "$compdump"
 else
-    compinit
+    compinit -d "$compdump"
 fi
 
 # Initialize prompt and colors
@@ -194,17 +194,37 @@ fi
 if [ -n "$(command -v op)" ]; then
 		eval "$(op completion zsh)"; compdef _op op
 
-		if [ -z "${GEMINI_API_KEY:-}" ]; then
-				GEMINI_API_KEY_VALUE="$(op read --no-newline 'op://bry-guy/GEMINI_API_KEY/credential' 2>/dev/null || true)"
-				if [ -n "$GEMINI_API_KEY_VALUE" ]; then
-						export GEMINI_API_KEY="$GEMINI_API_KEY_VALUE"
-						unset GEMINI_API_KEY_VALUE
+		load-gemini-api-key() {
+				if [ -n "${GEMINI_API_KEY:-}" ]; then
+						return 0
 				fi
-		fi
+
+				local gemini_api_key_value
+				gemini_api_key_value="$(op read --no-newline 'op://bry-guy/GEMINI_API_KEY/credential' 2>/dev/null || true)"
+				if [ -n "$gemini_api_key_value" ]; then
+						export GEMINI_API_KEY="$gemini_api_key_value"
+						return 0
+				fi
+
+				return 1
+		}
 fi
 
 if [ -n "$(command -v gh)" ]; then
-		export HOMEBREW_GITHUB_API_TOKEN="$(gh auth token)"
+		load-gh-token() {
+				if [ -n "${HOMEBREW_GITHUB_API_TOKEN:-}" ]; then
+						return 0
+				fi
+
+				local gh_token
+				gh_token="$(gh auth token 2>/dev/null || true)"
+				if [ -n "$gh_token" ]; then
+						export HOMEBREW_GITHUB_API_TOKEN="$gh_token"
+						return 0
+				fi
+
+				return 1
+		}
 fi
 
 if [ -n "$(command -v rg)" ]; then
@@ -236,15 +256,16 @@ if [[ -o interactive ]] && [ -n "$(command -v brew)" ]; then
 		}
 
 		dotfiles_brew_reminder_precmd() {
-				local dotfiles_dir profile command reminder
+				local profile command reminder
 
 				if [ -n "${DOTFILES_BREW_REMINDER_SHOWN:-}" ]; then
 						return
 				fi
 
-				dotfiles_dir="$(chezmoi source-path 2>/dev/null || echo "$HOME/.local/share/chezmoi")"
-				profile="$("$dotfiles_dir/script/brew-profile" 2>/dev/null || true)"
-				if [ -n "$profile" ]; then
+				if [ -f "$HOME/.config/dotfiles/brew-profile" ]; then
+						profile="$(awk 'NF { print; exit }' "$HOME/.config/dotfiles/brew-profile")"
+				fi
+				if [ -n "${profile:-}" ]; then
 						command="script/brew-audit $profile"
 				else
 						command="script/brew-audit <profile>"
