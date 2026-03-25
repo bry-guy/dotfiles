@@ -79,17 +79,13 @@ for manifest in profile_manifests:
         for name in names:
             manifest_declarations[(kind, name)].append(manifest)
 
-formula_info = subprocess.check_output([brew_bin, "info", "--json=v2", "--installed"], text=True)
-formula_data = __import__("json").loads(formula_info)
-requested_formulae = set()
-for formula in formula_data.get("formulae", []):
-    installed = formula.get("installed", [])
-    if any(item.get("installed_on_request") for item in installed):
-        requested_formulae.add(formula["name"])
+installed_formulae = set(subprocess.check_output([brew_bin, "list", "--formula"], text=True).split())
+direct_formulae = set(subprocess.check_output([brew_bin, "leaves"], text=True).split())
 
 actual_entries = {
     "tap": set(subprocess.check_output([brew_bin, "tap"], text=True).split()),
-    "brew": requested_formulae,
+    "brew": installed_formulae,
+    "brew_direct": direct_formulae,
     "cask": set(subprocess.check_output([brew_bin, "list", "--cask"], text=True).split()),
     "mas": set(),
     "vscode": set(),
@@ -98,7 +94,11 @@ actual_entries = {
 issues_found = False
 
 for kind, label in [("tap", "taps"), ("brew", "formulae"), ("cask", "casks")]:
-    installed_untracked = sorted(actual_entries[kind] - wanted_entries[kind])
+    if kind == "brew":
+        installed_untracked = sorted(actual_entries["brew_direct"] - wanted_entries[kind])
+    else:
+        installed_untracked = sorted(actual_entries[kind] - wanted_entries[kind])
+
     tracked_missing = sorted(wanted_entries[kind] - actual_entries[kind])
 
     hints = []
