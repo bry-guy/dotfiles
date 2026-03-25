@@ -14,6 +14,7 @@ source "$SCRIPT_DIR/brew/lib.sh"
 BREW_BIN="$(brew_bin)"
 
 for manifest in "$@"; do
+    ensure_manifest_taps "$manifest"
     manifest_file="$(manifest_path "$manifest")"
     [ -f "$manifest_file" ] || error "Manifest '$manifest' not found at $manifest_file"
 

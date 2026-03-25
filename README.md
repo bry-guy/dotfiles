@@ -82,6 +82,8 @@ Apply a full profile:
 script/brew-apply-profile personal-macos
 ```
 
+`brew-apply-profile` automatically taps any required taps declared by the manifests and will continue past a failing manifest, then report a skipped-manifest summary at the end.
+
 Apply one or more manifests directly:
 ```sh
 script/brew-apply-manifest base.core ai.common ai.personal

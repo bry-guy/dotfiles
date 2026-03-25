@@ -66,6 +66,32 @@ manifest_path() {
     echo "$BREW_MANIFEST_DIR/$1.Brewfile"
 }
 
+manifest_taps() {
+    local path
+    path="$(manifest_path "$1")"
+
+    [ -f "$path" ] || error "Manifest '$1' not found at $path"
+
+    awk '
+        /^[[:space:]]*tap[[:space:]]+"[^"]+"/ {
+            match($0, /"([^"]+)"/, m)
+            if (m[1] != "") print m[1]
+        }
+    ' "$path"
+}
+
+ensure_manifest_taps() {
+    local tap_name
+
+    while IFS= read -r tap_name; do
+        [ -n "$tap_name" ] || continue
+        if ! brew tap | grep -qx "$tap_name"; then
+            echo "Tapping '$tap_name'..."
+            brew tap "$tap_name"
+        fi
+    done < <(manifest_taps "$1")
+}
+
 profile_manifests() {
     local profile
     local path
