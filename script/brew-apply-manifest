@@ -13,11 +13,24 @@ source "$SCRIPT_DIR/brew/lib.sh"
 
 BREW_BIN="$(brew_bin)"
 
+failures=0
 for manifest in "$@"; do
-    ensure_manifest_taps "$manifest"
     manifest_file="$(manifest_path "$manifest")"
     [ -f "$manifest_file" ] || error "Manifest '$manifest' not found at $manifest_file"
 
+    if ! ensure_manifest_taps "$manifest"; then
+        echo "Error: skipping manifest '$manifest' because one or more taps failed" >&2
+        failures=$((failures + 1))
+        continue
+    fi
+
     echo "Applying brew manifest '$manifest'..."
-    DOTFILES_BREW_NO_DIRTY=1 "$BREW_BIN" bundle --verbose --file="$manifest_file"
+    if ! DOTFILES_BREW_NO_DIRTY=1 "$BREW_BIN" bundle --verbose --file="$manifest_file"; then
+        echo "Error: skipping manifest '$manifest' after bundle failure" >&2
+        failures=$((failures + 1))
+    fi
 done
+
+if [ "$failures" -gt 0 ]; then
+    error "Skipped $failures manifest(s) while applying manifests. Review the errors above and rerun after fixing them."
+fi

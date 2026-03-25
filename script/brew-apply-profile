@@ -21,7 +21,11 @@ while IFS= read -r manifest; do
     manifest_file="$(manifest_path "$manifest")"
     [ -f "$manifest_file" ] || error "Manifest '$manifest' not found at $manifest_file"
 
-    ensure_manifest_taps "$manifest"
+    if ! ensure_manifest_taps "$manifest"; then
+        echo "Error: skipping manifest '$manifest' because one or more taps failed" >&2
+        failures=$((failures + 1))
+        continue
+    fi
 
     echo "Applying brew manifest '$manifest' for profile '$profile'..."
     if ! DOTFILES_BREW_NO_DIRTY=1 "$BREW_BIN" bundle --verbose --file="$manifest_file"; then

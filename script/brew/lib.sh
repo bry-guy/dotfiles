@@ -72,24 +72,25 @@ manifest_taps() {
 
     [ -f "$path" ] || error "Manifest '$1' not found at $path"
 
-    awk '
-        /^[[:space:]]*tap[[:space:]]+"[^"]+"/ {
-            match($0, /"([^"]+)"/, m)
-            if (m[1] != "") print m[1]
-        }
-    ' "$path"
+    sed -n -E 's/^[[:space:]]*tap[[:space:]]+"([^"]+)".*/\1/p' "$path"
 }
 
 ensure_manifest_taps() {
     local tap_name
+    local failed=0
 
     while IFS= read -r tap_name; do
         [ -n "$tap_name" ] || continue
-        if ! brew tap | grep -qx "$tap_name"; then
+        if ! brew tap | grep -qxF "$tap_name"; then
             echo "Tapping '$tap_name'..."
-            brew tap "$tap_name"
+            if ! brew tap "$tap_name"; then
+                echo "Error: failed to tap '$tap_name'" >&2
+                failed=1
+            fi
         fi
     done < <(manifest_taps "$1")
+
+    return "$failed"
 }
 
 profile_manifests() {
