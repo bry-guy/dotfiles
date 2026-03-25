@@ -1,5 +1,5 @@
 tap "aws/tap"
 brew "aws-vault"
 brew "awscli"
-brew "kubectl"
+brew "kubernetes-cli"
 brew "sops"
