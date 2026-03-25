@@ -71,6 +71,8 @@ Machine profiles are tracked under:
 - `ai.common`
 - `ai.personal`
 - `ai.work`
+
+`ai.common` currently includes shared AI/dev tooling such as `ccusage`, `claude-code`, `codex`, and `pi-coding-agent`.
 - `virtual.colima`
 - `apps.common`
 - `apps.personal`
