@@ -7,8 +7,6 @@ local M = {
   event = "BufReadPre",
   keys = require("config.keymaps").lsp_hotkeys,
   config = function()
-    local lsp = require("lspconfig")
-
     local default_cap = vim.lsp.protocol.make_client_capabilities()
     local cmp_cap = require('cmp_nvim_lsp').default_capabilities()
 
@@ -20,37 +18,32 @@ local M = {
 
     -- jdtls / java is setup via nvim-jdtls
 
-    local jsonls_cap = capabilities
+    local jsonls_cap = vim.deepcopy(capabilities)
     jsonls_cap.textDocument.completion.completionItem.snippetSupport = true
 
-    lsp.jsonls.setup{
-      -- on_attach = require("config.keymaps").lsp_hotkeys,
+    vim.lsp.config('jsonls', {
       capabilities = jsonls_cap,
       cmd = { "vscode-json-languageserver", "--stdio" }
-    }
+    })
 
-    lsp.eslint.setup{
-      -- on_attach = require("config.keymaps").lsp_hotkeys,
+    vim.lsp.config('eslint', {
       capabilities = capabilities,
-    }
+    })
 
-    lsp.ts_ls.setup{
-      -- on_attach = require("config.keymaps").lsp_hotkeys,
+    vim.lsp.config('ts_ls', {
       capabilities = capabilities,
-    }
+    })
 
-    lsp.gopls.setup{
-      -- on_attach = require("config.keymaps").lsp_hotkeys,
+    vim.lsp.config('gopls', {
       capabilities = capabilities,
       settings = {
         gopls = {
           gofumpt = true
         }
       }
-    }
+    })
 
-    lsp.lua_ls.setup{
-      -- on_attach = require("config.keymaps").lsp_hotkeys,
+    vim.lsp.config('lua_ls', {
       capabilities = capabilities,
       settings = {
         Lua = {
@@ -59,8 +52,13 @@ local M = {
           },
         }
       }
+    })
 
-    }
+    vim.lsp.enable('jsonls')
+    vim.lsp.enable('eslint')
+    vim.lsp.enable('ts_ls')
+    vim.lsp.enable('gopls')
+    vim.lsp.enable('lua_ls')
   end
 }
 

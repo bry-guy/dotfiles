@@ -5,8 +5,12 @@ local M = {}
 vim.keymap.set('v', 'Y', '"+y', { desc = "Yank selection (Clipboard)" })
 
 -- diagnostics
-vim.keymap.set('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', { desc = "Diagnostic Next" })
-vim.keymap.set('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', { desc = "Diagnostic Prev" })
+vim.keymap.set('n', ']d', function()
+  vim.diagnostic.jump({ count = 1, float = true })
+end, { desc = "Diagnostic Next" })
+vim.keymap.set('n', '[d', function()
+  vim.diagnostic.jump({ count = -1, float = true })
+end, { desc = "Diagnostic Prev" })
 
 -- dap
 M.dap_hotkeys = {
@@ -38,8 +42,8 @@ M.lsp_hotkeys = {
   { "gt", "<cmd>lua vim.lsp.buf.type_definition()<CR>", { desc = "LSP Type Definition" } },
   { "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", { desc = "LSP Implementation" } },
   { "gr", "<cmd>lua vim.lsp.buf.references()<CR>", { desc = "LSP References" } },
-  { "gh", "<cmd>lua vim.lsp.buf.hover()<CR>", { desc = "LSP Hover" } },
-  { "gH", "<cmd>lua vim.lsp.buf.signature_help()<CR>", { desc = "LSP Signature Help" } },
+  { "gh", function() vim.lsp.buf.hover({ border = "single" }) end, { desc = "LSP Hover" } },
+  { "gH", function() vim.lsp.buf.signature_help({ border = "single" }) end, { desc = "LSP Signature Help" } },
   { "gR", "<cmd>lua vim.lsp.buf.rename()<CR>", { desc = "LSP Rename" } },
   { "gA", "<cmd>lua vim.lsp.buf.code_action()<CR>", { desc = "LSP Code Action" } },
 }
