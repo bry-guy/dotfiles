@@ -1,1 +1,2 @@
 brew "ansible"
+brew "opentofu"
