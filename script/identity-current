@@ -2,7 +2,8 @@
 set -euo pipefail
 
 profile_file="$HOME/.config/dotfiles/identity-profile"
-gitconfig_file="$HOME/.gitconfig.identity.local"
+personal_gitconfig_file="$HOME/.gitconfig.identity.local"
+work_gitconfig_file="$HOME/.gitconfig.identity.work"
 ssh_file="$HOME/.ssh/config.identity"
 
 if [ -f "$profile_file" ]; then
@@ -11,11 +12,18 @@ else
     echo "profile: unset"
 fi
 
-echo "--- git identity ---"
-if [ -f "$gitconfig_file" ]; then
-    cat "$gitconfig_file"
+echo "--- git identity (personal default) ---"
+if [ -f "$personal_gitconfig_file" ]; then
+    cat "$personal_gitconfig_file"
 else
-    echo "missing: $gitconfig_file"
+    echo "missing: $personal_gitconfig_file"
+fi
+
+echo "--- git identity (work override) ---"
+if [ -f "$work_gitconfig_file" ]; then
+    cat "$work_gitconfig_file"
+else
+    echo "missing: $work_gitconfig_file"
 fi
 
 echo "--- ssh identity ---"

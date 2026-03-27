@@ -149,9 +149,14 @@ Global `mise` usage is intentionally minimized in favor of Brew for machine-glob
 Machine identity is selected locally, not committed.
 
 ### Commands
-Apply the personal identity:
+Apply machine-local identity files:
 ```sh
 script/identity-apply personal
+```
+
+On a work-scoped machine, this also works and records the machine profile as `work`:
+```sh
+script/identity-apply work
 ```
 
 Inspect the current generated identity files:
@@ -162,37 +167,40 @@ script/identity-current
 ### What identity apply writes locally
 - `~/.config/dotfiles/identity-profile`
 - `~/.gitconfig.identity.local`
+- `~/.gitconfig.identity.work`
 - `~/.ssh/config.identity`
-- `~/.ssh/git-personal.pub` or `~/.ssh/git-work.pub`
+- `~/.ssh/git-personal.pub`
+- `~/.ssh/git-work.pub` (when available)
 
-Tracked git config includes `~/.gitconfig.identity.local`, so machine identity can change without changing the committed repo.
+Tracked git config includes:
+- `~/.gitconfig.identity.local` as the personal default
+- `~/.gitconfig.identity.work` for repos whose remote points at `lumora.ghe.com`
 
 Tracked SSH config includes `~/.ssh/config.identity` and uses the 1Password SSH agent.
 
-### Personal identity
-Personal identity currently resolves to:
+### Host-based identity behavior
+- `github.com` uses the personal SSH key and personal git email
+- `lumora.ghe.com` uses the work SSH key and work git email
+
+That means the same tracked dotfiles can be used on personal and work machines without changing committed config.
+The machine-local files are generated from 1Password and kept out of the repo.
+
+### Personal identity defaults
 - git name: `Bryan Smith`
 - git email: `bryan@bry-guy.net`
-- git username: `bry-guy`
+- 1Password account: `my.1password.com`
+- 1Password vault: `Private`
+- key item title: `git-personal`
+- legacy fallback key item title: `brainbook.local`
 
-Personal identity expects a 1Password SSH key item titled `git-personal` in the `Private` vault.
-For now, the helper also falls back to the legacy item title `brainbook.local`.
+### Work identity defaults
+- git name: `Bryan Smith`
+- git email: `bryan@lumoratech.com`
+- 1Password account: `my.1password.com`
+- 1Password vault: `Lumora`
+- key item title: `git-work`
 
-### Work identity
-Work identity support exists structurally, but it is **not finalized yet**.
-A dedicated work SSH key item titled `git-work` has already been created in the `Private` vault, but the work git defaults are still intentionally undecided.
-When work details are known, this will be completed by:
-- deciding work git name/email/username defaults
-- updating `script/identity-apply work` defaults
-- testing the work identity on a real work-scoped machine
-
-Today, you can still apply work identity manually by supplying explicit environment variables:
-```sh
-DOTFILES_IDENTITY_WORK_NAME='Your Name' \
-DOTFILES_IDENTITY_WORK_EMAIL='you@work.example' \
-DOTFILES_IDENTITY_WORK_USERNAME='your-work-handle' \
-script/identity-apply work
-```
+Both personal and work defaults can be overridden with environment variables before running `script/identity-apply`.
 
 ## Secrets
 
