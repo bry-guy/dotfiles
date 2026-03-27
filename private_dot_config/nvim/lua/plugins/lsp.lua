@@ -26,6 +26,10 @@ local M = {
       cmd = { "vscode-json-languageserver", "--stdio" }
     })
 
+    vim.lsp.config('metals', {
+      capabilities = capabilities,
+    })
+
     vim.lsp.config('eslint', {
       capabilities = capabilities,
     })
@@ -59,6 +63,7 @@ local M = {
     vim.lsp.enable('ts_ls')
     vim.lsp.enable('gopls')
     vim.lsp.enable('lua_ls')
+    vim.lsp.enable('metals')
   end
 }
 

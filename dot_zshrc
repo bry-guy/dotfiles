@@ -37,6 +37,9 @@ fi
 # Java
 # ===============================
 
+export PATH="$PATH:/Users/bryan/Library/Application Support/Coursier/bin"
+
+
 
 # ===============================
 # Antidote Plugin Setup
@@ -289,4 +292,3 @@ fi
 # fnox activation is project-local via direnv/.envrc
 
 # zprof
-

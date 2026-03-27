@@ -21,7 +21,8 @@ local M = {
       "markdown",
       "yaml",
       "c",
-      "vimdoc"
+      "vimdoc",
+      "scala"
     })
   end,
   init = function()
@@ -42,7 +43,8 @@ local M = {
       "markdown",
       "yaml",
       "c",
-      "vimdoc"
+      "vimdoc",
+      "scala"
     }
 
     vim.api.nvim_create_autocmd('FileType', {
