@@ -2,6 +2,10 @@
 		ff = only
 [include]
 		path = ~/.gitconfig.identity.local
+[includeIf "hasconfig:remote.*.url:git@lumora.ghe.com:*/**"]
+		path = ~/.gitconfig.identity.work
+[includeIf "hasconfig:remote.*.url:ssh://git@lumora.ghe.com/**"]
+		path = ~/.gitconfig.identity.work
 [alias]
 		co = checkout
 		br = branch
