@@ -9,33 +9,81 @@ vim.opt_local.foldmethod = "indent"
 vim.opt_local.foldlevelstart = 99
 vim.opt_local.commentstring = "//%s"
 
+local uv = vim.uv or vim.loop
+
+local function trim(s)
+  return (s or ""):gsub("^%s+", ""):gsub("%s+$", "")
+end
+
+local function system(cmd)
+  return trim(vim.fn.system(cmd))
+end
+
+local function executable_path(cmd)
+  local path = vim.fn.exepath(cmd)
+  if path == nil or path == "" then
+    return nil
+  end
+  return uv.fs_realpath(path) or path
+end
+
+local function parent_dir(path)
+  return vim.fn.fnamemodify(path, ':h')
+end
+
+local function jdtls_home()
+  local jdtls_bin = executable_path('jdtls')
+  if not jdtls_bin then
+    return nil
+  end
+  return parent_dir(parent_dir(jdtls_bin))
+end
+
+local function java_debug_jar()
+  if vim.fn.executable('java-debug') ~= 1 then
+    return nil
+  end
+
+  local jar = system('java-debug --path')
+  if jar == '' or vim.fn.filereadable(jar) ~= 1 then
+    return nil
+  end
+
+  return jar
+end
+
 -- Project workspace directory
 local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h:t')
 local workspace_dir = vim.fn.expand('~/dev/workspaces/') .. project_name
 
--- Dynamically find JDTLS and java-debug paths using mise
-local jdtls_path = vim.fn.trim(vim.fn.system('mise where jdtls'))
-local java_debug_path = vim.fn.trim(vim.fn.system('mise where java-debug'))
+local jdtls_path = jdtls_home()
+if not jdtls_path or vim.fn.isdirectory(jdtls_path) ~= 1 then
+  vim.notify('jdtls not found on PATH or install root could not be determined', vim.log.levels.ERROR)
+  return
+end
 
 -- Find the Equinox launcher jar
 local launcher_jar = ''
-if vim.fn.isdirectory(jdtls_path) == 1 then
-  local find_launcher = "find " .. jdtls_path .. "/plugins -name 'org.eclipse.equinox.launcher_*.jar' | sort | tail -n 1"
-  launcher_jar = vim.fn.trim(vim.fn.system(find_launcher))
+local find_launcher = "find " .. vim.fn.shellescape(jdtls_path .. "/plugins") .. " -name 'org.eclipse.equinox.launcher_*.jar' | sort | tail -n 1"
+launcher_jar = system(find_launcher)
+
+if launcher_jar == '' or vim.fn.filereadable(launcher_jar) ~= 1 then
+  vim.notify('Could not find JDTLS Equinox launcher jar under ' .. jdtls_path, vim.log.levels.ERROR)
+  return
 end
 
 -- Determine OS for configuration directory
 local config_dir = ''
-local os_name = vim.fn.system('uname -s'):gsub('\n', '')
+local os_name = system('uname -s')
 if os_name == "Darwin" then
-  local is_arm = vim.fn.system('uname -m'):gsub('\n', '') == "arm64"
+  local is_arm = system('uname -m') == "arm64"
   if is_arm then
     config_dir = jdtls_path .. "/config_mac_arm"
   else
     config_dir = jdtls_path .. "/config_mac"
   end
 elseif os_name == "Linux" then
-  local is_arm = vim.fn.system('uname -m'):match("arm")
+  local is_arm = system('uname -m'):match("arm")
   if is_arm then
     config_dir = jdtls_path .. "/config_linux_arm"
   else
@@ -45,10 +93,16 @@ else
   config_dir = jdtls_path .. "/config_win"
 end
 
+if vim.fn.isdirectory(config_dir) ~= 1 then
+  vim.notify('Could not find JDTLS config dir: ' .. config_dir, vim.log.levels.ERROR)
+  return
+end
+
 -- Find java-debug.jar
 local bundles = {}
-if vim.fn.filereadable(java_debug_path .. "/java-debug.jar") == 1 then
-  table.insert(bundles, java_debug_path .. "/java-debug.jar")
+local debug_jar = java_debug_jar()
+if debug_jar then
+  table.insert(bundles, debug_jar)
 end
 
 local keymaps = require("config.keymaps")
@@ -73,7 +127,7 @@ local config = {
     '-data', workspace_dir
   },
   -- One dedicated LSP server & client will be started per unique root_dir
-  root_dir = vim.fs.root(0, {".git", "mvnw", "gradlew"}),
+  root_dir = vim.fs.root(0, {".git", "mvnw", "gradlew", "build.sbt", "project.scala"}),
 
   -- See https://github.com/eclipse/eclipse.jdt.ls/wiki/Running-the-JAVA-LS-server-from-the-command-line#initialize-request
   settings = {

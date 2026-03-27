@@ -26,10 +26,6 @@ local M = {
       cmd = { "vscode-json-languageserver", "--stdio" }
     })
 
-    vim.lsp.config('metals', {
-      capabilities = capabilities,
-    })
-
     vim.lsp.config('eslint', {
       capabilities = capabilities,
     })
@@ -56,6 +52,18 @@ local M = {
           },
         }
       }
+    })
+
+    vim.lsp.config('metals', {
+      capabilities = capabilities,
+      cmd = { 'metals' },
+      filetypes = { 'scala', 'sbt' },
+      root_dir = function(bufnr, on_dir)
+        local root = vim.fs.root(bufnr, { 'build.sbt', 'build.sc', 'settings.gradle', 'settings.gradle.kts', '.git' })
+        if root then
+          on_dir(root)
+        end
+      end,
     })
 
     vim.lsp.enable('jsonls')

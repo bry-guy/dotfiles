@@ -1,0 +1,23 @@
+{
+  "lastChangelogVersion": "0.62.0",
+  "theme": "dark",
+  "packages": [
+    "git:github.com/nicobailon/pi-mcp-adapter",
+    "git:github.com/nicobailon/pi-web-access",
+    "git:github.com/lajarre/pi-vim",
+    "git:github.com/bry-guy/pi-ez-worktree",
+    "git:github.com/bry-guy/pi-ez-delegate"
+  ],
+  "defaultProvider": "openai-codex",
+  "defaultModel": "gpt-5.4",
+  "defaultThinkingLevel": "medium",
+  "editorPaddingX": 2,
+  "hideThinkingBlock": true,
+  "quietStartup": true,
+  "treeFilterMode": "default",
+  "compaction": {
+    "enabled": true,
+    "reserveTokens": 32768,
+    "keepRecentTokens": 16384
+  }
+}
