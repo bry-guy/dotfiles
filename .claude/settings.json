@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:*.github.io)",
+      "WebFetch(domain:*.golang.org)",
+      "WebFetch(domain:github.com)",
+      "Bash(go *)",
+      "Bash(mise *)",
+      "Bash(git commit:*)",
+      "Bash(chmod:*)"
+    ],
+    "defaultMode": "default"
+  },
+  "model": "opus",
+  "statusLine": {
+    "type": "command",
+    "command": "ccusage statusline",
+    "padding": 0
+  },
+  "enabledPlugins": {
+    "gopls-lsp@claude-plugins-official": true
+  },
+  "syntaxHighlightingDisabled": false
+}
