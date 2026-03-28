@@ -3,12 +3,12 @@ set -euo pipefail
 
 usage() {
     cat >&2 <<'EOF'
-Usage: script/setup [brew-profile]
+Usage: ~/script/setup [brew-profile]
 
 Examples:
-  script/setup
-  script/setup personal-macos
-  script/setup work-macos
+  ~/script/setup
+  ~/script/setup personal-macos
+  ~/script/setup work-macos
 EOF
     exit 1
 }
@@ -25,13 +25,13 @@ Post-setup checklist
 Automated setup is done. The following items are still worth checking manually:
 
 1. Run a final package audit
-   script/brew-audit${BREW_PROFILE:+ $BREW_PROFILE}
+   ~/script/brew-audit${BREW_PROFILE:+ $BREW_PROFILE}
 
 2. Confirm 1Password setup
    - Sign in to 1Password
    - Enable the 1Password SSH agent
-   - For personal machines: run 'script/identity-apply personal' if needed
-   - For work machines: defer 'script/identity-apply work' until work identity details are finalized
+   - For personal machines: run '~/script/identity-apply personal' if needed
+   - For work machines: defer '~/script/identity-apply work' until work identity details are finalized
 
 3. Review macOS appearance and shell integration
    - Open a fresh terminal and confirm shell config loads as expected
@@ -57,15 +57,15 @@ mkdir -p "$HOME/log"
 exec > >(tee -i "$HOME/log/dotfiles_install.log")
 exec 2>&1
 
-DOTFILES_DIR="$(git rev-parse --show-toplevel)"
+DOTFILES_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 
 # ===============================
 # Detect OS and Arch
 # ===============================
 
-[ -f dot_detect_os ] && source dot_detect_os
-[ -f dot_detect_arch ] && source dot_detect_arch
-[ -f dot_detect_cloud ] && source dot_detect_cloud
+[ -f "$DOTFILES_DIR/.detect_os" ] && source "$DOTFILES_DIR/.detect_os"
+[ -f "$DOTFILES_DIR/.detect_arch" ] && source "$DOTFILES_DIR/.detect_arch"
+[ -f "$DOTFILES_DIR/.detect_cloud" ] && source "$DOTFILES_DIR/.detect_cloud"
 
 if [ -n "$BREW_PROFILE" ]; then
     if [ ! -f "$DOTFILES_DIR/script/brew/profiles/$BREW_PROFILE" ]; then
@@ -91,11 +91,10 @@ else
 fi
 
 # ===============================
-# Apply dotfiles
+# Tracked files are already present via yadm
 # ===============================
 
-echo "Applying dotfiles."
-chezmoi init --apply bry-guy
+echo "Using tracked home-layout dotfiles from $DOTFILES_DIR."
 
 # ===============================
 # Accept SSH Fingerprints

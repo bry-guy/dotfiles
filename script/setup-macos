@@ -114,10 +114,10 @@ fi
 # Apply macOS Defaults
 # ===============================
 
-if [ -f "$DOTFILES_DIR/dot_osx" ]; then
-    echo "Applying macOS defaults from $DOTFILES_DIR/dot_osx..."
-    source "$DOTFILES_DIR/dot_osx"
+if [ -f "$DOTFILES_DIR/.osx" ]; then
+    echo "Applying macOS defaults from $DOTFILES_DIR/.osx..."
+    source "$DOTFILES_DIR/.osx"
     echo "macOS defaults applied."
 else
-    echo "macOS defaults file $DOTFILES_DIR/dot_osx not found. Skipping."
+    echo "macOS defaults file $DOTFILES_DIR/.osx not found. Skipping."
 fi

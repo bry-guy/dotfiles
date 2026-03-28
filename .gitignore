@@ -1,1 +1,4 @@
 .zsh_arch
+.gitconfig.identity.local
+.gitconfig.identity.work
+.ssh/config.identity

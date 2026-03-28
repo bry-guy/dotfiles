@@ -13,13 +13,13 @@ if [ "$#" -ne 1 ]; then
 fi
 
 ENV="$1"
-DOTFILES_DIR="$(git rev-parse --show-toplevel)"
+DOTFILES_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 
 # ===============================
 # Install DNF Packages
 # ===============================
 
-DNF_FILE="$DOTFILES_DIR/dot_dnf.$ENV"
+DNF_FILE="$DOTFILES_DIR/script/linux/dnf.$ENV"
 if [ -f "$DNF_FILE" ]; then
     echo "Installing DNF packages from $DNF_FILE..."
     PACKAGES=$(grep -v "^#" "$DNF_FILE" | grep -v "^$" | tr '\n' ' ')
@@ -37,7 +37,7 @@ fi
 # Install Flatpak Applications
 # ===============================
 
-FLATPAK_FILE="$DOTFILES_DIR/dot_flatpak.$ENV"
+FLATPAK_FILE="$DOTFILES_DIR/script/linux/flatpak.$ENV"
 if [ -f "$FLATPAK_FILE" ]; then
     echo "Installing Flatpak applications from $FLATPAK_FILE..."
     grep -v "^#" "$FLATPAK_FILE" | grep -v "^$" | while read -r line; do

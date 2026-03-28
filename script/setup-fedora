@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DOTFILES_DIR="$(git rev-parse --show-toplevel)"
+DOTFILES_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 
 # ===============================
 # Install System Dependencies
@@ -32,18 +32,18 @@ if ! flatpak remotes | grep -q "flathub"; then
 fi
 
 # ===============================
-# Install chezmoi (manual)
+# Install yadm
 # ===============================
 
-echo "Installing chezmoi..."
-sh -c "$(curl -fsLS get.chezmoi.io)" -- -b $HOME/.local/bin
+echo "Installing yadm..."
+sudo dnf install -y yadm
 
 # ===============================
 # Install Core DNF Packages
 # ===============================
 
 echo "Installing core system packages..."
-DNF_CORE_FILE="$DOTFILES_DIR/dot_dnf.core"
+DNF_CORE_FILE="$DOTFILES_DIR/script/linux/dnf.core"
 
 if [ -f "$DNF_CORE_FILE" ]; then
     # Filter out comments and empty lines, then install packages

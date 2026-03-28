@@ -3,9 +3,9 @@
 ## Setup
 
 Test the following under a new macOS user. Don't ruin my current setup!
-- [x] Include chezmoi in setup scripts
-- [x] (chezmoi) Ignore linux folder on darwin machines
-- [ ] (chezmoi) Ignore \_work files on non-work machines
+- [x] Migrate repo layout for yadm
+- [x] Make `~/script/setup` bootstrap the machine without applying dotfiles
+- [ ] Decide whether work-only tracked files should remain shared or move behind local machine gating
 
 ## Linux
 

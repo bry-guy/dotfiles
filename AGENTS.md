@@ -1,6 +1,7 @@
 # Agent Notes
 
-- `chezmoi` is the active dotfiles manager for this machine.
-- The active source repo is `~/.local/share/chezmoi`.
-- A plain repo checkout may be used today to bootstrap a new machine, but day-to-day changes should go through chezmoi.
-- `~/dotfiles` is not the primary working copy for ongoing dotfile edits.
+- `yadm` is the target dotfiles manager for this repo.
+- This repository is being migrated to a home-layout structure suitable for `yadm`.
+- Tracked files should now be edited at their real home-relative paths inside the repo (for example `.gitconfig`, `.config/nvim/...`, `.ssh/config`).
+- Machine-local identity and secret files should remain untracked.
+- `script/` is part of the tracked home layout and is expected to exist as `~/script` on managed machines.

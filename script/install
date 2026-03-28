@@ -14,7 +14,7 @@ EOF
 [ "$#" -ge 1 ] || usage
 
 DOTFILES_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
-[ -f "$DOTFILES_DIR/dot_detect_os" ] && source "$DOTFILES_DIR/dot_detect_os"
+[ -f "$DOTFILES_DIR/.detect_os" ] && source "$DOTFILES_DIR/.detect_os"
 
 if [ -n "${OS_MAC:-}" ]; then
     case "$1" in

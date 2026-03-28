@@ -1,7 +1,7 @@
 brew "age"
 brew "antidote"
 brew "bash-completion"
-brew "chezmoi"
+brew "yadm"
 brew "coreutils"
 brew "direnv"
 brew "fd"

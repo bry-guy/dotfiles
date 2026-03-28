@@ -1,7 +1,7 @@
 # bry-guy's dotfiles
 
 This repo manages my machine setup with:
-- `chezmoi` for applying dotfiles
+- `yadm` for tracked dotfiles in `$HOME`
 - `brew` for machine-global packages and apps
 - `1Password` for secrets, SSH, and identity material
 
@@ -9,52 +9,56 @@ A machine should be reproducible, composable, and scoped to a domain like `perso
 
 ## Important model
 
-There are two different layers here:
+There are three layers here:
 
-1. **Repo/source layer**
-   - the chezmoi source repo
-   - contains bootstrap/setup scripts under `script/`
-   - contains Brew manifests and profiles
-2. **Applied target layer**
-   - the actual files in `$HOME`
-   - managed by `chezmoi apply`
+1. **Tracked home files**
+   - this repo is laid out like `$HOME`
+   - `yadm` tracks the shared dotfiles directly
+   - examples: `.gitconfig`, `.zshrc`, `.config/nvim`, `.pi/agent/settings.json`
+2. **Bootstrap/ops scripts**
+   - tracked under `~/script`
+   - used for setup, package management, identity helpers, and audits
+3. **Local-only machine state**
+   - identity files, secrets, and machine-specific overrides
+   - intentionally not committed
 
-The `script/` directory is part of the repo/source layer. It is **not** applied into `$HOME` by chezmoi.
-That means fresh-machine bootstrap should be run from the repo/source checkout, not from an applied home-directory file.
+That means `~/script` is part of the tracked home layout and is expected to be available on every machine after `yadm clone`.
 
 ## Bootstrap and setup
 
 On a fresh macOS machine:
 
 ```sh
-script/setup personal-macos
+brew install yadm
+yadm clone git@github.com:bry-guy/dotfiles.git
+~/script/setup personal-macos
 ```
 
-or for a work-scoped machine:
+Or for a work-scoped machine:
 
 ```sh
-script/setup work-macos
+~/script/setup work-macos
 ```
 
-`script/setup [brew-profile]` currently does the following:
+Running `~/script/setup [brew-profile]` currently does the following:
 - installs Homebrew if needed
 - installs baseline Brew manifests
-- installs 1Password dependencies
-- applies chezmoi
+- installs 1Password dependencies where appropriate
 - persists the selected Brew profile to `~/.config/dotfiles/brew-profile`
 - applies the selected Brew profile if one was provided
+- bootstraps SSH known_hosts for common remotes
 
-Running `script/setup` without a profile still performs the baseline bootstrap only.
+Running `~/script/setup` without a profile still performs the baseline bootstrap only.
 
 After that, Homebrew package state is managed through the manifest/profile system below.
 
 ## Brew manifests and profiles
 
 Homebrew state is tracked via small reusable manifests under:
-- `script/brew/manifests/`
+- `~/script/brew/manifests/`
 
 Machine profiles are tracked under:
-- `script/brew/profiles/`
+- `~/script/brew/profiles/`
 
 ### Current profiles
 - `personal-macos`
@@ -71,34 +75,34 @@ Machine profiles are tracked under:
 - `ai.common`
 - `ai.personal`
 - `ai.work`
-
-`ai.common` currently includes shared AI/dev tooling such as `ccusage`, `claude-code`, `codex`, and `pi-coding-agent`.
 - `virtual.colima`
 - `apps.common`
 - `apps.personal`
+
+`ai.common` currently includes shared AI/dev tooling such as `ccusage`, `claude-code`, `codex`, and `pi-coding-agent`.
 
 ### Useful commands
 
 Apply a full profile:
 ```sh
-script/brew-apply-profile personal-macos
+~/script/brew-apply-profile personal-macos
 ```
 
 `brew-apply-profile` automatically taps any required taps declared by the manifests and will continue past a failing manifest, then report a skipped-manifest summary at the end.
 
 Apply one or more manifests directly:
 ```sh
-script/brew-apply-manifest base.core ai.common ai.personal
+~/script/brew-apply-manifest base.core ai.common ai.personal
 ```
 
 Show the fully merged desired Brewfile for a profile:
 ```sh
-script/brew-wanted personal-macos
+~/script/brew-wanted personal-macos
 ```
 
 Audit installed Homebrew state against a profile:
 ```sh
-script/brew-audit personal-macos
+~/script/brew-audit personal-macos
 ```
 
 ### Current local machine selection
@@ -106,7 +110,7 @@ To avoid passing a profile every time, set one of:
 - `DOTFILES_BREW_PROFILE=personal-macos`, or
 - `~/.config/dotfiles/brew-profile` containing the selected profile name
 
-Normally, `script/setup personal-macos` or `script/setup work-macos` writes this file automatically.
+Normally, `~/script/setup personal-macos` or `~/script/setup work-macos` writes this file automatically.
 On this machine, the local profile file is used.
 
 ## Remembering Brew drift
@@ -120,12 +124,12 @@ Interactive shells wrap `brew` and mark package state dirty after successful mut
 When state is dirty, the shell reminds me to run:
 
 ```sh
-script/brew-audit
+~/script/brew-audit
 ```
 
 The intended workflow is:
 1. install something normally when needed
-2. run `script/brew-audit`
+2. run `~/script/brew-audit`
 3. classify it into the right manifest if it should stay
 4. uninstall it if it was temporary or accidental
 
@@ -151,12 +155,12 @@ Machine identity is selected locally, not committed.
 ### Commands
 Apply the personal identity:
 ```sh
-script/identity-apply personal
+~/script/identity-apply personal
 ```
 
 Inspect the current generated identity files:
 ```sh
-script/identity-current
+~/script/identity-current
 ```
 
 ### What identity apply writes locally
@@ -183,7 +187,7 @@ Work identity support exists structurally, but it is **not finalized yet**.
 A dedicated work SSH key item titled `git-work` has already been created in the `Private` vault, but the work git defaults are still intentionally undecided.
 When work details are known, this will be completed by:
 - deciding work git name/email/username defaults
-- updating `script/identity-apply work` defaults
+- updating `~/script/identity-apply work` defaults
 - testing the work identity on a real work-scoped machine
 
 Today, you can still apply work identity manually by supplying explicit environment variables:
@@ -191,7 +195,7 @@ Today, you can still apply work identity manually by supplying explicit environm
 DOTFILES_IDENTITY_WORK_NAME='Your Name' \
 DOTFILES_IDENTITY_WORK_EMAIL='you@work.example' \
 DOTFILES_IDENTITY_WORK_USERNAME='your-work-handle' \
-script/identity-apply work
+~/script/identity-apply work
 ```
 
 ## Secrets
@@ -216,6 +220,7 @@ Current major improvements already in place:
 - profile-aware Brew audit flow
 - machine-local identity selection
 - initial migration away from `~/.secrets`
+- yadm-compatible home-layout repo structure
 
 Known future work is tracked in `TODO.md`, especially:
 - finalizing work identity
