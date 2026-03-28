@@ -31,13 +31,19 @@ On a fresh macOS machine:
 ```sh
 brew install yadm
 yadm clone git@github.com:bry-guy/dotfiles.git
-~/script/setup personal-macos
+yadm bootstrap personal-macos
 ```
 
 Or for a work-scoped machine:
 
 ```sh
-~/script/setup work-macos
+yadm bootstrap work-macos
+```
+
+`yadm bootstrap` is a thin wrapper around `~/script/setup`, so the explicit form below also works:
+
+```sh
+~/script/setup personal-macos
 ```
 
 Running `~/script/setup [brew-profile]` currently does the following:
