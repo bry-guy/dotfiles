@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "0.62.0",
+  "lastChangelogVersion": "0.63.1",
   "theme": "dark",
   "packages": [
     "git:github.com/nicobailon/pi-mcp-adapter",
@@ -10,9 +10,9 @@
   ],
   "defaultProvider": "openai-codex",
   "defaultModel": "gpt-5.4",
-  "defaultThinkingLevel": "medium",
+  "defaultThinkingLevel": "low",
   "editorPaddingX": 2,
-  "hideThinkingBlock": true,
+  "hideThinkingBlock": false,
   "quietStartup": true,
   "treeFilterMode": "default",
   "compaction": {
