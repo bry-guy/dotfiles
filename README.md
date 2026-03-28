@@ -67,8 +67,45 @@ Machine profiles are tracked under:
 - `~/script/brew/profiles/`
 
 ### Current profiles
+
+Profiles represent the intended machine role and decide which Brew manifest groups get applied beyond the baseline bootstrap.
+
 - `personal-macos`
+  - intended for a personal macOS workstation
+  - includes personal infrastructure, personal AI tooling, and personal GUI apps
 - `work-macos`
+  - intended for a work-scoped macOS workstation
+  - includes work infrastructure and work AI tooling
+  - currently does **not** include `apps.personal`
+
+If no profile is selected, `~/script/setup` still performs the baseline bootstrap, but it does **not** persist `~/.config/dotfiles/brew-profile` and does **not** apply a role-specific package set.
+
+### Current profile composition
+
+#### `personal-macos`
+- `auth.1password`
+- `base.core`
+- `base.desktop-macos`
+- `dev.common`
+- `infra.common`
+- `infra.personal`
+- `ai.common`
+- `ai.personal`
+- `virtual.colima`
+- `apps.common`
+- `apps.personal`
+
+#### `work-macos`
+- `auth.1password`
+- `base.core`
+- `base.desktop-macos`
+- `dev.common`
+- `infra.common`
+- `infra.work`
+- `ai.common`
+- `ai.work`
+- `virtual.colima`
+- `apps.common`
 
 ### Current manifest layout
 - `auth.1password`
