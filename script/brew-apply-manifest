@@ -2,11 +2,19 @@
 set -euo pipefail
 
 usage() {
-    echo "Usage: $0 <manifest> [manifest ...]" >&2
+    cat >&2 <<EOF
+Usage: $0 <manifest> [manifest ...]
+
+Apply one or more named Brew manifests from ~/script/brew/manifests.
+Example:
+  ~/script/brew-apply-manifest base.core ai.common
+EOF
     exit 1
 }
 
-[ "$#" -ge 1 ] || usage
+if [ "$#" -lt 1 ] || [ "${1:-}" = "-h" ] || [ "${1:-}" = "--help" ]; then
+    usage
+fi
 
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/brew/lib.sh"

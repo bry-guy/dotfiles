@@ -2,11 +2,41 @@
 set -euo pipefail
 
 usage() {
-    echo "Usage: $0 [profile]" >&2
+    cat >&2 <<EOF
+Usage: $0 [profile]
+
+Audit installed Homebrew state against the selected profile.
+
+Checks:
+  - installed direct formulae must be tracked or ignored
+  - installed taps/casks must be tracked or ignored
+  - tracked or ignored entries should exist locally
+  - duplicate manifest declarations are reported
+
+Profile resolution order:
+  1. explicit [profile]
+  2. DOTFILES_BREW_PROFILE
+  3. ~/.config/dotfiles/brew-profile
+
+Ignore file:
+  $(ignore_file_path)
+  Use Brewfile-style lines, for example:
+    brew "foo"
+    cask "bar"
+    tap "homebrew/cask-fonts"
+EOF
     exit 1
 }
 
+if [ "${1:-}" = "-h" ] || [ "${1:-}" = "--help" ]; then
+    SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+    source "$SCRIPT_DIR/brew/lib.sh"
+    usage
+fi
+
 if [ "$#" -gt 1 ]; then
+    SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+    source "$SCRIPT_DIR/brew/lib.sh"
     usage
 fi
 
@@ -16,16 +46,22 @@ source "$SCRIPT_DIR/brew/lib.sh"
 profile="$(resolve_profile "${1:-}")"
 BREW_BIN="$(brew_bin)"
 WANTED_FILE="$(mktemp)"
+IGNORE_FILE="$(mktemp)"
 PROFILE_PATH="$(profile_path "$profile")"
+LOCAL_IGNORE_PATH="$(ignore_file_path)"
 
 cleanup() {
-    rm -f "$WANTED_FILE"
+    rm -f "$WANTED_FILE" "$IGNORE_FILE"
 }
 trap cleanup EXIT
 
 "$SCRIPT_DIR/brew-wanted" "$profile" > "$WANTED_FILE"
 
-if PROFILE="$profile" PROFILE_PATH="$PROFILE_PATH" MANIFEST_DIR="$BREW_MANIFEST_DIR" WANTED_FILE="$WANTED_FILE" BREW_BIN="$BREW_BIN" python3 - <<'PY'
+if [ -f "$LOCAL_IGNORE_PATH" ]; then
+    cp "$LOCAL_IGNORE_PATH" "$IGNORE_FILE"
+fi
+
+if PROFILE="$profile" PROFILE_PATH="$PROFILE_PATH" MANIFEST_DIR="$BREW_MANIFEST_DIR" WANTED_FILE="$WANTED_FILE" IGNORE_FILE="$IGNORE_FILE" IGNORE_PATH="$LOCAL_IGNORE_PATH" BREW_BIN="$BREW_BIN" python3 - <<'PY'
 import os
 import re
 import subprocess
@@ -37,6 +73,8 @@ profile = os.environ["PROFILE"]
 profile_path = Path(os.environ["PROFILE_PATH"])
 manifest_dir = Path(os.environ["MANIFEST_DIR"])
 wanted_file = Path(os.environ["WANTED_FILE"])
+ignore_file = Path(os.environ["IGNORE_FILE"])
+ignore_path = Path(os.environ["IGNORE_PATH"])
 brew_bin = os.environ["BREW_BIN"]
 rename_hints = {"tailscale": "tailscale-app"}
 entry_re = re.compile(r'^(tap|brew|cask|mas|vscode)\s+"([^"]+)"')
@@ -54,6 +92,7 @@ def load_profile_manifests(path: Path):
 
 def parse_entries(lines):
     entries = {"tap": set(), "brew": set(), "cask": set(), "mas": set(), "vscode": set()}
+    invalid = []
     for raw in lines:
         line = raw.strip()
         if not line or line.startswith("#"):
@@ -62,10 +101,26 @@ def parse_entries(lines):
         if match:
             kind, name = match.groups()
             entries[kind].add(name)
-    return entries
+        else:
+            invalid.append(line)
+    return entries, invalid
 
 
-wanted_entries = parse_entries(wanted_file.read_text().splitlines())
+wanted_entries, wanted_invalid = parse_entries(wanted_file.read_text().splitlines())
+if wanted_invalid:
+    print("Internal error: merged wanted Brewfile contains unsupported entries:", file=sys.stderr)
+    for line in wanted_invalid:
+        print(f"  - {line}", file=sys.stderr)
+    sys.exit(2)
+
+ignore_entries, ignore_invalid = parse_entries(ignore_file.read_text().splitlines() if ignore_file.exists() else [])
+if ignore_invalid:
+    print(f"Invalid ignore entries in {ignore_path}:")
+    for line in ignore_invalid:
+        print(f"  - {line}")
+    print()
+    sys.exit(1)
+
 profile_manifests = load_profile_manifests(profile_path)
 manifest_declarations = defaultdict(list)
 
@@ -74,7 +129,12 @@ for manifest in profile_manifests:
     if not manifest_file.exists():
         print(f"Profile '{profile}' references missing manifest: {manifest_file}", file=sys.stderr)
         sys.exit(2)
-    entries = parse_entries(manifest_file.read_text().splitlines())
+    entries, invalid = parse_entries(manifest_file.read_text().splitlines())
+    if invalid:
+        print(f"Unsupported entries in manifest '{manifest_file}':", file=sys.stderr)
+        for line in invalid:
+            print(f"  - {line}", file=sys.stderr)
+        sys.exit(2)
     for kind, names in entries.items():
         for name in names:
             manifest_declarations[(kind, name)].append(manifest)
@@ -95,11 +155,14 @@ issues_found = False
 
 for kind, label in [("tap", "taps"), ("brew", "formulae"), ("cask", "casks")]:
     if kind == "brew":
-        installed_untracked = sorted(actual_entries["brew_direct"] - wanted_entries[kind])
+        actual_installed = actual_entries["brew_direct"]
     else:
-        installed_untracked = sorted(actual_entries[kind] - wanted_entries[kind])
+        actual_installed = actual_entries[kind]
 
+    installed_untracked = sorted(actual_installed - wanted_entries[kind] - ignore_entries[kind])
     tracked_missing = sorted(wanted_entries[kind] - actual_entries[kind])
+    ignored_missing = sorted(ignore_entries[kind] - actual_entries[kind])
+    tracked_and_ignored = sorted(wanted_entries[kind] & ignore_entries[kind])
 
     hints = []
     for name in installed_untracked:
@@ -118,6 +181,20 @@ for kind, label in [("tap", "taps"), ("brew", "formulae"), ("cask", "casks")]:
         issues_found = True
         print(f"Tracked but missing {label}:")
         for name in tracked_missing:
+            print(f"  - {name}")
+        print()
+
+    if ignored_missing:
+        issues_found = True
+        print(f"Ignored but missing {label}:")
+        for name in ignored_missing:
+            print(f"  - {name}")
+        print()
+
+    if tracked_and_ignored:
+        issues_found = True
+        print(f"Tracked and ignored {label}:")
+        for name in tracked_and_ignored:
             print(f"  - {name}")
         print()
 

@@ -1,6 +1,24 @@
 #!/bin/bash
 set -euo pipefail
 
+usage() {
+    cat >&2 <<EOF
+Usage: $0 [profile]
+
+Resolve the active Brew profile name.
+
+Resolution order:
+  1. explicit [profile]
+  2. DOTFILES_BREW_PROFILE
+  3. ~/.config/dotfiles/brew-profile
+EOF
+    exit 1
+}
+
+if [ "${1:-}" = "-h" ] || [ "${1:-}" = "--help" ] || [ "$#" -gt 1 ]; then
+    usage
+fi
+
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/brew/lib.sh"
 

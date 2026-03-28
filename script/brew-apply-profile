@@ -2,11 +2,20 @@
 set -euo pipefail
 
 usage() {
-    echo "Usage: $0 [profile]" >&2
+    cat >&2 <<EOF
+Usage: $0 [profile]
+
+Apply every manifest referenced by a Brew profile.
+
+Profile resolution order:
+  1. explicit [profile]
+  2. DOTFILES_BREW_PROFILE
+  3. ~/.config/dotfiles/brew-profile
+EOF
     exit 1
 }
 
-if [ "$#" -gt 1 ]; then
+if [ "${1:-}" = "-h" ] || [ "${1:-}" = "--help" ] || [ "$#" -gt 1 ]; then
     usage
 fi
 

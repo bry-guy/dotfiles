@@ -9,6 +9,7 @@ BREW_STATE_DIR="$HOME/.local/state/dotfiles"
 BREW_DIRTY_FILE="$BREW_STATE_DIR/brew-dirty"
 BREW_LAST_RUN_FILE="$BREW_STATE_DIR/brew-audit-last-run"
 BREW_PROFILE_FILE="$HOME/.config/dotfiles/brew-profile"
+BREW_IGNORE_FILE="${DOTFILES_BREW_IGNORE_FILE:-$HOME/.config/dotfiles/brew-ignore}"
 
 error() {
     echo "Error: $*" >&2
@@ -64,6 +65,10 @@ profile_path() {
 
 manifest_path() {
     echo "$BREW_MANIFEST_DIR/$1.Brewfile"
+}
+
+ignore_file_path() {
+    echo "$BREW_IGNORE_FILE"
 }
 
 manifest_taps() {

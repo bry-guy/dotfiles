@@ -7,6 +7,8 @@ This repo manages my machine setup with:
 
 A machine should be reproducible, composable, and scoped to a domain like `personal` or `work`.
 
+> Today, dotfiles is heavily configured around macOS. In the future, linux distributions and other OSes may see more functionality contributed.
+
 ## Important model
 
 There are three layers here:
@@ -65,6 +67,8 @@ Homebrew state is tracked via small reusable manifests under:
 
 Machine profiles are tracked under:
 - `~/script/brew/profiles/`
+
+The old top-level legacy files like `~/.brewfile.*` are no longer used and should not exist.
 
 ### Current profiles
 
@@ -148,6 +152,20 @@ Audit installed Homebrew state against a profile:
 ~/script/brew-audit personal-macos
 ```
 
+Ignore a local-only package explicitly by adding a Brewfile-style entry to:
+- `~/.config/dotfiles/brew-ignore`
+
+Example:
+```sh
+cat >> ~/.config/dotfiles/brew-ignore <<'EOF'
+brew "foo"
+cask "bar"
+tap "homebrew/cask-fonts"
+EOF
+```
+
+`brew-audit` treats ignored entries as intentional local exceptions. It also reports stale ignores so the file stays tidy.
+
 ### Current local machine selection
 To avoid passing a profile every time, set one of:
 - `DOTFILES_BREW_PROFILE=personal-macos`, or
@@ -173,7 +191,7 @@ When state is dirty, the shell reminds me to run:
 The intended workflow is:
 1. install something normally when needed
 2. run `~/script/brew-audit`
-3. classify it into the right manifest if it should stay
+3. either add it to the right tracked manifest or explicitly add it to `~/.config/dotfiles/brew-ignore`
 4. uninstall it if it was temporary or accidental
 
 ## Package ownership
@@ -264,20 +282,3 @@ The direction is:
 - prefer `op read`, `op run`, or targeted shell loading
 - keep machine-global secrets in the appropriate 1Password vault
 
-## Current repo status / future work
-
-Current major improvements already in place:
-- composable Brew manifests and profiles
-- profile-aware Brew audit flow
-- machine-local identity selection
-- initial migration away from `~/.secrets`
-- yadm-compatible home-layout repo structure
-
-Known future work is tracked in `TODO.md`, especially:
-- finalizing work identity
-- improving non-work exclusion of work-only files
-- expanding personal/work infra manifests
-
-## Unified macOS / popOS Hotkeys
-
-I use macOS hotkeys everywhere. In Linux, use kinto.sh. Rolling my own config is for the birds.
