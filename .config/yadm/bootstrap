@@ -1,4 +1,48 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-exec "$HOME/script/setup" "$@"
+setup_script="$HOME/script/setup"
+profile_dir="$HOME/script/brew/profiles"
+
+if [ ! -x "$setup_script" ]; then
+  echo "Missing setup script: $setup_script" >&2
+  exit 1
+fi
+
+if [ "$#" -gt 0 ]; then
+  exec "$setup_script" "$@"
+fi
+
+profiles=()
+if [ -d "$profile_dir" ]; then
+  while IFS= read -r name; do
+    profiles+=("$name")
+  done < <(find "$profile_dir" -mindepth 1 -maxdepth 1 -type f -exec basename {} \; | sort)
+fi
+
+if [ "${#profiles[@]}" -eq 0 ]; then
+  echo "No brew profiles found under $profile_dir; running setup without a profile."
+  exec "$setup_script"
+fi
+
+echo "Available brew profiles:"
+for i in "${!profiles[@]}"; do
+  printf '  %d) %s\n' "$((i + 1))" "${profiles[$i]}"
+done
+printf '  %d) %s\n' "$(( ${#profiles[@]} + 1 ))" "continue without a profile"
+
+while true; do
+  printf 'Select a profile [1-%d]: ' "$(( ${#profiles[@]} + 1 ))"
+  read -r choice
+
+  if [[ "$choice" =~ ^[0-9]+$ ]]; then
+    if [ "$choice" -ge 1 ] && [ "$choice" -le "${#profiles[@]}" ]; then
+      exec "$setup_script" "${profiles[$((choice - 1))]}"
+    fi
+    if [ "$choice" -eq "$(( ${#profiles[@]} + 1 ))" ]; then
+      exec "$setup_script"
+    fi
+  fi
+
+  echo "Invalid selection."
+done
