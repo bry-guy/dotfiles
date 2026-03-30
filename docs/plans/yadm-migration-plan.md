@@ -1,9 +1,12 @@
 # YADM Migration Plan
 
-Status: draft
+Status: done
 Branch: `yadm-migration`
 Author: pi
 Date: 2026-03-27
+Completed: 2026-03-28
+
+> Historical note: this migration plan has been completed. The repository now uses a yadm-compatible home-layout structure, `script/setup` no longer applies dotfiles via chezmoi, and the old top-level legacy `~/.brewfile.*` files have been removed.
 
 ## Goal
 
@@ -440,7 +443,9 @@ private_dot_config/tmux/executable_window-name.sh -> .config/tmux/window-name.sh
 
 ---
 
-## `script/setup` rewrite checklist
+## Historical `script/setup` rewrite checklist
+
+> Retained for migration history. The repository has since been migrated and this checklist is no longer an active TODO list.
 
 ### README / docs
 
@@ -481,6 +486,12 @@ private_dot_config/tmux/executable_window-name.sh -> .config/tmux/window-name.sh
 
 ---
 
-## Recommendation
+## Outcome
 
-Proceed with the migration on `yadm-migration` by making the structural repo changes next, but do not merge until the personal-machine trial has passed.
+The migration has been completed and is now the current operating model for this repository.
+
+Current state:
+- tracked dotfiles use the home-layout structure expected by `yadm`
+- `script/setup` bootstraps the machine but does not deploy dotfiles
+- Brew state is managed through `~/script/brew/manifests/` and `~/script/brew/profiles/`
+- legacy top-level `~/.brewfile.*` files are no longer part of the supported workflow

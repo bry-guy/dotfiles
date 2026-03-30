@@ -11,7 +11,7 @@ alias python="python3"
 alias ts="tailscale"
 alias tsf="ts-find"
 
-alias ls="LC_COLLATE=C ls --color=auto"
+alias ls="eza --group-directories-first --sort Name"
 alias hg="history -1 | grep"
 
 alias ignore="vim ~/.config/git/ignore"
