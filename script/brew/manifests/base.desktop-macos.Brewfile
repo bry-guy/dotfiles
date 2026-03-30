@@ -1,6 +1,7 @@
 cask "alacritty"
 cask "amethyst"
 cask "font-hack-nerd-font"
+cask "ghostty"
 cask "karabiner-elements"
 cask "linearmouse"
 cask "monitorcontrol"
