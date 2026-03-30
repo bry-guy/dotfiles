@@ -1,0 +1,26 @@
+# Ghostty config tuned to mirror the existing Alacritty setup closely.
+# Tracked via yadm.
+
+# Match font setup.
+font-family = Hack Nerd Font Mono
+font-style = Regular
+font-style-bold = Bold
+font-style-italic = Italic
+font-style-bold-italic = Bold Italic
+font-size = 14
+
+# Use Ghostty's built-in Moonfly theme.
+theme = Moonfly
+
+# Match Alacritty's left-option-only Alt behavior.
+macos-option-as-alt = left
+
+# Keep the shell explicit.
+command = /bin/zsh
+shell-integration = zsh
+
+# Similar safety tweak: don't close the terminal with Cmd+W.
+keybind = super+w=ignore
+
+# Pi docs recommend this mapping for better terminal ergonomics.
+keybind = alt+backspace=text:\x1b\x7f
