@@ -19,11 +19,37 @@ local function system(cmd)
   return trim(vim.fn.system(cmd))
 end
 
-local function executable_path(cmd)
-  local path = vim.fn.exepath(cmd)
+local root_markers = {
+  ".git",
+  "gradlew",
+  "mvnw",
+  "build.sbt",
+  "project.scala",
+  "settings.gradle",
+  "mise.local.toml",
+  ".mise.toml",
+  "mise.toml",
+}
+
+local root_dir = vim.fs.root(0, root_markers)
+if not root_dir then
+  vim.notify('Could not determine Java project root', vim.log.levels.ERROR)
+  return
+end
+
+local function executable_path(cmd, dir)
+  local path = nil
+
+  if dir and vim.fn.executable('mise') == 1 then
+    path = system(("mise x -C %s -- which %s"):format(vim.fn.shellescape(dir), vim.fn.shellescape(cmd)))
+  else
+    path = vim.fn.exepath(cmd)
+  end
+
   if path == nil or path == "" then
     return nil
   end
+
   return uv.fs_realpath(path) or path
 end
 
@@ -31,21 +57,24 @@ local function parent_dir(path)
   return vim.fn.fnamemodify(path, ':h')
 end
 
-local function jdtls_home()
-  local jdtls_bin = executable_path('jdtls')
+local function jdtls_home(dir)
+  local jdtls_bin = executable_path('jdtls', dir)
   if not jdtls_bin then
     return nil
   end
   return parent_dir(parent_dir(jdtls_bin))
 end
 
-local function java_debug_jar()
-  if vim.fn.executable('java-debug') ~= 1 then
-    return nil
+local function java_debug_jar(dir)
+  local jar = nil
+
+  if dir and vim.fn.executable('mise') == 1 then
+    jar = system(("mise x -C %s -- java-debug --path"):format(vim.fn.shellescape(dir)))
+  elseif vim.fn.executable('java-debug') == 1 then
+    jar = system('java-debug --path')
   end
 
-  local jar = system('java-debug --path')
-  if jar == '' or vim.fn.filereadable(jar) ~= 1 then
+  if not jar or jar == '' or vim.fn.filereadable(jar) ~= 1 then
     return nil
   end
 
@@ -53,12 +82,12 @@ local function java_debug_jar()
 end
 
 -- Project workspace directory
-local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h:t')
+local project_name = vim.fn.fnamemodify(root_dir, ':t')
 local workspace_dir = vim.fn.expand('~/dev/workspaces/') .. project_name
 
-local jdtls_path = jdtls_home()
+local jdtls_path = jdtls_home(root_dir)
 if not jdtls_path or vim.fn.isdirectory(jdtls_path) ~= 1 then
-  vim.notify('jdtls not found on PATH or install root could not be determined', vim.log.levels.ERROR)
+  vim.notify('jdtls not found via mise for ' .. root_dir, vim.log.levels.ERROR)
   return
 end
 
@@ -100,7 +129,7 @@ end
 
 -- Find java-debug.jar
 local bundles = {}
-local debug_jar = java_debug_jar()
+local debug_jar = java_debug_jar(root_dir)
 if debug_jar then
   table.insert(bundles, debug_jar)
 end
@@ -110,6 +139,7 @@ local lsp_hotkeys = keymaps.lsp_hotkeys
 
 local config = {
   cmd = {
+    'mise', 'x', '-C', root_dir, '--',
     'java',
     '-Declipse.application=org.eclipse.jdt.ls.core.id1',
     '-Dosgi.bundles.defaultStartLevel=4',
@@ -127,11 +157,14 @@ local config = {
     '-data', workspace_dir
   },
   -- One dedicated LSP server & client will be started per unique root_dir
-  root_dir = vim.fs.root(0, {".git", "mvnw", "gradlew", "build.sbt", "project.scala"}),
+  root_dir = root_dir,
 
   -- See https://github.com/eclipse/eclipse.jdt.ls/wiki/Running-the-JAVA-LS-server-from-the-command-line#initialize-request
   settings = {
     java = {
+      configuration = {
+        updateBuildConfiguration = "automatic",
+      },
     }
   },
   init_options = {
