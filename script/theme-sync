@@ -89,6 +89,18 @@ else
   harlequin_theme="textual-light"
   tmux_theme_source="${home_dir}/.config/tmux/theme.light.conf"
   claude_theme="$claude_theme_light"
+
+  sunfly_install="${home_dir}/script/sunfly-install"
+  if [[ -x "$sunfly_install" ]]; then
+    missing_extras=()
+    [[ ! -f "${home_dir}/.config/ghostty/themes/Sunfly" ]] && missing_extras+=(ghostty)
+    [[ ! -f "${home_dir}/.pi/agent/themes/sunfly.json" ]] && missing_extras+=(pi)
+    [[ ! -f "${home_dir}/.local/share/posting/themes/sunfly.yaml" ]] && missing_extras+=(posting)
+    [[ ! -f "$tmux_theme_source" ]] && missing_extras+=(tmux)
+    if [[ ${#missing_extras[@]} -gt 0 ]]; then
+      "$sunfly_install" "${missing_extras[@]}"
+    fi
+  fi
 fi
 
 python3 - "$pi_settings" "$pi_theme" <<'PY'

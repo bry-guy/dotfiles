@@ -1,6 +1,5 @@
 # Sunfly — terminal-optimized light companion to Moonfly
-# Tuned for stronger ANSI blues/yellows and better contrast than the
-# original parchment pass, while keeping the same warm-paper feel.
+# Generated from palette/sunfly.json
 palette = 0=#f8f2ea
 palette = 1=#9b1b23
 palette = 2=#2c5f00

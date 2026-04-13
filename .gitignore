@@ -8,6 +8,10 @@ second-brain/**/*
 .pi/agent/sessions/**/*
 .npm/**/*
 .local/share/**/*
+!.local/share/posting/
+!.local/share/posting/themes/
+!.local/share/posting/themes/moonfly.yaml
+!.local/share/posting/themes/sunfly.yaml
 .local/state/**/*
 .local/opt/**/*
 .kube/cache/**/*

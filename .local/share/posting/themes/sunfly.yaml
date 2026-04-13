@@ -9,7 +9,7 @@ panel: '#f8f2ea'
 error: '#b01018'
 success: '#006840'
 warning: '#605200'
-author: Bryan + Pi
+author: Bryan Guy
 description: Sunfly light Posting theme tuned to match Moonfly semantics.
 text_area:
   cursor: reverse

@@ -4,6 +4,11 @@ Status: in progress
 Author: pi
 Date: 2026-04-12
 
+> Status note (2026-04-13): the published Sunfly source of truth now lives in
+> `github.com/bry-guy/sunfly`. The detailed implementation notes below are kept
+> as design history from the local prototyping phase; current local dotfiles now
+> consume the public repo instead of hand-maintaining the Sunfly files here.
+
 ## Goal
 
 Create a first-pass `sunfly` light theme that feels like a coherent sibling to the existing `moonfly` setup, with the earliest iteration loop focused on Neovim semantics and readability.
@@ -127,47 +132,48 @@ A successful first pass should:
 
 ## Progress snapshot
 
-Status: paused in a decent-but-not-finished state
-Last updated: 2026-04-12
+Status: published and consumed from the public repo
+Last updated: 2026-04-13
 
 What is implemented now:
 
 - default `nvim` still starts with `moonfly`
-- opt-in preview launcher exists at `~/script/nvim-preview-sunfly`
-- preview Neovim runs with `NVIM_APPNAME=nvim-sunfly-preview`
-- `sunfly` is implemented as a Moonfly-derived light wrapper with custom palette overrides and extra highlight overrides
-- `lualine` theme selection is dynamic so preview mode can use a separate `sunfly` lualine theme
+- light mode still switches to `sunfly`
+- the Neovim Sunfly colorscheme is now consumed from `github.com/bry-guy/sunfly`
+- local dotfiles no longer hand-maintain the Sunfly Neovim files
+- the preview launcher still exists at `~/script/nvim-preview-sunfly`
+- preview Neovim still runs with `NVIM_APPNAME=nvim-sunfly-preview`
 
 Validation completed:
 
-- normal `nvim` still reports `moonfly`
-- preview `nvim` reports `sunfly`
-- isolated preview state is stored under the `nvim-sunfly-preview` app namespace
+- normal `nvim` reports `sunfly` when light mode selects it through the public plugin
+- preview `nvim` reports `sunfly` through the public plugin
+- isolated preview state is still stored under the `nvim-sunfly-preview` app namespace
 
 ## Files added / changed
 
-Added:
+Current local pieces:
 
 - `docs/plans/sunfly-theme.md`
 - `.config/nvim/lua/config/theme.lua`
+- `.config/nvim/lua/plugins/sunfly.lua`
+- `.config/nvim-sunfly-preview/init.lua`
+- `.config/nvim-sunfly-preview/lua/plugins/sunfly.lua`
+- `script/nvim-preview-sunfly`
+
+Removed from local source-of-truth status:
+
 - `.config/nvim/lua/sunfly/init.lua`
 - `.config/nvim/colors/sunfly.lua`
 - `.config/nvim/lua/lualine/themes/sunfly.lua`
-- `.config/nvim-sunfly-preview/init.lua`
-- `.config/nvim-sunfly-preview/lua` (symlink to `../nvim/lua`)
-- `.config/nvim-sunfly-preview/colors` (symlink to `../nvim/colors`)
-- `script/nvim-preview-sunfly`
 
-Changed:
-
-- `.config/nvim/lua/config/options.lua`
-- `.config/nvim/lua/plugins/lualine.lua`
+Those now come from the published `bry-guy/sunfly` repository instead.
 
 ## Current Sunfly specification
 
 ### Base palette
 
-Current palette source of truth: `.config/nvim/lua/sunfly/init.lua`
+Current published palette source of truth: `github.com/bry-guy/sunfly` (`palette/sunfly.json` in that repo).
 
 ```lua
 -- Coordinated ink-band palette: all accents at CIELAB L* 30-37, WCAG AAA (>=7:1) vs bg
@@ -234,7 +240,7 @@ Current semantic mapping intentionally stays close to Moonfly:
 
 ### Current lualine spec
 
-Current source of truth: `.config/nvim/lua/lualine/themes/sunfly.lua`
+Current published lualine source of truth: `github.com/bry-guy/sunfly` (`lua/lualine/themes/sunfly.lua` in that repo).
 
 ```lua
 {

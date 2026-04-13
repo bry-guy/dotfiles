@@ -70,14 +70,14 @@ Make the Moonfly/Sunfly automatic switching path reliable and readable across th
 - tmux is now on the `theme-sync` path.
 - `~/script/theme-sync` copies either:
   - `~/.config/tmux/theme.dark.conf`, or
-  - `~/.config/tmux/theme.light.conf`
+  - `~/.config/tmux/theme.light.conf` (tracked locally, refreshed from `github.com/bry-guy/sunfly`)
   into `~/.config/tmux/theme.conf`, then reloads tmux when a server is running.
 - This resolves the original "tmux is static" problem, but the light palette still needs practical validation.
 
 ##### Follow-up checklist
 
 - [ ] Check tmux status line, copy-mode highlight, active border, and window-status colors in Sunfly/Ghostty light mode.
-- [ ] If inactive text is still too faint, darken `window-status-style` further in `~/.config/tmux/theme.light.conf`.
+- [ ] If inactive text is still too faint, darken `window-status-style` further in the published Sunfly tmux theme (`extras/tmux/sunfly.conf` in `github.com/bry-guy/sunfly`), then reinstall it locally.
 - [ ] If copy-mode or borders still feel weak, tune `mode-style` / `pane-active-border-style` in the light theme template.
 
 #### 4. Startup-only vs live-reload behavior still differs by app

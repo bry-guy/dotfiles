@@ -142,16 +142,19 @@ Apply a full profile:
 
 The tracked theme sync pieces are:
 - `~/script/theme-sync` — applies `dark` / `light` themes across Neovim, Pi, Posting, Harlequin, tmux, and Claude Code, and sends a best-effort Ghostty reload signal on macOS
+- `~/script/sunfly-install <extra...>` — updates the tracked local Sunfly config files from `github.com/bry-guy/sunfly`; required extras are explicit (`ghostty`, `pi`, `posting`, `tmux`, or `all`)
 - `~/script/theme-watch` — macOS watcher wrapper around `dark-notify`
 - `~/Library/LaunchAgents/net.bryguy.theme-sync.plist` — user launch agent for automatic macOS syncing
 - `~/.local/share/darkman/{dark-mode.d,light-mode.d}/50-theme-sync` — Linux darkman hooks
-- `~/.local/share/posting/themes/{moonfly,sunfly}.yaml` — Posting custom themes in Posting's default XDG data path
-- `~/.pi/agent/themes/{moonfly,sunfly}.json` — Pi custom Moonfly/Sunfly themes tuned for readable light-mode prompts and tool/code blocks
-- `~/.config/tmux/theme.{dark,light}.conf` — tmux theme templates; `theme-sync` copies the active one to `~/.config/tmux/theme.conf`
+- `~/.local/share/posting/themes/{moonfly,sunfly}.yaml` — tracked local Posting themes; `sunfly-install posting` refreshes `sunfly.yaml` from the public Sunfly repo
+- `~/.pi/agent/themes/{moonfly,sunfly}.json` — tracked local Pi themes; `sunfly-install pi` refreshes `sunfly.json` from the public Sunfly repo
+- `~/.config/tmux/theme.dark.conf` and `~/.config/tmux/theme.light.conf` — tracked tmux templates; `sunfly-install tmux` refreshes the light template from the public Sunfly repo and `theme-sync` copies the active template to `~/.config/tmux/theme.conf`
+- `~/.config/ghostty/themes/Sunfly` — tracked local Ghostty light theme; `sunfly-install ghostty` refreshes it from the public Sunfly repo
 - `~/docs/plans/light-theme-follow-up.md` — follow-up bug plan for remaining light-mode polish and automation issues
 
 Useful commands:
 ```sh
+~/script/sunfly-install ghostty pi posting tmux
 ~/script/theme-sync auto
 ~/script/theme-sync-enable
 ~/script/theme-sync-disable

@@ -4,6 +4,12 @@ Status: in progress
 Author: claude
 Date: 2026-04-12
 
+> Status note (2026-04-13): the published Sunfly source of truth now lives in
+> `github.com/bry-guy/sunfly`. Local dotfiles still own theme selection,
+> automation, and the tracked home-path copies of the Ghostty / Pi / Posting /
+> tmux Sunfly files; those local copies are now refreshed from the public repo
+> instead of hand-edited here.
+
 ## What's done
 
 ### Neovim (complete)
@@ -47,11 +53,11 @@ So previews and one-off forced themes still behave predictably.
 Pi has a `"theme"` field in `~/.pi/agent/settings.json`.
 
 - Pi supports built-in and custom themes
-- Tracked custom themes now live in `~/.pi/agent/themes/`:
-  - `moonfly` → `.pi/agent/themes/moonfly.json`
-  - `sunfly` → `.pi/agent/themes/sunfly.json`
+- Local Pi theme files live in `~/.pi/agent/themes/`:
+  - `moonfly` → tracked in dotfiles at `.pi/agent/themes/moonfly.json`
+  - `sunfly` → tracked in dotfiles at `.pi/agent/themes/sunfly.json`, refreshed via `~/script/sunfly-install pi`
 - No native auto dark/light switching support
-- **Implemented**: `~/script/theme-sync` rewrites that field to switch between the tracked `moonfly` / `sunfly` Pi themes
+- **Implemented**: `~/script/theme-sync` rewrites that field to switch between the local `moonfly` / `sunfly` Pi themes
 
 ### Harlequin
 
@@ -71,10 +77,10 @@ This is a best-effort approximation rather than a custom Sunfly port.
 Posting supports custom YAML themes.
 
 - Active theme is configured in `~/.config/posting/config.yaml`
-- Tracked custom themes live in `~/.local/share/posting/themes/` (Posting's default XDG data location)
+- Local custom themes live in `~/.local/share/posting/themes/` (Posting's default XDG data location)
 - **Implemented** custom themes:
-  - `moonfly` → `.local/share/posting/themes/moonfly.yaml`
-  - `sunfly` → `.local/share/posting/themes/sunfly.yaml`
+  - `moonfly` → tracked in dotfiles at `.local/share/posting/themes/moonfly.yaml`
+  - `sunfly` → tracked in dotfiles at `.local/share/posting/themes/sunfly.yaml`, refreshed via `~/script/sunfly-install posting`
 - `~/script/theme-sync` rewrites the active Posting theme between those two names
 
 This gives Posting a real Moonfly/Sunfly pairing instead of a generic Textual fallback.
@@ -107,9 +113,9 @@ Implemented scripts and automation:
 - tracked Linux darkman hooks:
   - `~/.local/share/darkman/dark-mode.d/50-theme-sync`
   - `~/.local/share/darkman/light-mode.d/50-theme-sync`
-- tracked Posting theme files:
-  - `~/.local/share/posting/themes/moonfly.yaml`
-  - `~/.local/share/posting/themes/sunfly.yaml`
+- local Posting theme files:
+  - `~/.local/share/posting/themes/moonfly.yaml` (tracked)
+  - `~/.local/share/posting/themes/sunfly.yaml` (tracked, refreshed from the public Sunfly repo)
 
 `theme-sync` rewrites:
 - `~/.pi/agent/settings.json`
@@ -129,10 +135,10 @@ macOS automation is handled by `dark-notify` running under the tracked `launchd`
 **Current caveat:** Ghostty native switching has still shown some macOS light-mode flakiness in practice, so `theme-sync` now also sends Ghostty a best-effort reload signal as a local mitigation.
 
 **What needs the script:**
-- Pi — settings.json rewrite to tracked custom `moonfly` / `sunfly` themes
-- Posting — switch between custom `moonfly` / `sunfly` themes
+- Pi — settings.json rewrite to local custom `moonfly` / `sunfly` themes
+- Posting — switch between local custom `moonfly` / `sunfly` themes
 - Harlequin — switch between built-in dark/light themes
-- tmux — switch between tracked dark/light theme templates and reload the server when available
+- tmux — switch between tracked dark / tracked Sunfly light theme templates and reload the server when available
 - Claude Code — `~/.claude.json` theme rewrite
 
 ## Priority order

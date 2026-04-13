@@ -1,0 +1,114 @@
+#!/bin/bash
+set -euo pipefail
+
+usage() {
+  cat <<'EOF'
+Usage: ~/script/sunfly-install [--ref <git-ref>] <extra> [<extra> ...]
+
+Update tracked local Sunfly config files from the public bry-guy/sunfly repository.
+
+Extras:
+  ghostty   -> updates ~/.config/ghostty/themes/Sunfly
+  pi        -> updates ~/.pi/agent/themes/sunfly.json
+  posting   -> updates ~/.local/share/posting/themes/sunfly.yaml
+  tmux      -> updates ~/.config/tmux/theme.light.conf
+  all       -> install all extras above
+
+Examples:
+  ~/script/sunfly-install ghostty pi
+  ~/script/sunfly-install --ref v0.1.0 tmux posting
+  ~/script/sunfly-install all
+
+Environment:
+  SUNFLY_REPO  Override GitHub repo (default: bry-guy/sunfly)
+  SUNFLY_REF   Override git ref/tag  (default: v0.1.0)
+EOF
+}
+
+repo="${SUNFLY_REPO:-bry-guy/sunfly}"
+ref="${SUNFLY_REF:-v0.1.0}"
+
+extras=()
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    --ref)
+      [[ $# -ge 2 ]] || { echo "Missing value for --ref" >&2; exit 1; }
+      ref="$2"
+      shift 2
+      ;;
+    ghostty|pi|posting|tmux|all)
+      extras+=("$1")
+      shift
+      ;;
+    *)
+      echo "Unknown argument: $1" >&2
+      usage >&2
+      exit 1
+      ;;
+  esac
+done
+
+[[ ${#extras[@]} -gt 0 ]] || { echo "Specify at least one extra to install." >&2; usage >&2; exit 1; }
+
+if command -v curl >/dev/null 2>&1; then
+  fetch() {
+    local url="$1" output="$2"
+    curl -fsSL "$url" -o "$output"
+  }
+else
+  echo "curl is required for sunfly-install" >&2
+  exit 1
+fi
+
+install_file() {
+  local label="$1" src="$2" dest="$3"
+  local url="https://raw.githubusercontent.com/${repo}/${ref}/${src}"
+  local tmp
+  tmp="$(mktemp)"
+  mkdir -p "$(dirname "$dest")"
+  fetch "$url" "$tmp"
+  mv "$tmp" "$dest"
+  chmod 644 "$dest"
+  echo "Updated ${label}: ${dest}"
+}
+
+expanded=()
+for extra in "${extras[@]}"; do
+  if [[ "$extra" == "all" ]]; then
+    expanded+=(ghostty pi posting tmux)
+  else
+    expanded+=("$extra")
+  fi
+done
+
+seen=" "
+unique=()
+for extra in "${expanded[@]}"; do
+  if [[ "$seen" != *" $extra "* ]]; then
+    unique+=("$extra")
+    seen+="$extra "
+  fi
+done
+
+for extra in "${unique[@]}"; do
+  case "$extra" in
+    ghostty)
+      install_file ghostty extras/ghostty/Sunfly "$HOME/.config/ghostty/themes/Sunfly"
+      ;;
+    pi)
+      install_file pi extras/pi/sunfly.json "$HOME/.pi/agent/themes/sunfly.json"
+      ;;
+    posting)
+      install_file posting extras/posting/sunfly.yaml "$HOME/.local/share/posting/themes/sunfly.yaml"
+      ;;
+    tmux)
+      install_file tmux extras/tmux/sunfly.conf "$HOME/.config/tmux/theme.light.conf"
+      ;;
+  esac
+done
+
+echo "Sunfly extras updated from ${repo}@${ref}."

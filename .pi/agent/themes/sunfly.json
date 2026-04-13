@@ -35,7 +35,6 @@
     "dim": "dim",
     "text": "ink",
     "thinkingText": "muted",
-
     "selectedBg": "paperSelected",
     "userMessageBg": "paperMuted",
     "userMessageText": "ink",
@@ -47,7 +46,6 @@
     "toolErrorBg": "paperError",
     "toolTitle": "accent",
     "toolOutput": "inkSoft",
-
     "mdHeading": "warning",
     "mdLink": "accent",
     "mdLinkUrl": "muted",
@@ -58,11 +56,9 @@
     "mdQuoteBorder": "border",
     "mdHr": "border",
     "mdListBullet": "success",
-
     "toolDiffAdded": "success",
     "toolDiffRemoved": "error",
     "toolDiffContext": "muted",
-
     "syntaxComment": "#75685b",
     "syntaxKeyword": "#801898",
     "syntaxFunction": "#004ca0",
@@ -72,14 +68,12 @@
     "syntaxType": "#006840",
     "syntaxOperator": "#a81838",
     "syntaxPunctuation": "#564b41",
-
     "thinkingOff": "border",
     "thinkingMinimal": "dim",
     "thinkingLow": "accentAlt",
     "thinkingMedium": "accent",
     "thinkingHigh": "violet",
     "thinkingXhigh": "magenta",
-
     "bashMode": "warning"
   },
   "export": {
