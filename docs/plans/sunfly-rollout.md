@@ -46,9 +46,12 @@ So previews and one-off forced themes still behave predictably.
 
 Pi has a `"theme"` field in `~/.pi/agent/settings.json`.
 
-- Pi supports `"dark"` and `"light"` themes (built-in, no custom themes)
+- Pi supports built-in and custom themes
+- Tracked custom themes now live in `~/.pi/agent/themes/`:
+  - `moonfly` → `.pi/agent/themes/moonfly.json`
+  - `sunfly` → `.pi/agent/themes/sunfly.json`
 - No native auto dark/light switching support
-- **Implemented**: `~/script/theme-sync` rewrites that field to match macOS appearance (or an explicit `dark` / `light` argument)
+- **Implemented**: `~/script/theme-sync` rewrites that field to switch between the tracked `moonfly` / `sunfly` Pi themes
 
 ### Harlequin
 
@@ -112,9 +115,10 @@ Implemented scripts and automation:
 - `~/.pi/agent/settings.json`
 - `~/.harlequin.toml`
 - `~/.config/posting/config.yaml`
+- `~/.config/tmux/theme.conf` (copied from tracked dark/light templates)
 - `~/.claude.json`
 
-It also pokes running Neovim servers to re-apply `require("config.theme").apply()` and sends a best-effort `SIGUSR2` reload signal to running Ghostty on macOS.
+It also pokes running Neovim servers to re-apply `require("config.theme").apply()`, reloads tmux when a server is running, and sends a best-effort `SIGUSR2` reload signal to running Ghostty on macOS.
 
 macOS automation is handled by `dark-notify` running under the tracked `launchd` agent.
 
@@ -125,9 +129,10 @@ macOS automation is handled by `dark-notify` running under the tracked `launchd`
 **Current caveat:** Ghostty native switching has still shown some macOS light-mode flakiness in practice, so `theme-sync` now also sends Ghostty a best-effort reload signal as a local mitigation.
 
 **What needs the script:**
-- Pi — settings.json rewrite
+- Pi — settings.json rewrite to tracked custom `moonfly` / `sunfly` themes
 - Posting — switch between custom `moonfly` / `sunfly` themes
 - Harlequin — switch between built-in dark/light themes
+- tmux — switch between tracked dark/light theme templates and reload the server when available
 - Claude Code — `~/.claude.json` theme rewrite
 
 ## Priority order

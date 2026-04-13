@@ -14,6 +14,7 @@ Make the Moonfly/Sunfly automatic switching path reliable and readable across th
 
 - Posting now launches and the `sunfly` theme looks good.
 - Pi / Claude / Posting / Harlequin / Neovim are all on the `theme-sync` path.
+- tmux is now also on the `theme-sync` path via generated light/dark theme includes.
 - macOS appearance changes are being observed by `dark-notify` via the tracked `launchd` agent.
 
 ### Known issues / follow-ups
@@ -64,23 +65,20 @@ Make the Moonfly/Sunfly automatic switching path reliable and readable across th
   - `solarized-light` (baseline / compare only)
 - [ ] Pick the best readable light theme and lock it in `~/script/theme-sync` + docs.
 
-#### 3. tmux is not actually theme-switched today
+#### 3. tmux light palette still needs a real-world readability pass
 
-- tmux is not on the `theme-sync` path.
-- Current `~/.tmux.conf` mostly uses terminal background defaults, so it is not completely broken in light mode.
-- But several colors are hard-coded and dark-biased, for example:
-  - `status-fg colour165`
-  - `mode-style bg='#4a2f57',fg='#e4e4e4'`
-  - `pane-active-border-style ... fg=colour165`
-- This means tmux is more of a readability/polish risk than an automatic-switching failure.
+- tmux is now on the `theme-sync` path.
+- `~/script/theme-sync` copies either:
+  - `~/.config/tmux/theme.dark.conf`, or
+  - `~/.config/tmux/theme.light.conf`
+  into `~/.config/tmux/theme.conf`, then reloads tmux when a server is running.
+- This resolves the original "tmux is static" problem, but the light palette still needs practical validation.
 
 ##### Follow-up checklist
 
 - [ ] Check tmux status line, copy-mode highlight, active border, and window-status colors in Sunfly/Ghostty light mode.
-- [ ] Decide whether tmux should:
-  - stay static but use more neutral colors, or
-  - join `theme-sync` with generated light/dark tmux theme includes.
-- [ ] If theme-sync is added, prefer a generated include file plus `tmux source-file ~/.tmux.conf` over rewriting the main config.
+- [ ] If inactive text is still too faint, darken `window-status-style` further in `~/.config/tmux/theme.light.conf`.
+- [ ] If copy-mode or borders still feel weak, tune `mode-style` / `pane-active-border-style` in the light theme template.
 
 #### 4. Startup-only vs live-reload behavior still differs by app
 
@@ -129,6 +127,6 @@ Even with automatic config rewriting, some tools may only fully reflect theme ch
 
 1. Verify Ghostty after the new reload-signal mitigation.
 2. Re-check Harlequin contrast with `textual-light`.
-3. Inspect tmux under light mode and decide whether it needs full automation or only color cleanup.
+3. Inspect tmux under light mode and fine-tune the new synced light template if needed.
 4. Re-check Claude light theme choice.
 5. Update docs once the final light-mode decisions are settled.

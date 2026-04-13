@@ -1,6 +1,6 @@
 {
-  "lastChangelogVersion": "0.63.1",
-  "theme": "dark",
+  "lastChangelogVersion": "0.66.1",
+  "theme": "sunfly",
   "packages": [
     "git:github.com/nicobailon/pi-mcp-adapter",
     "git:github.com/nicobailon/pi-web-access",
@@ -10,7 +10,7 @@
   ],
   "defaultProvider": "openai-codex",
   "defaultModel": "gpt-5.4",
-  "defaultThinkingLevel": "medium",
+  "defaultThinkingLevel": "high",
   "editorPaddingX": 2,
   "hideThinkingBlock": false,
   "quietStartup": true,

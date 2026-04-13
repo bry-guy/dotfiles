@@ -1,20 +1,20 @@
-# Sunfly Crisp — light companion to Moonfly (high contrast variant)
+# Sunfly Crisp — higher-contrast terminal variant for light mode
 palette = 0=#fdfcf8
-palette = 1=#a81018
-palette = 2=#285c00
-palette = 3=#5e4a00
+palette = 1=#9b1b23
+palette = 2=#2c5f00
+palette = 3=#594800
 palette = 4=#004898
 palette = 5=#7d1090
 palette = 6=#005060
-palette = 7=#75685b
-palette = 8=#75685b
-palette = 9=#a01030
-palette = 10=#005c45
-palette = 11=#6a4a08
-palette = 12=#185888
-palette = 13=#4e30a8
-palette = 14=#285410
-palette = 15=#19120d
+palette = 7=#65594e
+palette = 8=#8b7d6f
+palette = 9=#b01018
+palette = 10=#006840
+palette = 11=#6b5200
+palette = 12=#1b4fae
+palette = 13=#5530bb
+palette = 14=#00727f
+palette = 15=#271e17
 background = #fdfcf8
 foreground = #271e17
 cursor-color = #75685b

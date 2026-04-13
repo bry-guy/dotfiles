@@ -67,23 +67,27 @@ pi_settings="${home_dir}/.pi/agent/settings.json"
 claude_state="${home_dir}/.claude.json"
 harlequin_config="${home_dir}/.harlequin.toml"
 posting_config="${home_dir}/.config/posting/config.yaml"
+tmux_theme_target="${home_dir}/.config/tmux/theme.conf"
 
 claude_theme_dark="${CLAUDE_THEME_DARK:-dark-ansi}"
 claude_theme_light="${CLAUDE_THEME_LIGHT:-light-ansi}"
 
 ghostty_status="native"
+tmux_status="not-configured"
 
 if [[ "$mode" == "dark" ]]; then
-  pi_theme="dark"
+  pi_theme="moonfly"
   nvim_theme="moonfly"
   posting_theme="moonfly"
   harlequin_theme="harlequin"
+  tmux_theme_source="${home_dir}/.config/tmux/theme.dark.conf"
   claude_theme="$claude_theme_dark"
 else
-  pi_theme="light"
+  pi_theme="sunfly"
   nvim_theme="sunfly"
   posting_theme="sunfly"
   harlequin_theme="textual-light"
+  tmux_theme_source="${home_dir}/.config/tmux/theme.light.conf"
   claude_theme="$claude_theme_light"
 fi
 
@@ -127,6 +131,19 @@ if count == 0:
 path.write_text(text)
 PY
 
+if [[ -f "$tmux_theme_source" ]]; then
+  mkdir -p "$(dirname "$tmux_theme_target")"
+  cp "$tmux_theme_source" "$tmux_theme_target"
+  tmux_status="theme-file updated"
+  if command -v tmux >/dev/null 2>&1 && tmux ls >/dev/null 2>&1; then
+    if tmux source-file "$home_dir/.tmux.conf" >/dev/null 2>&1; then
+      tmux_status="reloaded"
+    else
+      tmux_status="theme-file updated (reload failed)"
+    fi
+  fi
+fi
+
 claude_status="manual"
 if [[ -f "$claude_state" ]]; then
   claude_status="$(python3 - "$claude_state" "$claude_theme" <<'PY'
@@ -162,6 +179,7 @@ Synced appearance: $mode
 - Pi: $pi_theme
 - Posting: $posting_theme
 - Harlequin: $harlequin_theme
+- tmux: $tmux_status
 - Ghostty: $ghostty_status (dark:Moonfly,light:Sunfly)
 - Claude Code: $claude_status ($( [[ "$claude_status" == "updated" ]] && echo "$claude_theme via ~/.claude.json" || echo "set via /theme $claude_theme" ))
 EOF

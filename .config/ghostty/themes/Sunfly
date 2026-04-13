@@ -1,23 +1,25 @@
-# Sunfly — light companion to Moonfly (parchment variant)
-palette = 0=#f0e8da
-palette = 1=#b01018
-palette = 2=#306800
-palette = 3=#605200
-palette = 4=#004ca0
-palette = 5=#801898
-palette = 6=#005868
-palette = 7=#75685b
-palette = 8=#75685b
-palette = 9=#a81838
+# Sunfly — terminal-optimized light companion to Moonfly
+# Tuned for stronger ANSI blues/yellows and better contrast than the
+# original parchment pass, while keeping the same warm-paper feel.
+palette = 0=#f8f2ea
+palette = 1=#9b1b23
+palette = 2=#2c5f00
+palette = 3=#5b4800
+palette = 4=#004898
+palette = 5=#8a3578
+palette = 6=#005060
+palette = 7=#65594e
+palette = 8=#8b7d6f
+palette = 9=#b01018
 palette = 10=#006840
-palette = 11=#6e5000
-palette = 12=#105c98
-palette = 13=#5830b0
-palette = 14=#306010
-palette = 15=#19120d
-background = #f0e8da
+palette = 11=#6b5200
+palette = 12=#1b4fae
+palette = 13=#5530bb
+palette = 14=#00727f
+palette = 15=#271e17
+background = #f8f2ea
 foreground = #271e17
 cursor-color = #75685b
-cursor-text = #f0e8da
+cursor-text = #f8f2ea
 selection-background = #d2c5b5
 selection-foreground = #271e17

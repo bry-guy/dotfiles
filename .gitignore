@@ -19,6 +19,7 @@ second-brain/**/*
 .claude/debug/**/*
 .claude.json.backup*
 .claude/settings.local.json
+.config/tmux/theme.conf
 
 
 Library/**/*

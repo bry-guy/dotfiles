@@ -141,11 +141,13 @@ Apply a full profile:
 ### Automatic theme sync
 
 The tracked theme sync pieces are:
-- `~/script/theme-sync` — applies `dark` / `light` themes across Neovim, Pi, Posting, Harlequin, and Claude Code, and sends a best-effort Ghostty reload signal on macOS
+- `~/script/theme-sync` — applies `dark` / `light` themes across Neovim, Pi, Posting, Harlequin, tmux, and Claude Code, and sends a best-effort Ghostty reload signal on macOS
 - `~/script/theme-watch` — macOS watcher wrapper around `dark-notify`
 - `~/Library/LaunchAgents/net.bryguy.theme-sync.plist` — user launch agent for automatic macOS syncing
 - `~/.local/share/darkman/{dark-mode.d,light-mode.d}/50-theme-sync` — Linux darkman hooks
 - `~/.local/share/posting/themes/{moonfly,sunfly}.yaml` — Posting custom themes in Posting's default XDG data path
+- `~/.pi/agent/themes/{moonfly,sunfly}.json` — Pi custom Moonfly/Sunfly themes tuned for readable light-mode prompts and tool/code blocks
+- `~/.config/tmux/theme.{dark,light}.conf` — tmux theme templates; `theme-sync` copies the active one to `~/.config/tmux/theme.conf`
 - `~/docs/plans/light-theme-follow-up.md` — follow-up bug plan for remaining light-mode polish and automation issues
 
 Useful commands:
