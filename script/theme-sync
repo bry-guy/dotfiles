@@ -1,0 +1,167 @@
+#!/bin/bash
+set -euo pipefail
+shopt -s nullglob
+
+usage() {
+  cat <<'EOF'
+Usage: ~/script/theme-sync [auto|dark|light]
+
+Syncs terminal app themes to the requested appearance.
+If omitted, appearance is detected from macOS.
+EOF
+}
+
+detect_mode() {
+  case "$(uname -s)" in
+    Darwin)
+      if defaults read -g AppleInterfaceStyle >/dev/null 2>&1; then
+        echo dark
+      else
+        echo light
+      fi
+      ;;
+    Linux)
+      if command -v darkman >/dev/null 2>&1; then
+        darkman get 2>/dev/null || echo dark
+        return
+      fi
+
+      if command -v gsettings >/dev/null 2>&1; then
+        local scheme
+        scheme="$(gsettings get org.gnome.desktop.interface color-scheme 2>/dev/null || true)"
+        if [[ "$scheme" == *dark* ]]; then
+          echo dark
+        else
+          echo light
+        fi
+        return
+      fi
+
+      echo dark
+      ;;
+    *)
+      echo dark
+      ;;
+  esac
+}
+
+mode="${1:-auto}"
+case "$mode" in
+  -h|--help)
+    usage
+    exit 0
+    ;;
+  auto)
+    mode="$(detect_mode)"
+    ;;
+  dark|light)
+    ;;
+  *)
+    usage >&2
+    exit 1
+    ;;
+esac
+
+home_dir="${HOME}"
+pi_settings="${home_dir}/.pi/agent/settings.json"
+claude_state="${home_dir}/.claude.json"
+harlequin_config="${home_dir}/.harlequin.toml"
+posting_config="${home_dir}/.config/posting/config.yaml"
+
+claude_theme_dark="${CLAUDE_THEME_DARK:-dark-ansi}"
+claude_theme_light="${CLAUDE_THEME_LIGHT:-light-ansi}"
+
+ghostty_status="native"
+
+if [[ "$mode" == "dark" ]]; then
+  pi_theme="dark"
+  nvim_theme="moonfly"
+  posting_theme="moonfly"
+  harlequin_theme="harlequin"
+  claude_theme="$claude_theme_dark"
+else
+  pi_theme="light"
+  nvim_theme="sunfly"
+  posting_theme="sunfly"
+  harlequin_theme="textual-light"
+  claude_theme="$claude_theme_light"
+fi
+
+python3 - "$pi_settings" "$pi_theme" <<'PY'
+import json
+import pathlib
+import sys
+
+path = pathlib.Path(sys.argv[1])
+theme = sys.argv[2]
+data = json.loads(path.read_text())
+data["theme"] = theme
+path.write_text(json.dumps(data, indent=2) + "\n")
+PY
+
+python3 - "$harlequin_config" "$harlequin_theme" <<'PY'
+import pathlib
+import re
+import sys
+
+path = pathlib.Path(sys.argv[1])
+theme = sys.argv[2]
+text = path.read_text()
+text, count = re.subn(r'(?m)^theme = ".*"$', f'theme = "{theme}"', text)
+if count == 0:
+    raise SystemExit(f"No theme entries found in {path}")
+path.write_text(text)
+PY
+
+python3 - "$posting_config" "$posting_theme" <<'PY'
+import pathlib
+import re
+import sys
+
+path = pathlib.Path(sys.argv[1])
+theme = sys.argv[2]
+text = path.read_text()
+text, count = re.subn(r'(?m)^theme: .*$', f'theme: {theme}', text, count=1)
+if count == 0:
+    text = f'theme: {theme}\n' + text
+path.write_text(text)
+PY
+
+claude_status="manual"
+if [[ -f "$claude_state" ]]; then
+  claude_status="$(python3 - "$claude_state" "$claude_theme" <<'PY'
+import json
+import pathlib
+import sys
+
+path = pathlib.Path(sys.argv[1])
+theme = sys.argv[2]
+data = json.loads(path.read_text())
+data["theme"] = theme
+path.write_text(json.dumps(data, indent=2) + "\n")
+print("updated")
+PY
+  )"
+fi
+
+for sock in /tmp/nvim*.sock; do
+  nvim --server "$sock" --remote-send "<Cmd>lua require('config.theme').apply()<CR>" >/dev/null 2>&1 || true
+done
+
+if [[ "$(uname -s)" == "Darwin" ]] && pgrep -x ghostty >/dev/null 2>&1; then
+  if pkill -USR2 -x ghostty >/dev/null 2>&1; then
+    ghostty_status="native + reload-signal"
+  else
+    ghostty_status="native (reload signal failed)"
+  fi
+fi
+
+cat <<EOF
+Synced appearance: $mode
+- Neovim: $nvim_theme
+- Pi: $pi_theme
+- Posting: $posting_theme
+- Harlequin: $harlequin_theme
+- Ghostty: $ghostty_status (dark:Moonfly,light:Sunfly)
+- Claude Code: $claude_status ($( [[ "$claude_status" == "updated" ]] && echo "$claude_theme via ~/.claude.json" || echo "set via /theme $claude_theme" ))
+EOF

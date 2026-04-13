@@ -1,0 +1,14 @@
+#!/bin/bash
+set -euo pipefail
+
+label="net.bryguy.theme-sync"
+plist="$HOME/Library/LaunchAgents/${label}.plist"
+
+if [[ "$(uname -s)" != "Darwin" ]]; then
+  echo "theme-sync-disable is only for macOS launchd." >&2
+  exit 1
+fi
+
+launchctl bootout "gui/$UID" "$plist" >/dev/null 2>&1 || true
+
+echo "Disabled $label"

@@ -1,0 +1,6 @@
+cask "dbeaver-community"
+cask "notion"
+cask "obsidian"
+cask "slack"
+brew "todoist-cli"
+cask "todoist-app"

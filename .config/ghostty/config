@@ -9,8 +9,8 @@ font-style-italic = Italic
 font-style-bold-italic = Bold Italic
 font-size = 14
 
-# Use Ghostty's built-in Moonfly theme.
-theme = Moonfly
+# Auto-switch between Moonfly (dark) and Sunfly (light) based on macOS appearance.
+theme = dark:Moonfly,light:Sunfly
 
 # Match Alacritty's left-option-only Alt behavior.
 macos-option-as-alt = left

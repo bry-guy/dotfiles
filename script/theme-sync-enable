@@ -1,0 +1,28 @@
+#!/bin/bash
+set -euo pipefail
+
+label="net.bryguy.theme-sync"
+plist="$HOME/Library/LaunchAgents/${label}.plist"
+
+if [[ "$(uname -s)" != "Darwin" ]]; then
+  echo "theme-sync-enable is only for macOS launchd." >&2
+  exit 1
+fi
+
+if [[ ! -f "$plist" ]]; then
+  echo "Missing LaunchAgent plist: $plist" >&2
+  exit 1
+fi
+
+if ! command -v dark-notify >/dev/null 2>&1; then
+  echo "dark-notify is required. Install with: brew install cormacrelf/tap/dark-notify" >&2
+  exit 1
+fi
+
+mkdir -p "$HOME/log"
+"$HOME/script/theme-sync" auto
+launchctl bootout "gui/$UID" "$plist" >/dev/null 2>&1 || true
+launchctl bootstrap "gui/$UID" "$plist"
+launchctl kickstart -k "gui/$UID/$label"
+
+echo "Enabled $label"

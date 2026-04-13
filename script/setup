@@ -125,6 +125,11 @@ if [ -n "$BREW_PROFILE" ]; then
 
         echo "Applying brew profile '$BREW_PROFILE'..."
         "$DOTFILES_DIR/script/brew-apply-profile" "$BREW_PROFILE"
+
+        if [ -n "${OS_MAC:-}" ] && command -v dark-notify >/dev/null 2>&1 && [ -f "$HOME/Library/LaunchAgents/net.bryguy.theme-sync.plist" ]; then
+            echo "Enabling automatic theme sync launch agent..."
+            "$DOTFILES_DIR/script/theme-sync-enable"
+        fi
 elif [ -n "${CLOUD:-}" ]; then
         # ===============================
         # Install Cloud Deps

@@ -1,0 +1,2 @@
+#!/bin/bash
+exec "$HOME/script/theme-sync" light

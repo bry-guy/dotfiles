@@ -50,7 +50,7 @@ vim.o.relativenumber = true
 
 -- Enable colorscheme
 vim.opt.termguicolors = true
-vim.cmd [[colorscheme moonfly]]
+require("config.theme").apply()
 
 -- LSP specific settings
 vim.diagnostic.config({ float = { border = "single" } })

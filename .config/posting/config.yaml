@@ -1,0 +1,19 @@
+# Theme is managed by ~/script/theme-sync:
+#   dark  -> moonfly
+#   light -> sunfly
+theme: sunfly
+load_user_themes: true
+watch_themes: true
+
+keymap:
+  # ctrl+? — help (replaces F1)
+  # Consistent with Harlequin
+  help: ctrl+question_mark
+
+  # ctrl+e — open in $EDITOR (replaces F4)
+  # Set POSTING_EDITOR=nvim in your env
+  # Consistent with Harlequin if you map ctrl+e there too
+  open-in-editor: ctrl+e
+
+  # alt+p — open in $PAGER (replaces F3)
+  open-in-pager: alt+p

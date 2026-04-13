@@ -1,0 +1,19 @@
+# Harlequin config
+# Theme lines are rewritten by ~/script/theme-sync:
+#   dark  -> harlequin
+#   light -> textual-light
+default_profile = "local-backend"
+
+[profiles.local-backend]
+adapter = "postgres"
+theme = "textual-light"
+limit = 100000
+keymap_name = ["vscode"]
+conn_str = ["postgres://developer_readonly:developer_readonly_password@localhost:5432/data_catalog_db"]
+
+[profiles.staging-backend]
+adapter = "postgres"
+theme = "textual-light"
+limit = 100000
+keymap_name = ["vscode"]
+conn_str = ["postgres://developer_readonly:developer_readonly_password@localhost:6432/data_catalog_db"]

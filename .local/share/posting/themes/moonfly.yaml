@@ -1,0 +1,33 @@
+name: moonfly
+dark: true
+primary: '#80a0ff'
+secondary: '#e3c78a'
+accent: '#74b2ff'
+background: '#080808'
+surface: '#121212'
+panel: '#1c1c1c'
+error: '#ff5d5d'
+success: '#36c692'
+warning: '#e3c78a'
+author: Bryan + Pi
+description: Moonfly-inspired dark Posting theme.
+text_area:
+  cursor: reverse
+  cursor_line: 'on #121212'
+  selection: reverse
+  gutter: '#626262'
+  matched_bracket: 'bold #36c692'
+url:
+  base: '#80a0ff'
+  protocol: 'bold #cf87e8'
+syntax:
+  json_key: '#74b2ff'
+  json_number: '#ae81ff'
+  json_string: '#c6c684'
+  json_boolean: '#e196a2'
+  json_null: '#949494'
+method:
+  get: '#74b2ff'
+  post: '#36c692'
+  put: '#cf87e8'
+  delete: '#ff5d5d'

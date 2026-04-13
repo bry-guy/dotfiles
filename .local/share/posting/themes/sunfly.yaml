@@ -1,0 +1,33 @@
+name: sunfly
+dark: false
+primary: '#105c98'
+secondary: '#6e5000'
+accent: '#004ca0'
+background: '#f0e8da'
+surface: '#fffefb'
+panel: '#f8f2ea'
+error: '#b01018'
+success: '#006840'
+warning: '#605200'
+author: Bryan + Pi
+description: Sunfly light Posting theme tuned to match Moonfly semantics.
+text_area:
+  cursor: reverse
+  cursor_line: 'on #f8f2ea'
+  selection: reverse
+  gutter: '#8b7d6f'
+  matched_bracket: 'bold #006840'
+url:
+  base: '#105c98'
+  protocol: 'bold #801898'
+syntax:
+  json_key: '#004ca0'
+  json_number: '#4c28b0'
+  json_string: '#6e5000'
+  json_boolean: '#5830b0'
+  json_null: '#75685b'
+method:
+  get: '#004ca0'
+  post: '#006840'
+  put: '#801898'
+  delete: '#b01018'

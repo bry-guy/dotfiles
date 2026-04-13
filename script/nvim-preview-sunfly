@@ -1,0 +1,18 @@
+#!/bin/zsh
+set -euo pipefail
+
+# Usage:
+#   nvim-preview-sunfly [sunfly|crisp] [file...]
+#
+# Variant defaults to "sunfly" if not specified.
+#   sunfly = Parchment + Vivid Ink (warm paper, easier on eyes in daylight)
+#   crisp  = High Chroma Ink (near-white paper, AAA contrast, sharper)
+
+variant="sunfly"
+case "${1:-}" in
+  sunfly|crisp) variant="$1"; shift ;;
+esac
+
+export NVIM_APPNAME="nvim-sunfly-preview"
+export SUNFLY_VARIANT="$variant"
+exec nvim "$@"

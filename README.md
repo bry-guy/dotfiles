@@ -54,6 +54,7 @@ Running `~/script/setup [brew-profile]` currently does the following:
 - installs 1Password dependencies where appropriate
 - persists the selected Brew profile to `~/.config/dotfiles/brew-profile`
 - applies the selected Brew profile if one was provided
+- on macOS, enables the tracked `launchd` agent for automatic terminal theme sync when `dark-notify` is installed
 - bootstraps SSH known_hosts for common remotes
 
 Running `~/script/setup` without a profile still performs the baseline bootstrap only.
@@ -79,7 +80,7 @@ Profiles represent the intended machine role and decide which Brew manifest grou
   - includes personal infrastructure, personal AI tooling, and personal GUI apps
 - `work-macos`
   - intended for a work-scoped macOS workstation
-  - includes work infrastructure and work AI tooling
+  - includes work infrastructure, work AI tooling, and work-scoped GUI apps
   - currently does **not** include `apps.personal`
 
 If no profile is selected, `~/script/setup` still performs the baseline bootstrap, but it does **not** persist `~/.config/dotfiles/brew-profile` and does **not** apply a role-specific package set.
@@ -110,6 +111,7 @@ If no profile is selected, `~/script/setup` still performs the baseline bootstra
 - `ai.work`
 - `virtual.colima`
 - `apps.common`
+- `apps.work`
 
 ### Current manifest layout
 - `auth.1password`
@@ -125,6 +127,7 @@ If no profile is selected, `~/script/setup` still performs the baseline bootstra
 - `virtual.colima`
 - `apps.common`
 - `apps.personal`
+- `apps.work`
 
 `ai.common` currently includes shared AI/dev tooling such as `ccusage`, `claude-code`, `codex`, and `pi-coding-agent`.
 
@@ -133,6 +136,23 @@ If no profile is selected, `~/script/setup` still performs the baseline bootstra
 Apply a full profile:
 ```sh
 ~/script/brew-apply-profile personal-macos
+```
+
+### Automatic theme sync
+
+The tracked theme sync pieces are:
+- `~/script/theme-sync` — applies `dark` / `light` themes across Neovim, Pi, Posting, Harlequin, and Claude Code, and sends a best-effort Ghostty reload signal on macOS
+- `~/script/theme-watch` — macOS watcher wrapper around `dark-notify`
+- `~/Library/LaunchAgents/net.bryguy.theme-sync.plist` — user launch agent for automatic macOS syncing
+- `~/.local/share/darkman/{dark-mode.d,light-mode.d}/50-theme-sync` — Linux darkman hooks
+- `~/.local/share/posting/themes/{moonfly,sunfly}.yaml` — Posting custom themes in Posting's default XDG data path
+- `~/docs/plans/light-theme-follow-up.md` — follow-up bug plan for remaining light-mode polish and automation issues
+
+Useful commands:
+```sh
+~/script/theme-sync auto
+~/script/theme-sync-enable
+~/script/theme-sync-disable
 ```
 
 `brew-apply-profile` automatically taps any required taps declared by the manifests and will continue past a failing manifest, then report a skipped-manifest summary at the end.

@@ -80,6 +80,16 @@ rename_hints = {"tailscale": "tailscale-app"}
 entry_re = re.compile(r'^(tap|brew|cask|mas|vscode)\s+"([^"]+)"')
 
 
+def normalize_formula(name: str) -> str:
+    return name.rsplit("/", 1)[-1]
+
+
+def normalize_entries(entries):
+    entries = {kind: set(values) for kind, values in entries.items()}
+    entries["brew"] = {normalize_formula(name) for name in entries["brew"]}
+    return entries
+
+
 def load_profile_manifests(path: Path):
     manifests = []
     for raw in path.read_text().splitlines():
@@ -107,6 +117,7 @@ def parse_entries(lines):
 
 
 wanted_entries, wanted_invalid = parse_entries(wanted_file.read_text().splitlines())
+wanted_entries = normalize_entries(wanted_entries)
 if wanted_invalid:
     print("Internal error: merged wanted Brewfile contains unsupported entries:", file=sys.stderr)
     for line in wanted_invalid:
@@ -114,6 +125,7 @@ if wanted_invalid:
     sys.exit(2)
 
 ignore_entries, ignore_invalid = parse_entries(ignore_file.read_text().splitlines() if ignore_file.exists() else [])
+ignore_entries = normalize_entries(ignore_entries)
 if ignore_invalid:
     print(f"Invalid ignore entries in {ignore_path}:")
     for line in ignore_invalid:
@@ -130,6 +142,7 @@ for manifest in profile_manifests:
         print(f"Profile '{profile}' references missing manifest: {manifest_file}", file=sys.stderr)
         sys.exit(2)
     entries, invalid = parse_entries(manifest_file.read_text().splitlines())
+    entries = normalize_entries(entries)
     if invalid:
         print(f"Unsupported entries in manifest '{manifest_file}':", file=sys.stderr)
         for line in invalid:
@@ -139,8 +152,8 @@ for manifest in profile_manifests:
         for name in names:
             manifest_declarations[(kind, name)].append(manifest)
 
-installed_formulae = set(subprocess.check_output([brew_bin, "list", "--formula"], text=True).split())
-direct_formulae = set(subprocess.check_output([brew_bin, "leaves"], text=True).split())
+installed_formulae = {normalize_formula(name) for name in subprocess.check_output([brew_bin, "list", "--formula"], text=True).split()}
+direct_formulae = {normalize_formula(name) for name in subprocess.check_output([brew_bin, "leaves"], text=True).split()}
 
 actual_entries = {
     "tap": set(subprocess.check_output([brew_bin, "tap"], text=True).split()),

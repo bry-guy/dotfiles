@@ -1,5 +1,7 @@
+tap "cormacrelf/tap"
 cask "alacritty"
 cask "amethyst"
+brew "dark-notify"
 cask "font-hack-nerd-font"
 cask "ghostty"
 cask "karabiner-elements"
