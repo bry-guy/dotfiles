@@ -12,14 +12,20 @@
     ],
     "defaultMode": "default"
   },
-  "model": "opus",
+  "model": "opus[1m]",
   "statusLine": {
     "type": "command",
     "command": "ccusage statusline",
     "padding": 0
   },
   "enabledPlugins": {
-    "gopls-lsp@claude-plugins-official": true
+    "gopls-lsp@claude-plugins-official": true,
+    "lua-lsp@claude-plugins-official": true
   },
-  "syntaxHighlightingDisabled": false
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
+  "syntaxHighlightingDisabled": false,
+  "skipDangerousModePermissionPrompt": true
 }

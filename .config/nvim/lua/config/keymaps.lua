@@ -1,5 +1,6 @@
 local M = {}
 
+
 -- TODO: Export and invoke the vim.keymaps below
 -- overwrites
 vim.keymap.set('v', 'Y', '"+y', { desc = "Yank selection (Clipboard)" })
@@ -146,7 +147,7 @@ M.rendermarkdown_hotkeys = {
 
 -- goyo
   M.goyo_hotkeys = {
-    { "<leader>g", "<CMD>Goyo<CR>", { desc = "Goyo Toggle" } },
+    { "<leader>G", "<CMD>Goyo<CR>", { desc = "Goyo Toggle" } },
   }
 
 -- codecompanion (ai)

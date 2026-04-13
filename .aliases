@@ -37,3 +37,6 @@ alias dc="docker-compose"
 alias dp="doppler"
 
 alias open-colima="colima start --vm-type vz --cpu 4 --memory 4"
+
+alias hq="harlequin"
+alias post="posting"
