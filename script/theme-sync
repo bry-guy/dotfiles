@@ -86,7 +86,7 @@ else
   pi_theme="sunfly"
   nvim_theme="sunfly"
   posting_theme="sunfly"
-  harlequin_theme="textual-light"
+  harlequin_theme="solarized-light"
   tmux_theme_source="${home_dir}/.config/tmux/theme.light.conf"
   claude_theme="$claude_theme_light"
 

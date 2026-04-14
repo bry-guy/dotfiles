@@ -1,19 +1,40 @@
 # Harlequin config
 # Theme lines are rewritten by ~/script/theme-sync:
 #   dark  -> harlequin
-#   light -> textual-light
+#   light -> solarized-light
+# Keep shared profile definitions here.
+# Project-local .harlequin.toml files should only set default_profile,
+# because Harlequin shallow-merges top-level config tables.
 default_profile = "local-backend"
 
 [profiles.local-backend]
 adapter = "postgres"
-theme = "textual-light"
+theme = "solarized-light"
 limit = 100000
 keymap_name = ["vscode"]
 conn_str = ["postgres://developer_readonly:developer_readonly_password@localhost:5432/data_catalog_db"]
 
 [profiles.staging-backend]
 adapter = "postgres"
-theme = "textual-light"
+theme = "solarized-light"
 limit = 100000
 keymap_name = ["vscode"]
 conn_str = ["postgres://developer_readonly:developer_readonly_password@localhost:6432/data_catalog_db"]
+
+[profiles.databricks]
+adapter = "databricks"
+theme = "solarized-light"
+limit = 100000
+keymap_name = ["vscode"]
+server_hostname = "dbc-7d988bc8-62a9.cloud.databricks.com"
+http_path = "/sql/1.0/warehouses/efb33512195839f4"
+auth_type = "databricks-oauth"
+skip_legacy_indexing = true
+
+[profiles.s3]
+adapter = "duckdb"
+theme = "solarized-light"
+limit = 100000
+keymap_name = ["vscode"]
+show_s3 = "s3://databricks-junk-staging-4e6dcba8-4121-4625-816d-36930f791a64/bryan@lumoratech.com/"
+extension = ["httpfs", "aws"]

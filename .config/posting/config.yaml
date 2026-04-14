@@ -1,6 +1,8 @@
-# Theme is managed by ~/script/theme-sync:
+# Theme is managed centrally by ~/script/theme-sync in this file:
 #   dark  -> moonfly
 #   light -> sunfly
+# Project-local overrides can live in ./posting.env via POSTING_* variables,
+# but should usually omit POSTING_THEME so system light/dark sync keeps working.
 theme: sunfly
 load_user_themes: true
 watch_themes: true

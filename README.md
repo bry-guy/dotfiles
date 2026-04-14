@@ -141,7 +141,7 @@ Apply a full profile:
 ### Automatic theme sync
 
 The tracked theme sync pieces are:
-- `~/script/theme-sync` — applies `dark` / `light` themes across Neovim, Pi, Posting, Harlequin, tmux, and Claude Code, and sends a best-effort Ghostty reload signal on macOS
+- `~/script/theme-sync` — applies `dark` / `light` themes across Neovim, Pi, Posting, Harlequin, tmux, and Claude Code, and sends a best-effort Ghostty reload signal on macOS; shared Harlequin profiles/themes live in `~/.harlequin.toml`, while project-local `.harlequin.toml` files should only set `default_profile` because Harlequin shallow-merges top-level config tables; Posting theme state is owned by `~/.config/posting/config.yaml`, while project-local overrides should use `posting.env` / `POSTING_*` and usually omit `POSTING_THEME`
 - `~/script/sunfly-install <extra...>` — updates the tracked local Sunfly config files from `github.com/bry-guy/sunfly`; required extras are explicit (`ghostty`, `pi`, `posting`, `tmux`, or `all`)
 - `~/script/theme-watch` — macOS watcher wrapper around `dark-notify`
 - `~/Library/LaunchAgents/net.bryguy.theme-sync.plist` — user launch agent for automatic macOS syncing

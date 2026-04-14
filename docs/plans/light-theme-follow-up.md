@@ -14,6 +14,7 @@ Make the Moonfly/Sunfly automatic switching path reliable and readable across th
 
 - Posting now launches and the `sunfly` theme looks good.
 - Pi / Claude / Posting / Harlequin / Neovim are all on the `theme-sync` path.
+- Harlequin now keeps shared profiles/themes in `~/.harlequin.toml`; project-local `.harlequin.toml` files only set `default_profile` because Harlequin shallow-merges top-level config tables.
 - tmux is now also on the `theme-sync` path via generated light/dark theme includes.
 - macOS appearance changes are being observed by `dark-notify` via the tracked `launchd` agent.
 
@@ -46,24 +47,21 @@ Make the Moonfly/Sunfly automatic switching path reliable and readable across th
   - track it as an upstream-only bug, or
   - add a stronger local workaround (for example, app relaunch or AppleScript-driven reload).
 
-#### 2. Harlequin light theme has readability problems
+#### 2. Harlequin light theme needs a final readability pass
 
-- Observed: Harlequin switched, but some light-theme text is hard to read.
-- Previous mapping was:
+- Current mapping is:
   - dark -> `harlequin`
   - light -> `solarized-light`
-- Adjustment made:
-  - dark -> `harlequin`
-  - light -> `textual-light`
+- Project-local `.harlequin.toml` files now only set `default_profile`, so this mapping is controlled centrally from `~/script/theme-sync` and `~/.harlequin.toml`.
 
 ##### Follow-up checklist
 
-- [ ] Launch Harlequin in light mode and verify catalog, editor, tabs, and result grid contrast.
-- [ ] If `textual-light` is still weak, test these built-in alternatives:
+- [ ] Launch Harlequin in light mode and verify catalog, editor, tabs, and result grid contrast with `solarized-light`.
+- [ ] If `solarized-light` is still weak, test these built-in alternatives:
   - `flexoki`
   - `catppuccin-latte`
-  - `solarized-light` (baseline / compare only)
-- [ ] Pick the best readable light theme and lock it in `~/script/theme-sync` + docs.
+  - `textual-light`
+- [ ] Keep the chosen light theme aligned in `~/script/theme-sync` + docs.
 
 #### 3. tmux light palette still needs a real-world readability pass
 
@@ -104,6 +102,7 @@ Even with automatic config rewriting, some tools may only fully reflect theme ch
   - `~/.config/posting/config.yaml`
   - `~/.harlequin.toml`
   - any other tracked config file we later place on the sync path
+- Posting project-local overrides should prefer `posting.env` without `POSTING_THEME`, so the synced home config remains the single theme authority unless a project deliberately opts out.
 
 ##### Follow-up checklist
 
@@ -126,7 +125,7 @@ Even with automatic config rewriting, some tools may only fully reflect theme ch
 ## Recommended execution order
 
 1. Verify Ghostty after the new reload-signal mitigation.
-2. Re-check Harlequin contrast with `textual-light`.
+2. Re-check Harlequin contrast with `solarized-light`.
 3. Inspect tmux under light mode and fine-tune the new synced light template if needed.
 4. Re-check Claude light theme choice.
 5. Update docs once the final light-mode decisions are settled.

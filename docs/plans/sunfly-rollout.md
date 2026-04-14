@@ -68,7 +68,7 @@ Harlequin is a Textual TUI app. Theming:
 - Config file is tracked at `~/.harlequin.toml`
 - **Implemented plan**: `~/script/theme-sync` rewrites profile themes to:
   - dark → `harlequin`
-  - light → `textual-light`
+  - light → `solarized-light`
 
 This is a best-effort approximation rather than a custom Sunfly port.
 
@@ -82,6 +82,7 @@ Posting supports custom YAML themes.
   - `moonfly` → tracked in dotfiles at `.local/share/posting/themes/moonfly.yaml`
   - `sunfly` → tracked in dotfiles at `.local/share/posting/themes/sunfly.yaml`, refreshed via `~/script/sunfly-install posting`
 - `~/script/theme-sync` rewrites the active Posting theme between those two names
+- Project-local Posting overrides should use `posting.env` / `POSTING_*`; avoid setting `POSTING_THEME` there unless you intentionally want to bypass system light/dark sync
 
 This gives Posting a real Moonfly/Sunfly pairing instead of a generic Textual fallback.
 
