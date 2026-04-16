@@ -11,6 +11,16 @@ else
 fi
 
 # ===============================
+# Identity Profile
+# ===============================
+
+if [ -f "$HOME/.config/dotfiles/identity-profile" ]; then
+    case "$(cat "$HOME/.config/dotfiles/identity-profile")" in
+        work) export WORK=1 ;;
+    esac
+fi
+
+# ===============================
 # PATH Configurations
 # ===============================
 
@@ -300,3 +310,7 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
+
+if [[ -n $WORK ]]; then
+		. $HOME/.zsh_work
+fi

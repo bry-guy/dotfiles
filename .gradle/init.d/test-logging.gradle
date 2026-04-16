@@ -1,0 +1,17 @@
+// User-local test configuration — applied to all Gradle builds on this machine.
+// Lives in ~/.gradle/init.d/ so it never touches shared build files.
+
+allprojects {
+    tasks.withType(Test).configureEach {
+        testLogging {
+            events "passed", "skipped", "failed"
+            exceptionFormat "short"
+        }
+
+        jvmArgs(
+            // Suppress Netty unsafe/native-access warnings on JDK 25+
+            "--enable-native-access=ALL-UNNAMED",
+            "--sun-misc-unsafe-memory-access=allow",
+        )
+    }
+}
