@@ -14,7 +14,6 @@ local handler = function(virtText, lnum, endLnum, width, truncate)
             local hlGroup = chunk[2]
             table.insert(newVirtText, {chunkText, hlGroup})
             chunkWidth = vim.fn.strdisplaywidth(chunkText)
-            -- str width returned from truncate() may less than 2nd argument, need padding
             if curWidth + chunkWidth < targetWidth then
                 suffix = suffix .. (' '):rep(targetWidth - curWidth - chunkWidth)
             end
@@ -25,6 +24,8 @@ local handler = function(virtText, lnum, endLnum, width, truncate)
     table.insert(newVirtText, {suffix, 'MoreMsg'})
     return newVirtText
 end
+
+local MAX_FOLD_LEVEL = 99
 
 local M = {
   'kevinhwang91/nvim-ufo',
@@ -55,21 +56,44 @@ local M = {
   },
   init = function()
     vim.o.foldcolumn = '1'
-    vim.o.foldlevel = 99
-    vim.o.foldlevelstart = 99
+    vim.o.foldlevel = MAX_FOLD_LEVEL
+    vim.o.foldlevelstart = MAX_FOLD_LEVEL
     vim.o.foldenable = true
-    vim.o.fillchars = 'eob: ,fold: ,foldopen:,foldsep: ,foldclose:'
-    vim.keymap.set('n', 'zR', require('ufo').openAllFolds)
-    vim.keymap.set('n', 'zM', require('ufo').closeAllFolds)
+    vim.o.fillchars = 'eob: ,fold: ,foldopen:,foldsep: ,foldclose:'
+
+    local ufo = require('ufo')
+    local current_level = MAX_FOLD_LEVEL
+
+    vim.keymap.set('n', 'zR', function()
+      current_level = MAX_FOLD_LEVEL
+      ufo.openAllFolds()
+    end, { desc = "Open all folds" })
+
+    vim.keymap.set('n', 'zM', function()
+      current_level = 0
+      ufo.closeAllFolds()
+    end, { desc = "Close all folds" })
+
+    vim.keymap.set('n', 'zr', function()
+      if current_level < MAX_FOLD_LEVEL then
+        current_level = current_level + 1
+      end
+      ufo.closeFoldsWith(current_level)
+    end, { desc = "Open one fold level" })
+
+    vim.keymap.set('n', 'zm', function()
+      if current_level > 0 then
+        current_level = current_level - 1
+      end
+      ufo.closeFoldsWith(current_level)
+    end, { desc = "Close one fold level" })
 
     vim.keymap.set('n', 'zp', function()
-      local winid = require('ufo').peekFoldedLinesUnderCursor()
+      local winid = ufo.peekFoldedLinesUnderCursor()
       if not winid then
         vim.lsp.buf.hover()
       end
-    end
-    )
+    end, { desc = "Peek fold or hover" })
   end,
 }
 return M
-
