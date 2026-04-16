@@ -17,28 +17,17 @@ local M = {
     local cmp = require('cmp')
     local types = require('cmp.types')
     local snippy = require('snippy')
+    local completion = require("config.completion")
 
     local has_words_before = function()
       local line, col = unpack(vim.api.nvim_win_get_cursor(0))
       return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
     end
 
-    cmp.setup({
-      enabled = function()
-        return vim.api.nvim_get_option_value("buftype", { buf = 0 }) ~= "prompt"
-        or require("cmp_dap").is_dap_buffer()
-      end
-    })
-    cmp.setup.filetype({ "markdown" }, {
-      enabled = false,
-    })
-    cmp.setup.filetype({ "dap-repl", "dapui_watches", "dapui_hover" }, {
-      sources = {
-        { name = "dap" },
-      },
-    })
-
     local opts = {
+      enabled = function()
+        return completion.enabled(0)
+      end,
       completion = {
         autocomplete = { types.cmp.TriggerEvent.TextChanged },
       },
@@ -82,7 +71,14 @@ local M = {
         { name = 'buffer' },
       })
     }
+
     cmp.setup(opts)
+    cmp.setup.filetype({ "dap-repl", "dapui_watches", "dapui_hover" }, {
+      enabled = true,
+      sources = {
+        { name = "dap" },
+      },
+    })
   end,
 }
 

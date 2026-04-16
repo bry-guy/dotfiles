@@ -150,6 +150,7 @@ The tracked theme sync pieces are:
 - `~/.pi/agent/themes/{moonfly,sunfly}.json` — tracked local Pi themes; `sunfly-install pi` refreshes `sunfly.json` from the public Sunfly repo
 - `~/.config/tmux/theme.dark.conf` and `~/.config/tmux/theme.light.conf` — tracked tmux templates; `sunfly-install tmux` refreshes the light template from the public Sunfly repo and `theme-sync` copies the active template to `~/.config/tmux/theme.conf`
 - `~/.config/ghostty/themes/Sunfly` — tracked local Ghostty light theme; `sunfly-install ghostty` refreshes it from the public Sunfly repo
+- `~/.config/nvim/lua/plugins/sunfly.lua` — tracked Neovim Sunfly loader glue; the current Sunfly Neovim implementation still uses Moonfly under the hood, so `bluz71/vim-moonfly-colors` remains a required dependency
 - `~/docs/plans/light-theme-follow-up.md` — follow-up bug plan for remaining light-mode polish and automation issues
 
 Useful commands:

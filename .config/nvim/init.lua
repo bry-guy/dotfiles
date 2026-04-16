@@ -3,4 +3,6 @@ require("config.autocmds")
 require("config.options")
 
 -- non-plugin hotkeys
-require("config.keymaps").apply(require("config.keymaps").tab_hotkeys)
+local keymaps = require("config.keymaps")
+keymaps.apply(keymaps.tab_hotkeys)
+keymaps.apply(keymaps.view_hotkeys)

@@ -4,6 +4,9 @@ local M = {
   keys = require("config.keymaps").whichkey_hotkeys,
   opts = {
     preset = "modern",
+    delay = function(ctx)
+      return ctx.plugin and 0 or 150
+    end,
     plugins = {
       registers = false,
     },
@@ -19,7 +22,9 @@ local M = {
       { "<leader>f", group = "Find (Telescope)" },
       { "<leader>m", group = "Markdown" },
       { "<leader>r", group = "Remote" },
+      { "<leader>s", group = "Snippets" },
       { "<leader>t", group = "Test (Neotest)" },
+      { "<leader>v", group = "View" },
       { "<leader>w", group = "Wiki (Obsidian)" },
       { "g", group = "LSP/Goto" },
       { "z", group = "Fold" },

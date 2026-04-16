@@ -119,8 +119,13 @@ M.tab_hotkeys = {
   { "<C-t>S-h", "<CMD>-tabmove<CR>", { desc = "Move tab to previous" } },
 }
 
--- completion (nvim-cmp) TODO: Uhhh what do
-M.cmp_hotkeys = {
+-- view
+M.view_hotkeys = {
+  { "<leader>vc", "<Cmd>CompletionToggle<CR>", { desc = "Completion Toggle" } },
+  { "<leader>vd", "<Cmd>ViewDiagnosticsToggle<CR>", { desc = "Diagnostics Virtual Text Toggle" } },
+  { "<leader>vh", "<Cmd>ViewInlayHintsToggle<CR>", { desc = "Inlay Hints Toggle" } },
+  { "<leader>vr", "<Cmd>ThemeRefresh<CR>", { desc = "Theme Refresh" } },
+  { "<leader>vw", "<Cmd>ViewWrapToggle<CR>", { desc = "Wrap Toggle" } },
 }
 
 
@@ -146,9 +151,9 @@ M.rendermarkdown_hotkeys = {
 }
 
 -- goyo
-  M.goyo_hotkeys = {
-    { "<leader>G", "<CMD>Goyo<CR>", { desc = "Goyo Toggle" } },
-  }
+M.goyo_hotkeys = {
+  { "<leader>vz", "<CMD>Goyo<CR>", { desc = "Zen (Goyo) Toggle" } },
+}
 
 -- codecompanion (ai)
 M.ai_hotkeys = {
@@ -204,9 +209,9 @@ M.whichkey_hotkeys = {
   {
     "<leader>?",
     function()
-      require("which-key").show({ global = false })
+      require("which-key").show({ keys = "<leader>", loop = true })
     end,
-    desc = "Buffer Local Keymaps (which-key)",
+    desc = "Leader Keymaps (which-key)",
   },
 }
 

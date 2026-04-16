@@ -50,7 +50,12 @@ vim.o.relativenumber = true
 
 -- Enable colorscheme
 vim.opt.termguicolors = true
-require("config.theme").apply()
+require("config.completion").setup()
+require("config.view").setup()
+local theme = require("config.theme")
+theme.setup()
+theme.apply()
 
 -- LSP specific settings
 vim.diagnostic.config({ float = { border = "single" } })
+

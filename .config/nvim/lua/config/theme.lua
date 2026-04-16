@@ -61,6 +61,20 @@ local function sync_lualine()
   lualine.setup(config)
 end
 
+local function reset_theme_modules()
+  package.loaded["moonfly"] = nil
+  package.loaded["sunfly"] = nil
+end
+
+local function sync_devicons()
+  local ok, devicons = pcall(require, "nvim-web-devicons")
+  if not ok or type(devicons.refresh) ~= "function" then
+    return
+  end
+
+  devicons.refresh()
+end
+
 local function ensure_focus_sync()
   if M._focus_sync_initialized or explicit_theme() or vim.fn.has("mac") == 0 then
     return
@@ -79,16 +93,33 @@ end
 function M.apply()
   local theme = M.current()
 
+  reset_theme_modules()
+
   if theme == "sunfly" then
-    vim.o.background = "light"
     vim.cmd("colorscheme sunfly")
   else
-    vim.o.background = "dark"
     vim.cmd("colorscheme moonfly")
   end
 
+  sync_devicons()
   sync_lualine()
   ensure_focus_sync()
+end
+
+function M.refresh()
+  M.apply()
+  vim.cmd("redraw!")
+end
+
+function M.setup()
+  if M._setup_done then
+    return
+  end
+
+  M._setup_done = true
+  vim.api.nvim_create_user_command("ThemeRefresh", function()
+    M.refresh()
+  end, { desc = "Refresh the current Neovim theme" })
 end
 
 function M.lualine_theme()

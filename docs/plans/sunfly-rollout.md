@@ -40,6 +40,9 @@ Date: 2026-04-12
 - uses `moonfly` for dark mode and `sunfly` for light mode when there is no explicit theme override
 - re-applies the correct theme on `FocusGained`
 - refreshes lualine when the theme flips
+- resets cached `moonfly` / `sunfly` modules before live theme refreshes so Sunfly's Moonfly-backed palette changes do not leak across mode switches
+
+Implementation note: the current Neovim `sunfly` plugin is still Moonfly-backed internally. It keeps `bluz71/vim-moonfly-colors` as an explicit dependency and layers the Sunfly palette/overrides on top.
 
 Explicit overrides still win:
 

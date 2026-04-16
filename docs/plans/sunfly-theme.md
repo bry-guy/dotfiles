@@ -169,6 +169,8 @@ Removed from local source-of-truth status:
 
 Those now come from the published `bry-guy/sunfly` repository instead.
 
+Implementation note: the current Neovim `sunfly` plugin is still Moonfly-backed internally. It requires `bluz71/vim-moonfly-colors` at runtime and layers the Sunfly palette/overrides on top of Moonfly's highlight coverage.
+
 ## Current Sunfly specification
 
 ### Base palette
