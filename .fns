@@ -46,6 +46,11 @@ vim-serve() {
 		tailscale serve --bg --tcp $port localhost:$port
 }
 
+open-colima() {
+	local mem="${1:-1}"
+	colima start --cpu 4 --memory "$mem" --disk 32 --vm-type=vz --vz-rosetta --mount-type=virtiofs --network-address --ssh-agent --dns 8.8.8.8 --dns 192.168.0.1
+}
+
 vim-connect() {
 		local host=$1
 		local port=$2

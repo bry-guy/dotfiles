@@ -36,7 +36,7 @@ alias d="docker"
 alias dc="docker-compose"
 alias dp="doppler"
 
-alias open-colima="colima start --vm-type vz --cpu 4 --memory 4"
+# open-colima is a function in .fns
 
 alias hq="harlequin"
 alias post="posting"

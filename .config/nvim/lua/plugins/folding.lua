@@ -59,7 +59,7 @@ local M = {
     vim.o.foldlevel = MAX_FOLD_LEVEL
     vim.o.foldlevelstart = MAX_FOLD_LEVEL
     vim.o.foldenable = true
-    vim.o.fillchars = 'eob: ,fold: ,foldopen:,foldsep: ,foldclose:'
+    vim.o.fillchars = 'eob: ,fold: ,foldopen:▾,foldsep: ,foldclose:▸'
 
     local ufo = require('ufo')
     local current_level = MAX_FOLD_LEVEL

@@ -1,10 +1,10 @@
 alias k='kubectl'
-alias dp='doppler'
-alias doppler-token="export DOPPLER_TOKEN=\"$(doppler configure get token --plain)\""
+# alias dp='doppler'
+# alias doppler-token="export DOPPLER_TOKEN=\"$(doppler configure get token --plain)\""
 alias d='docker'
 alias dc="docker-compose"
 alias open-rancher="open -a /Applications/Rancher\ Desktop.app"
-alias open-colima="colima start --cpu 4 --memory 6 --disk 32 --vm-type=vz --vz-rosetta --mount-type=virtiofs --network-address --ssh-agent --dns 8.8.8.8 --dns 192.168.0.1"
+# open-colima is a function in .fns
 alias docker='docker-wrapper'
 
 alias lumora='lumora-cli'

@@ -1,7 +1,2 @@
-source ~/.aliases_work
-
-## terraform
-complete -o nospace -C /opt/homebrew/bin/terraform terraform
-
-## work secrets
-export DOPPLER_TOKEN="$(doppler configure get token --plain)"
+export DOCKER_HOST="unix://${HOME}/.colima/default/docker.sock"
+export TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE=/var/run/docker.sock

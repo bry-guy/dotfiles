@@ -6,6 +6,8 @@
 		path = ~/.gitconfig.identity.work
 [includeIf "hasconfig:remote.*.url:ssh://git@lumora.ghe.com/**"]
 		path = ~/.gitconfig.identity.work
+[includeIf "hasconfig:remote.*.url:lumora@lumora.ghe.com:*/**"]
+		path = ~/.gitconfig.identity.work
 [alias]
 		co = checkout
 		br = branch

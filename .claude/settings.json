@@ -1,4 +1,8 @@
 {
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
   "permissions": {
     "allow": [
       "WebSearch",
@@ -20,11 +24,8 @@
   },
   "enabledPlugins": {
     "gopls-lsp@claude-plugins-official": true,
-    "lua-lsp@claude-plugins-official": true
-  },
-  "attribution": {
-    "commit": "",
-    "pr": ""
+    "lua-lsp@claude-plugins-official": true,
+    "jdtls-lsp@claude-plugins-official": true
   },
   "syntaxHighlightingDisabled": false,
   "skipDangerousModePermissionPrompt": true
