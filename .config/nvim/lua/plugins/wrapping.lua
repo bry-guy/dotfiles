@@ -1,12 +1,8 @@
 local M = {
   "andrewferrier/wrapping.nvim",
-  ft = { 'markdown', 'mkd', 'text' },
-  opts = {
-    softener = { markdown = function()
-      return true
-    end
-  },
-  },
+  -- Markdown uses an explicit reading mode (<leader>vm) so editing remains
+  -- plain/unwrapped by default. Keep wrapping.nvim only for generic text files.
+  ft = { "text" },
 }
 
 return M

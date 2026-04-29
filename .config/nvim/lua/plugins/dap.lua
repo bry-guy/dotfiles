@@ -5,7 +5,10 @@ local M = {
   },
   keys = require("config.keymaps").dap_hotkeys,
   config = function()
-    require("dap-go").setup()
+    if vim.fn.executable("dlv") == 1 then
+      require("dap-go").setup()
+    end
+
     local dap = require("dap")
     dap.switchbuf = "usevisible,usetab,uselast"
 

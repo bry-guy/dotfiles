@@ -61,35 +61,34 @@ local M = {
     vim.o.foldenable = true
     vim.o.fillchars = 'eob: ,fold: ,foldopen:▾,foldsep: ,foldclose:▸'
 
-    local ufo = require('ufo')
     local current_level = MAX_FOLD_LEVEL
 
     vim.keymap.set('n', 'zR', function()
       current_level = MAX_FOLD_LEVEL
-      ufo.openAllFolds()
+      require('ufo').openAllFolds()
     end, { desc = "Open all folds" })
 
     vim.keymap.set('n', 'zM', function()
       current_level = 0
-      ufo.closeAllFolds()
+      require('ufo').closeAllFolds()
     end, { desc = "Close all folds" })
 
     vim.keymap.set('n', 'zr', function()
       if current_level < MAX_FOLD_LEVEL then
         current_level = current_level + 1
       end
-      ufo.closeFoldsWith(current_level)
+      require('ufo').closeFoldsWith(current_level)
     end, { desc = "Open one fold level" })
 
     vim.keymap.set('n', 'zm', function()
       if current_level > 0 then
         current_level = current_level - 1
       end
-      ufo.closeFoldsWith(current_level)
+      require('ufo').closeFoldsWith(current_level)
     end, { desc = "Close one fold level" })
 
     vim.keymap.set('n', 'zp', function()
-      local winid = ufo.peekFoldedLinesUnderCursor()
+      local winid = require('ufo').peekFoldedLinesUnderCursor()
       if not winid then
         vim.lsp.buf.hover()
       end

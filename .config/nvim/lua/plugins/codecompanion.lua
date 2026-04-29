@@ -3,7 +3,6 @@ local M = {
   dependencies = {
     "nvim-lua/plenary.nvim",
     "nvim-treesitter/nvim-treesitter",
-    { "MeanderingProgrammer/render-markdown.nvim", ft = { "markdown", "codecompanion" } },
   },
   keys = require("config.keymaps").ai_hotkeys,
   init = function()
@@ -52,7 +51,7 @@ local M = {
       }
     },
     opts = {
-      log_level = "DEBUG",
+      log_level = "WARN",
     },
   }
 }

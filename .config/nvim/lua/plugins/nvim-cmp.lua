@@ -7,7 +7,6 @@ local M = {
     -- 'hrsh7th/cmp-path',
     -- 'hrsh7th/cmp-cmdline',
     "rcarriga/cmp-dap",
-    'dcampos/nvim-snippy',
   },
   lazy = false,
   init = function()
@@ -16,7 +15,6 @@ local M = {
   config = function()
     local cmp = require('cmp')
     local types = require('cmp.types')
-    local snippy = require('snippy')
     local completion = require("config.completion")
 
     local has_words_before = function()
@@ -33,7 +31,7 @@ local M = {
       },
       snippet = {
         expand = function(args)
-          snippy.expand_snippet(args.body)
+          vim.snippet.expand(args.body)
         end
       },
       mapping = {
@@ -42,8 +40,8 @@ local M = {
         ["<Tab>"] = cmp.mapping(function(fallback)
           if cmp.visible() then
             cmp.select_next_item()
-          elseif snippy.can_expand_or_advance() then
-            snippy.expand_or_advance()
+          elseif vim.snippet.active({ direction = 1 }) then
+            vim.snippet.jump(1)
           elseif has_words_before() then
             cmp.complete()
           else
@@ -51,11 +49,13 @@ local M = {
           end
         end, { "i", "s" }),
 
-        ["<S-Tab>"] = cmp.mapping(function()
+        ["<S-Tab>"] = cmp.mapping(function(fallback)
           if cmp.visible() then
             cmp.select_prev_item()
-          elseif snippy.can_jump(-1) then
-            snippy.previous()
+          elseif vim.snippet.active({ direction = -1 }) then
+            vim.snippet.jump(-1)
+          else
+            fallback()
           end
         end, { "i", "s" }),
         ['<C-s>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),

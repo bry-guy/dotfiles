@@ -49,20 +49,7 @@ M.lsp_hotkeys = {
   { "gA", "<cmd>lua vim.lsp.buf.code_action()<CR>", { desc = "LSP Code Action" } },
 }
 
--- test
-M.test_hotkeys = {
-  { "<leader>tn", "<cmd>lua require('neotest').run.run()<CR>", desc = "Test Run Nearest" },
-  { "<leader>tl", "<cmd>lua require('neotest').run.run_last()<CR>", desc = "Test Run Last" },
-  { "<leader>tf", "<cmd>lua require('neotest').run.run(vim.fn.expand('%'))<CR>", desc = "Test Run File" },
-  { "<leader>td", "<cmd>lua require('neotest').run.run({strategy = 'dap'})<CR>", desc = "Test Debug Nearest" },
-  { "<leader>tp", "<cmd>lua require('neotest').output_panel.open()<CR>:tabnext<CR>", desc = "Test Output Panel" },
-  { "<leader>tP", "<cmd>lua require('neotest').output_panel.close()<CR>", desc = "Test Close Panel" },
-  { "<leader>tc", "<cmd>lua require('neotest').output_panel.clear()<CR>", desc = "Test Clear Panel" },
-  { "<leader>to", "<cmd>lua require('neotest').output.open({ short = true, enter = true, auto_close = true })<CR>", desc = "Test Show Output" },
-}
-
 -- oil (navigation)
-vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 M.oil_hotkeys = {
   ["g?"]    = "actions.show_help",
   ["<CR>"]  = "actions.select",
@@ -106,7 +93,7 @@ M.telescope_hotkeys = {
   { "<leader>fm", "<cmd>lua require('telescope.builtin').man_pages()<CR>", { desc = "Tele Man Pages" } },
   { "<leader>fl", "<cmd>lua require('telescope.builtin').lsp_references()<CR>", { desc = "Tele LSP References" } },
   { "<leader>ft", "<cmd>lua require('telescope.builtin').treesitter()<CR>", { desc = "Tele Treesitter Symbols" } },
-  { "<leader>fl", "<cmd>lua require('telescope.builtin').registers()<CR>", { desc = "Tele Registers" } },
+  { "<leader>fr", "<cmd>lua require('telescope.builtin').registers()<CR>", { desc = "Tele Registers" } },
 }
 
 -- tabs
@@ -140,14 +127,16 @@ M.obsidian_hotkeys = {
   { "<leader>wg", "<Cmd>ObsidianFollowLink<CR>", { desc = "Wiki Follow Link" } },
 }
 
--- render-markdown
-M.rendermarkdown_hotkeys = {
-  { "<leader>me", "<CMD>RenderMarkdown enable<CR>", { desc = "Enable this plugin" } },
-  { "<leader>md", "<CMD>RenderMarkdown disable<CR>", { desc = "Disable this plugin" } },
-  { "<leader>mt", "<CMD>RenderMarkdown toggle<CR>", { desc = "Switch between enabling & disabling this plugin" } },
-  { "<leader>ml", "<CMD>RenderMarkdown log<CR>", { desc = "Opens the log file for this plugin" } },
-  { "<leader>me", "<CMD>RenderMarkdown expand<CR>", { desc = "Increase anti-conceal margin above and below by 1" } },
-  { "<leader>mc", "<CMD>RenderMarkdown contract<CR>", { desc = "Decrease anti-conceal margin above and below by 1" } },
+-- markdown view
+M.markview_hotkeys = {
+  { "<leader>vm", "<CMD>MarkdownReadModeToggle<CR>", desc = "Markdown Read Mode Toggle" },
+}
+
+-- session
+M.session_hotkeys = {
+  { "<leader>sl", function() require("persistence").load({ last = true }) end, desc = "Session Last" },
+  { "<leader>sr", function() require("persistence").load() end, desc = "Session Restore" },
+  { "<leader>ss", function() require("persistence").select() end, desc = "Session Select" },
 }
 
 -- goyo
@@ -187,17 +176,6 @@ M.copilot_hotkeys = {
   }
 }
 
--- snippets
-M.snippets_hotkeys = {
-  is = {
-    ['<leader>s'] = 'expand_or_advance',
-    ['<leader>S'] = 'previous',
-  },
-  nx = {
-    ['<leader>x'] = 'cut_text',
-  },
-}
-
 -- remote (devcontainer)
 M.remote_hotkeys = {
   { "<leader>rs", "<cmd>RemoteStart<cr>", desc = "Remote Start" },
@@ -216,10 +194,14 @@ M.whichkey_hotkeys = {
 }
 
 -- apply a table directly
-function M.apply(mappings)
+function M.apply(mappings, default_opts)
+  default_opts = default_opts or {}
+
   for _, map in ipairs(mappings) do
-    local lhs, rhs, opts = map[1], map[2], map[3] or {}
+    local lhs, rhs = map[1], map[2]
+    local opts = vim.tbl_extend("force", default_opts, map[3] or {})
     local mode = opts.mode or "n"
+
     -- remove .mode from opts so vim.keymap.set won’t choke
     opts.mode = nil
     vim.keymap.set(mode, lhs, rhs, opts)

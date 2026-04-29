@@ -1,3 +1,10 @@
+-- Disable unused remote plugin providers. These only affect legacy/provider-hosted
+-- plugins written for Node/Python/Ruby/Perl, not normal Lua plugins or LSP/DAP tools.
+vim.g.loaded_node_provider = 0
+vim.g.loaded_perl_provider = 0
+vim.g.loaded_python3_provider = 0
+vim.g.loaded_ruby_provider = 0
+
 -- Enable filetype detection
 vim.cmd('filetype on')
 -- Enable filetype-specific indenting and plugins

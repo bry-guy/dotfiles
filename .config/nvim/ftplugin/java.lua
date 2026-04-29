@@ -142,8 +142,8 @@ local config = {
     '-Declipse.application=org.eclipse.jdt.ls.core.id1',
     '-Dosgi.bundles.defaultStartLevel=4',
     '-Declipse.product=org.eclipse.jdt.ls.core.product',
-    '-Dlog.protocol=true',
-    '-Dlog.level=ALL',
+    '-Dlog.protocol=false',
+    '-Dlog.level=WARN',
     '-Xmx1g',
     '-Xms512m',
     '-XX:+UseG1GC',
@@ -168,8 +168,8 @@ local config = {
   init_options = {
     bundles = bundles
   },
-  on_attach = function(_,_)
-    keymaps.apply(lsp_hotkeys)
+  on_attach = function(_, bufnr)
+    keymaps.apply(lsp_hotkeys, { buffer = bufnr })
   end,
 }
 require('jdtls').start_or_attach(config)
