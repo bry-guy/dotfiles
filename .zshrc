@@ -145,6 +145,12 @@ function current_process() {
 
 setopt prompt_subst
 autoload -Uz add-zsh-hook
+
+function restore_terminal_cursor_precmd() {
+    printf '\033[?25h'
+}
+add-zsh-hook precmd restore_terminal_cursor_precmd
+
 function aws_prompt_precmd() {
     if [[ -n $AWS_VAULT ]]; then
         if [[ $AWS_VAULT == *prod* ]]; then

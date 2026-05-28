@@ -3,7 +3,7 @@
 #   light -> sunfly
 # Project-local overrides can live in ./posting.env via POSTING_* variables,
 # but should usually omit POSTING_THEME so system light/dark sync keeps working.
-theme: sunfly
+theme: sunfly-paper
 load_user_themes: true
 watch_themes: true
 

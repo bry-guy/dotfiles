@@ -171,6 +171,8 @@ Those now come from the published `bry-guy/sunfly` repository instead.
 
 Implementation note: the current Neovim `sunfly` plugin is still Moonfly-backed internally. It requires `bluz71/vim-moonfly-colors` at runtime and layers the Sunfly palette/overrides on top of Moonfly's highlight coverage.
 
+Variant note (2026-05-05): Sunfly is now being reified as `sunfly-paper` (`#f0e8da`, the original Neovim background) and `sunfly-bright` (`#f8f2ea`, the original terminal background). See `docs/plans/sunfly-variants.md` for the active variant rollout details; the single-palette notes below are historical context for the paper-first work.
+
 ## Current Sunfly specification
 
 ### Base palette

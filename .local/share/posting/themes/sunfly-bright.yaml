@@ -1,0 +1,33 @@
+name: sunfly-bright
+dark: false
+primary: '#1b4fae'
+secondary: '#594800'
+accent: '#004ca8'
+background: '#f8f2ea'
+surface: '#fffefb'
+panel: '#f2ebe2'
+error: '#9b1b23'
+success: '#0d5f20'
+warning: '#6b5200'
+author: Bryan Guy
+description: Sunfly Bright light Posting theme tuned to match Moonfly semantics.
+text_area:
+  cursor: reverse
+  cursor_line: 'on #f2ebe2'
+  selection: reverse
+  gutter: '#8b7d6f'
+  matched_bracket: 'bold #0d5f20'
+url:
+  base: '#1b4fae'
+  protocol: 'bold #5530bb'
+syntax:
+  json_key: '#004ca8'
+  json_number: '#4a38c0'
+  json_string: '#594800'
+  json_boolean: '#8a3578'
+  json_null: '#75685b'
+method:
+  get: '#004ca8'
+  post: '#0d5f20'
+  put: '#5530bb'
+  delete: '#9b1b23'

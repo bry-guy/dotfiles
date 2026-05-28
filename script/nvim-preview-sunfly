@@ -2,8 +2,27 @@
 set -euo pipefail
 
 # Usage:
-#   nvim-preview-sunfly [file...]
+#   nvim-preview-sunfly [paper|bright] [file...]
+
+variant="${DOTFILES_SUNFLY_VARIANT:-paper}"
+if [[ $# -gt 0 ]]; then
+  case "$1" in
+    paper|sunfly-paper)
+      variant="paper"
+      shift
+      ;;
+    bright|sunfly-bright)
+      variant="bright"
+      shift
+      ;;
+  esac
+fi
 
 export NVIM_APPNAME="nvim-sunfly-preview"
+export DOTFILES_SUNFLY_VARIANT="$variant"
+export DOTFILES_NVIM_THEME="sunfly-$variant"
+if [[ -d "$HOME/.local/share/nvim/lazy/sunfly" ]]; then
+  export SUNFLY_PLUGIN_DIR="$HOME/.local/share/nvim/lazy/sunfly"
+fi
 unset SUNFLY_VARIANT
 exec nvim "$@"

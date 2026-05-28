@@ -27,7 +27,7 @@
         re = recent
         rerem = recent-remote
 [core]
-		excludesFile = ~/.local/.gitignore
+	excludesFile = /Users/bryan/.gitignore
 [init]
 		defaultBranch = main
 

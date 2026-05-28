@@ -8,6 +8,10 @@ Usage: ~/script/theme-sync [auto|dark|light]
 
 Syncs terminal app themes to the requested appearance.
 If omitted, appearance is detected from macOS.
+
+Light mode uses DOTFILES_SUNFLY_VARIANT/SUNFLY_VARIANT when set:
+  paper  -> Sunfly Paper / sunfly-paper (default)
+  bright -> Sunfly Bright / sunfly-bright
 EOF
 }
 
@@ -67,10 +71,27 @@ pi_settings="${home_dir}/.pi/agent/settings.json"
 claude_state="${home_dir}/.claude.json"
 harlequin_config="${home_dir}/.harlequin.toml"
 posting_config="${home_dir}/.config/posting/config.yaml"
+ghostty_config="${home_dir}/.config/ghostty/config"
 tmux_theme_target="${home_dir}/.config/tmux/theme.conf"
 
 claude_theme_dark="${CLAUDE_THEME_DARK:-dark-ansi}"
 claude_theme_light="${CLAUDE_THEME_LIGHT:-light-ansi}"
+
+sunfly_variant="${DOTFILES_SUNFLY_VARIANT:-${SUNFLY_VARIANT:-paper}}"
+sunfly_variant="${sunfly_variant#sunfly-}"
+case "$sunfly_variant" in
+  paper)
+    sunfly_ghostty_theme="Sunfly Paper"
+    ;;
+  bright)
+    sunfly_ghostty_theme="Sunfly Bright"
+    ;;
+  *)
+    echo "Unknown Sunfly variant: $sunfly_variant" >&2
+    exit 1
+    ;;
+esac
+sunfly_theme="sunfly-${sunfly_variant}"
 
 ghostty_status="native"
 tmux_status="not-configured"
@@ -83,24 +104,40 @@ if [[ "$mode" == "dark" ]]; then
   tmux_theme_source="${home_dir}/.config/tmux/theme.dark.conf"
   claude_theme="$claude_theme_dark"
 else
-  pi_theme="sunfly"
-  nvim_theme="sunfly"
-  posting_theme="sunfly"
+  pi_theme="$sunfly_theme"
+  nvim_theme="$sunfly_theme"
+  posting_theme="$sunfly_theme"
   harlequin_theme="solarized-light"
-  tmux_theme_source="${home_dir}/.config/tmux/theme.light.conf"
+  tmux_theme_source="${home_dir}/.config/tmux/theme.light.${sunfly_variant}.conf"
   claude_theme="$claude_theme_light"
 
   sunfly_install="${home_dir}/script/sunfly-install"
   if [[ -x "$sunfly_install" ]]; then
     missing_extras=()
-    [[ ! -f "${home_dir}/.config/ghostty/themes/Sunfly" ]] && missing_extras+=(ghostty)
-    [[ ! -f "${home_dir}/.pi/agent/themes/sunfly.json" ]] && missing_extras+=(pi)
-    [[ ! -f "${home_dir}/.local/share/posting/themes/sunfly.yaml" ]] && missing_extras+=(posting)
+    [[ ! -f "${home_dir}/.config/ghostty/themes/${sunfly_ghostty_theme}" ]] && missing_extras+=(ghostty)
+    [[ ! -f "${home_dir}/.pi/agent/themes/${sunfly_theme}.json" ]] && missing_extras+=(pi)
+    [[ ! -f "${home_dir}/.local/share/posting/themes/${sunfly_theme}.yaml" ]] && missing_extras+=(posting)
     [[ ! -f "$tmux_theme_source" ]] && missing_extras+=(tmux)
     if [[ ${#missing_extras[@]} -gt 0 ]]; then
-      "$sunfly_install" "${missing_extras[@]}"
+      "$sunfly_install" --variant "$sunfly_variant" "${missing_extras[@]}"
     fi
   fi
+fi
+
+if [[ -f "$ghostty_config" ]]; then
+  python3 - "$ghostty_config" "$sunfly_ghostty_theme" <<'PY'
+import pathlib
+import re
+import sys
+
+path = pathlib.Path(sys.argv[1])
+light_theme = sys.argv[2]
+text = path.read_text()
+text, count = re.subn(r'(?m)^theme = dark:Moonfly,light:.*$', f'theme = dark:Moonfly,light:{light_theme}', text, count=1)
+if count == 0:
+    text += f'\ntheme = dark:Moonfly,light:{light_theme}\n'
+path.write_text(text)
+PY
 fi
 
 python3 - "$pi_settings" "$pi_theme" <<'PY'
@@ -174,7 +211,7 @@ PY
 fi
 
 for sock in /tmp/nvim*.sock; do
-  nvim --server "$sock" --remote-send "<Cmd>lua require('config.theme').apply()<CR>" >/dev/null 2>&1 || true
+  nvim --server "$sock" --remote-send "<Cmd>lua vim.g.dotfiles_sunfly_variant = '${sunfly_variant}'; require('config.theme').apply()<CR>" >/dev/null 2>&1 || true
 done
 
 if [[ "$(uname -s)" == "Darwin" ]] && pgrep -x ghostty >/dev/null 2>&1; then
@@ -192,6 +229,6 @@ Synced appearance: $mode
 - Posting: $posting_theme
 - Harlequin: $harlequin_theme
 - tmux: $tmux_status
-- Ghostty: $ghostty_status (dark:Moonfly,light:Sunfly)
+- Ghostty: $ghostty_status (dark:Moonfly,light:$sunfly_ghostty_theme)
 - Claude Code: $claude_status ($( [[ "$claude_status" == "updated" ]] && echo "$claude_theme via ~/.claude.json" || echo "set via /theme $claude_theme" ))
 EOF

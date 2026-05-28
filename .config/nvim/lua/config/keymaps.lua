@@ -144,17 +144,48 @@ M.goyo_hotkeys = {
   { "<leader>vz", "<CMD>Goyo<CR>", { desc = "Zen (Goyo) Toggle" } },
 }
 
--- codecompanion (ai)
+-- agentic (ai)
 M.ai_hotkeys = {
-  { "<leader>aa", "<cmd>CodeCompanionActions<cr>", desc = "AI Actions" },
-  { "<leader>ac", "<cmd>CodeCompanionChat Toggle<cr>", desc = "AI Chat Toggle" },
-  { "<leader>ap", "<cmd>CodeCompanionChat Add<cr>", desc = "AI Chat Add" },
-}
-
--- codecompanion diff (ai)
-M.ai_diff_hotkeys = {
-  { "<leader>ady", function() require("codecompanion").diff.accept() end, { desc = "AI Accept Diff" } },
-  { "<leader>adn", function() require("codecompanion").diff.reject() end, { desc = "AI Reject Diff" } },
+  {
+    "<leader>ac",
+    function() require("agentic").toggle({ auto_add_to_context = false }) end,
+    mode = { "n", "v", "i" },
+    desc = "AI Chat Toggle",
+  },
+  {
+    "<leader>ap",
+    function() require("agentic").add_selection_or_file_to_context() end,
+    mode = { "n", "v" },
+    desc = "AI Add File/Selection",
+  },
+  {
+    "<leader>an",
+    function() require("agentic").new_session({ auto_add_to_context = false }) end,
+    mode = { "n", "v", "i" },
+    desc = "AI New Session",
+  },
+  {
+    "<leader>ar",
+    function() require("agentic").restore_session() end,
+    mode = { "n", "v", "i" },
+    desc = "AI Restore Session",
+  },
+  {
+    "<leader>ad",
+    function() require("agentic").add_buffer_diagnostics() end,
+    desc = "AI Add Buffer Diagnostics",
+  },
+  {
+    "<leader>as",
+    function() require("agentic").stop_generation() end,
+    desc = "AI Stop Generation",
+  },
+  {
+    "<leader>at",
+    function() require("agentic").rotate_layout({ "right", "bottom" }) end,
+    mode = { "n", "v", "i" },
+    desc = "AI Toggle Layout",
+  },
 }
 
 -- copilot hotkeys (ai)

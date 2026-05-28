@@ -15,9 +15,16 @@ local function apply_sunfly_gutter_overrides()
   end
 end
 
+local sunfly_plugin_dir = vim.env.SUNFLY_PLUGIN_DIR
+if sunfly_plugin_dir == "" then
+  sunfly_plugin_dir = nil
+end
+
 local M = {
   "bry-guy/sunfly",
-  tag = "v0.1.0",
+  name = "sunfly",
+  dir = sunfly_plugin_dir,
+  branch = sunfly_plugin_dir and nil or "main",
   lazy = false,
   priority = 1001,
   -- Sunfly currently reuses Moonfly's implementation and palette plumbing under the hood.
@@ -29,7 +36,7 @@ local M = {
     local group = vim.api.nvim_create_augroup("SunflyThemeOverrides", { clear = true })
     vim.api.nvim_create_autocmd("ColorScheme", {
       group = group,
-      pattern = "sunfly",
+      pattern = "sunfly*",
       callback = apply_sunfly_gutter_overrides,
     })
   end,

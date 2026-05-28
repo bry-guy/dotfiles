@@ -141,22 +141,22 @@ Apply a full profile:
 ### Automatic theme sync
 
 The tracked theme sync pieces are:
-- `~/script/theme-sync` — applies `dark` / `light` themes across Neovim, Pi, Posting, Harlequin, tmux, and Claude Code, and sends a best-effort Ghostty reload signal on macOS; shared Harlequin profiles/themes live in `~/.harlequin.toml`, while project-local `.harlequin.toml` files should only set `default_profile` because Harlequin shallow-merges top-level config tables; Posting theme state is owned by `~/.config/posting/config.yaml`, while project-local overrides should use `posting.env` / `POSTING_*` and usually omit `POSTING_THEME`
-- `~/script/sunfly-install <extra...>` — updates the tracked local Sunfly config files from `github.com/bry-guy/sunfly`; required extras are explicit (`ghostty`, `pi`, `posting`, `tmux`, or `all`)
+- `~/script/theme-sync` — applies `dark` / `light` themes across Neovim, Pi, Posting, Harlequin, tmux, Ghostty, and Claude Code, and sends a best-effort Ghostty reload signal on macOS; light mode uses the selected Sunfly variant from `DOTFILES_SUNFLY_VARIANT` / `SUNFLY_VARIANT` (`paper` by default, or `bright`); shared Harlequin profiles/themes live in `~/.harlequin.toml`, while project-local `.harlequin.toml` files should only set `default_profile` because Harlequin shallow-merges top-level config tables; Posting theme state is owned by `~/.config/posting/config.yaml`, while project-local overrides should use `posting.env` / `POSTING_*` and usually omit `POSTING_THEME`
+- `~/script/sunfly-install --variant paper|bright|all <extra...>` — updates the tracked local Sunfly variant config files from `github.com/bry-guy/sunfly` or `SUNFLY_SOURCE_DIR`; required extras are explicit (`ghostty`, `pi`, `posting`, `tmux`, or `all`)
 - `~/script/theme-watch` — macOS watcher wrapper around `dark-notify`
 - `~/Library/LaunchAgents/net.bryguy.theme-sync.plist` — user launch agent for automatic macOS syncing
 - `~/.local/share/darkman/{dark-mode.d,light-mode.d}/50-theme-sync` — Linux darkman hooks
-- `~/.local/share/posting/themes/{moonfly,sunfly}.yaml` — tracked local Posting themes; `sunfly-install posting` refreshes `sunfly.yaml` from the public Sunfly repo
-- `~/.pi/agent/themes/{moonfly,sunfly}.json` — tracked local Pi themes; `sunfly-install pi` refreshes `sunfly.json` from the public Sunfly repo
-- `~/.config/tmux/theme.dark.conf` and `~/.config/tmux/theme.light.conf` — tracked tmux templates; `sunfly-install tmux` refreshes the light template from the public Sunfly repo and `theme-sync` copies the active template to `~/.config/tmux/theme.conf`
-- `~/.config/ghostty/themes/Sunfly` — tracked local Ghostty light theme; `sunfly-install ghostty` refreshes it from the public Sunfly repo
+- `~/.local/share/posting/themes/{moonfly,sunfly-paper,sunfly-bright}.yaml` — tracked local Posting themes; `sunfly-install --variant ... posting` refreshes the Sunfly variant themes from the public Sunfly repo
+- `~/.pi/agent/themes/{moonfly,sunfly-paper,sunfly-bright}.json` — tracked local Pi themes; `sunfly-install --variant ... pi` refreshes the Sunfly variant themes from the public Sunfly repo
+- `~/.config/tmux/theme.dark.conf` and `~/.config/tmux/theme.light.{paper,bright}.conf` — tracked tmux templates; `sunfly-install --variant ... tmux` refreshes the light templates from the public Sunfly repo and `theme-sync` copies the active template to `~/.config/tmux/theme.conf`
+- `~/.config/ghostty/themes/Sunfly {Paper,Bright}` — tracked local Ghostty light variants; `sunfly-install --variant ... ghostty` refreshes them from the public Sunfly repo
 - `~/.config/nvim/lua/plugins/sunfly.lua` — tracked Neovim Sunfly loader glue; the current Sunfly Neovim implementation still uses Moonfly under the hood, so `bluz71/vim-moonfly-colors` remains a required dependency
 - `~/docs/plans/light-theme-follow-up.md` — follow-up bug plan for remaining light-mode polish and automation issues
 
 Useful commands:
 ```sh
-~/script/sunfly-install ghostty pi posting tmux
-~/script/theme-sync auto
+~/script/sunfly-install --variant all all
+DOTFILES_SUNFLY_VARIANT=paper ~/script/theme-sync auto
 ~/script/theme-sync-enable
 ~/script/theme-sync-disable
 ```
@@ -233,7 +233,7 @@ The intended workflow is:
 - versioned project runtimes
 - repo-specific development toolchains
 
-Global `mise` usage is intentionally minimized in favor of Brew for machine-global tools.
+Global `mise` usage is intentionally minimized in favor of Brew for machine-global tools. Temporary machine-local exceptions may live in untracked `~/.mise.local.toml` when a tool is WIP or does not have an appropriate Brew formula yet; prefer moving those tools to Brew once practical.
 
 ## Identity selection
 

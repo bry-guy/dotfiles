@@ -1,6 +1,6 @@
 {
-  "lastChangelogVersion": "0.66.1",
-  "theme": "sunfly",
+  "lastChangelogVersion": "0.76.0",
+  "theme": "sunfly-paper",
   "packages": [
     "git:github.com/nicobailon/pi-mcp-adapter",
     "git:github.com/nicobailon/pi-web-access",
@@ -9,8 +9,8 @@
     "git:github.com/bry-guy/pi-ez-delegate"
   ],
   "defaultProvider": "openai-codex",
-  "defaultModel": "gpt-5.4",
-  "defaultThinkingLevel": "high",
+  "defaultModel": "gpt-5.5",
+  "defaultThinkingLevel": "xhigh",
   "editorPaddingX": 2,
   "hideThinkingBlock": false,
   "quietStartup": true,

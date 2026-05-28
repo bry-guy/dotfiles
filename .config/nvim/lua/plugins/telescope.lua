@@ -76,7 +76,22 @@ local M = {
     require('telescope').setup(opts)
     require('telescope').load_extension('fzf')
     require('telescope').load_extension('dap')
+
+    -- telescope-ui-select can throw `Invalid cursor line: out of range` when a
+    -- vim.ui.select picker has no rows. Guard empty selects but keep Telescope
+    -- for non-empty pickers, including Agentic's restore picker.
     require('telescope').load_extension('ui-select')
+    local telescope_select = vim.ui.select
+    vim.ui.select = function(items, select_opts, on_choice)
+      if not items or vim.tbl_isempty(items) then
+        if on_choice then
+          on_choice(nil, nil)
+        end
+        return
+      end
+
+      return telescope_select(items, select_opts or {}, on_choice)
+    end
   end,
   opts = {
       defaults = {
@@ -122,7 +137,10 @@ local M = {
           override_generic_sorter = true,  -- override the generic sorter
           override_file_sorter = true,     -- override the file sorter
           case_mode = "smart_case",        -- or "ignore_case" or "respect_case"
-        }
+        },
+        ["ui-select"] = {
+          sorting_strategy = "ascending",
+        },
       }
   },
 }

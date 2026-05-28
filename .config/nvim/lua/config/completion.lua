@@ -9,6 +9,10 @@ local prose_filetypes = {
   text = true,
 }
 
+local completion_disabled_filetypes = {
+  AgenticInput = true,
+}
+
 local function is_dap_buffer()
   local ok, cmp_dap = pcall(require, "cmp_dap")
   return ok and cmp_dap.is_dap_buffer()
@@ -35,7 +39,12 @@ function M.enabled(bufnr)
     return is_dap_buffer()
   end
 
-  return not prose_filetypes[current_filetype(bufnr)]
+  local filetype = current_filetype(bufnr)
+  if completion_disabled_filetypes[filetype] then
+    return false
+  end
+
+  return not prose_filetypes[filetype]
 end
 
 local function cmp_refresh()

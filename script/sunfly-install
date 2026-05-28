@@ -3,30 +3,52 @@ set -euo pipefail
 
 usage() {
   cat <<'EOF'
-Usage: ~/script/sunfly-install [--ref <git-ref>] <extra> [<extra> ...]
+Usage: ~/script/sunfly-install [--variant paper|bright|all] [--ref <git-ref>] [--source-dir <path>] <extra> [<extra> ...]
 
-Update tracked local Sunfly config files from the public bry-guy/sunfly repository.
+Update tracked local Sunfly config files from the public bry-guy/sunfly repository
+or from a local checkout.
 
 Extras:
-  ghostty   -> updates ~/.config/ghostty/themes/Sunfly
-  pi        -> updates ~/.pi/agent/themes/sunfly.json
-  posting   -> updates ~/.local/share/posting/themes/sunfly.yaml
-  tmux      -> updates ~/.config/tmux/theme.light.conf
+  ghostty   -> updates ~/.config/ghostty/themes/Sunfly Paper|Bright
+  pi        -> updates ~/.pi/agent/themes/sunfly-paper|bright.json
+  posting   -> updates ~/.local/share/posting/themes/sunfly-paper|bright.yaml
+  tmux      -> updates ~/.config/tmux/theme.light.paper|bright.conf
   all       -> install all extras above
 
 Examples:
-  ~/script/sunfly-install ghostty pi
-  ~/script/sunfly-install --ref v0.1.0 tmux posting
-  ~/script/sunfly-install all
+  ~/script/sunfly-install --variant paper ghostty pi
+  ~/script/sunfly-install --variant bright tmux posting
+  ~/script/sunfly-install --variant all all
+  ~/script/sunfly-install --source-dir ~/.local/share/nvim/lazy/sunfly --variant paper all
 
 Environment:
-  SUNFLY_REPO  Override GitHub repo (default: bry-guy/sunfly)
-  SUNFLY_REF   Override git ref/tag  (default: v0.1.0)
+  DOTFILES_SUNFLY_VARIANT  Default variant when --variant is omitted (default: paper)
+  SUNFLY_VARIANT           Fallback default variant
+  SUNFLY_REPO              Override GitHub repo (default: bry-guy/sunfly)
+  SUNFLY_REF               Override git ref/tag  (default: main)
+  SUNFLY_SOURCE_DIR        Copy files from a local checkout instead of GitHub
 EOF
 }
 
 repo="${SUNFLY_REPO:-bry-guy/sunfly}"
-ref="${SUNFLY_REF:-v0.1.0}"
+ref="${SUNFLY_REF:-main}"
+variant="${DOTFILES_SUNFLY_VARIANT:-${SUNFLY_VARIANT:-paper}}"
+source_dir="${SUNFLY_SOURCE_DIR:-}"
+
+normalize_variant() {
+  case "${1#sunfly-}" in
+    paper|bright|all) echo "${1#sunfly-}" ;;
+    *) echo "Unknown Sunfly variant: $1" >&2; exit 1 ;;
+  esac
+}
+
+variant_display() {
+  case "$1" in
+    paper) echo "Sunfly Paper" ;;
+    bright) echo "Sunfly Bright" ;;
+    *) echo "Unknown Sunfly variant: $1" >&2; exit 1 ;;
+  esac
+}
 
 extras=()
 while [[ $# -gt 0 ]]; do
@@ -38,6 +60,16 @@ while [[ $# -gt 0 ]]; do
     --ref)
       [[ $# -ge 2 ]] || { echo "Missing value for --ref" >&2; exit 1; }
       ref="$2"
+      shift 2
+      ;;
+    --variant)
+      [[ $# -ge 2 ]] || { echo "Missing value for --variant" >&2; exit 1; }
+      variant="$(normalize_variant "$2")"
+      shift 2
+      ;;
+    --source-dir)
+      [[ $# -ge 2 ]] || { echo "Missing value for --source-dir" >&2; exit 1; }
+      source_dir="$2"
       shift 2
       ;;
     ghostty|pi|posting|tmux|all)
@@ -52,25 +84,32 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
+variant="$(normalize_variant "$variant")"
 [[ ${#extras[@]} -gt 0 ]] || { echo "Specify at least one extra to install." >&2; usage >&2; exit 1; }
 
-if command -v curl >/dev/null 2>&1; then
-  fetch() {
-    local url="$1" output="$2"
-    curl -fsSL "$url" -o "$output"
-  }
-else
-  echo "curl is required for sunfly-install" >&2
+if [[ -z "$source_dir" ]] && ! command -v curl >/dev/null 2>&1; then
+  echo "curl is required for remote sunfly-install" >&2
   exit 1
 fi
 
+fetch() {
+  local src="$1" output="$2"
+  if [[ -n "$source_dir" ]]; then
+    local local_src="${source_dir%/}/${src}"
+    [[ -f "$local_src" ]] || { echo "Missing local Sunfly file: $local_src" >&2; exit 1; }
+    cp "$local_src" "$output"
+  else
+    local url="https://raw.githubusercontent.com/${repo}/${ref}/${src}"
+    curl -fsSL "$url" -o "$output"
+  fi
+}
+
 install_file() {
   local label="$1" src="$2" dest="$3"
-  local url="https://raw.githubusercontent.com/${repo}/${ref}/${src}"
   local tmp
   tmp="$(mktemp)"
   mkdir -p "$(dirname "$dest")"
-  fetch "$url" "$tmp"
+  fetch "$src" "$tmp"
   mv "$tmp" "$dest"
   chmod 644 "$dest"
   echo "Updated ${label}: ${dest}"
@@ -94,21 +133,33 @@ for extra in "${expanded[@]}"; do
   fi
 done
 
-for extra in "${unique[@]}"; do
-  case "$extra" in
-    ghostty)
-      install_file ghostty extras/ghostty/Sunfly "$HOME/.config/ghostty/themes/Sunfly"
-      ;;
-    pi)
-      install_file pi extras/pi/sunfly.json "$HOME/.pi/agent/themes/sunfly.json"
-      ;;
-    posting)
-      install_file posting extras/posting/sunfly.yaml "$HOME/.local/share/posting/themes/sunfly.yaml"
-      ;;
-    tmux)
-      install_file tmux extras/tmux/sunfly.conf "$HOME/.config/tmux/theme.light.conf"
-      ;;
-  esac
+variants=()
+if [[ "$variant" == "all" ]]; then
+  variants=(paper bright)
+else
+  variants=("$variant")
+fi
+
+for current_variant in "${variants[@]}"; do
+  display="$(variant_display "$current_variant")"
+  for extra in "${unique[@]}"; do
+    case "$extra" in
+      ghostty)
+        install_file "ghostty (${current_variant})" "extras/ghostty/${display}" "$HOME/.config/ghostty/themes/${display}"
+        ;;
+      pi)
+        install_file "pi (${current_variant})" "extras/pi/sunfly-${current_variant}.json" "$HOME/.pi/agent/themes/sunfly-${current_variant}.json"
+        ;;
+      posting)
+        install_file "posting (${current_variant})" "extras/posting/sunfly-${current_variant}.yaml" "$HOME/.local/share/posting/themes/sunfly-${current_variant}.yaml"
+        ;;
+      tmux)
+        install_file "tmux (${current_variant})" "extras/tmux/sunfly-${current_variant}.conf" "$HOME/.config/tmux/theme.light.${current_variant}.conf"
+        ;;
+    esac
+  done
 done
 
-echo "Sunfly extras updated from ${repo}@${ref}."
+source_label="${repo}@${ref}"
+[[ -n "$source_dir" ]] && source_label="$source_dir"
+echo "Sunfly extras updated from ${source_label} for variant ${variant}."

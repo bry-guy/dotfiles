@@ -12,7 +12,7 @@ Make the Moonfly/Sunfly automatic switching path reliable and readable across th
 
 ### Good / verified enough
 
-- Posting now launches and the `sunfly` theme looks good.
+- Posting now launches and the Sunfly variant themes are available as `sunfly-paper` / `sunfly-bright`.
 - Pi / Claude / Posting / Harlequin / Neovim are all on the `theme-sync` path.
 - Harlequin now keeps shared profiles/themes in `~/.harlequin.toml`; project-local `.harlequin.toml` files only set `default_profile` because Harlequin shallow-merges top-level config tables.
 - tmux is now also on the `theme-sync` path via generated light/dark theme includes.
@@ -22,7 +22,7 @@ Make the Moonfly/Sunfly automatic switching path reliable and readable across th
 
 #### 1. Ghostty does not always visibly switch on macOS appearance change
 
-- Expected: Ghostty should handle `theme = dark:Moonfly,light:Sunfly` natively.
+- Expected: Ghostty should handle `theme = dark:Moonfly,light:Sunfly Paper` (or `Sunfly Bright`) natively.
 - Observed: after switching macOS to light mode, Ghostty did not visibly update as expected.
 - Evidence:
   - config uses native dark/light syntax in `~/.config/ghostty/config`
@@ -68,14 +68,14 @@ Make the Moonfly/Sunfly automatic switching path reliable and readable across th
 - tmux is now on the `theme-sync` path.
 - `~/script/theme-sync` copies either:
   - `~/.config/tmux/theme.dark.conf`, or
-  - `~/.config/tmux/theme.light.conf` (tracked locally, refreshed from `github.com/bry-guy/sunfly`)
+  - `~/.config/tmux/theme.light.paper.conf` or `~/.config/tmux/theme.light.bright.conf` (tracked locally, refreshed from `github.com/bry-guy/sunfly`)
   into `~/.config/tmux/theme.conf`, then reloads tmux when a server is running.
 - This resolves the original "tmux is static" problem, but the light palette still needs practical validation.
 
 ##### Follow-up checklist
 
-- [ ] Check tmux status line, copy-mode highlight, active border, and window-status colors in Sunfly/Ghostty light mode.
-- [ ] If inactive text is still too faint, darken `window-status-style` further in the published Sunfly tmux theme (`extras/tmux/sunfly.conf` in `github.com/bry-guy/sunfly`), then reinstall it locally.
+- [ ] Check tmux status line, copy-mode highlight, active border, and window-status colors in both Sunfly/Ghostty light variants.
+- [ ] If inactive text is still too faint, darken `window-status-style` further in the published Sunfly tmux variant themes (`extras/tmux/sunfly-{paper,bright}.conf` in `github.com/bry-guy/sunfly`), then reinstall them locally.
 - [ ] If copy-mode or borders still feel weak, tune `mode-style` / `pane-active-border-style` in the light theme template.
 
 #### 4. Startup-only vs live-reload behavior still differs by app
@@ -101,6 +101,7 @@ Even with automatic config rewriting, some tools may only fully reflect theme ch
   - `~/.pi/agent/settings.json`
   - `~/.config/posting/config.yaml`
   - `~/.harlequin.toml`
+  - `~/.config/ghostty/config` when switching Sunfly variants
   - any other tracked config file we later place on the sync path
 - Posting project-local overrides should prefer `posting.env` without `POSTING_THEME`, so the synced home config remains the single theme authority unless a project deliberately opts out.
 

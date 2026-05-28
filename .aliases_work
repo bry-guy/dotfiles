@@ -3,9 +3,9 @@ alias k='kubectl'
 # alias doppler-token="export DOPPLER_TOKEN=\"$(doppler configure get token --plain)\""
 alias d='docker'
 alias dc="docker-compose"
-alias open-rancher="open -a /Applications/Rancher\ Desktop.app"
+# alias open-rancher="open -a /Applications/Rancher\ Desktop.app"
 # open-colima is a function in .fns
-alias docker='docker-wrapper'
+# alias docker='docker-wrapper'
 
 alias lumora='lumora-cli'
 alias lum='lumora-cli'

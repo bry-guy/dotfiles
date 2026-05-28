@@ -1,4 +1,5 @@
 {
+  "agentic.nvim": { "branch": "main", "commit": "6a35c8bd3073c50a376ebf80a3b8602ea9b5807a" },
   "cmp-buffer": { "branch": "main", "commit": "b74fab3656eea9de20a9b8116afa3cfc4ec09657" },
   "cmp-dap": { "branch": "master", "commit": "ea92773e84c0ad3288c3bc5e452ac91559669087" },
   "cmp-nvim-lsp": { "branch": "main", "commit": "cbc7b02bb99fae35cb42f514762b89b5126651ef" },

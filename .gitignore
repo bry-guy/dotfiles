@@ -2,6 +2,14 @@
 .gitconfig.identity.local
 .gitconfig.identity.work
 .ssh/config.identity
+.mise/
+.mise.local.toml
+mise.local.toml
+.config/nvim-sunfly-preview/lazy-lock.json
+.harlequin/
+.harlequin.toml
+harlequin/
+harlequin.toml
 
 go/**/*
 second-brain/**/*
@@ -12,6 +20,8 @@ second-brain/**/*
 !.local/share/posting/themes/
 !.local/share/posting/themes/moonfly.yaml
 !.local/share/posting/themes/sunfly.yaml
+!.local/share/posting/themes/sunfly-paper.yaml
+!.local/share/posting/themes/sunfly-bright.yaml
 .local/state/**/*
 .local/opt/**/*
 .kube/cache/**/*

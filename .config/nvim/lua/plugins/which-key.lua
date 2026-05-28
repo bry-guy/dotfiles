@@ -15,8 +15,7 @@ local M = {
       scroll_up = "<Up>",
     },
     spec = {
-      { "<leader>a", group = "AI (CodeCompanion/Copilot)" },
-      { "<leader>ad", group = "AI Diff" },
+      { "<leader>a", group = "AI (Agentic/Copilot)" },
       { "<leader>c", group = "Multiple Cursors" },
       { "<leader>d", group = "Debug (DAP)" },
       { "<leader>f", group = "Find (Telescope)" },

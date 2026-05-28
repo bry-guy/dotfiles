@@ -35,6 +35,12 @@ brew-diff() {
     "$HOME/script/brew-audit" "$@"
 }
 
+restore-terminal-cursor() {
+	# Some TUIs intentionally hide the hardware cursor and can leave it hidden
+	# when exiting through tmux. Force the standard xterm cursor-visible state.
+	printf '\033[?25h'
+}
+
 ts-find() {
 		local name=$1
 		tailscale status | grep $name | awk '{ print $1 }'
@@ -55,4 +61,38 @@ vim-connect() {
 		local host=$1
 		local port=$2
 		nvim --remote-ui --server $(ts-find $host):$port
+}
+
+webm() {
+	local input output
+
+	if (( $# > 2 )); then
+		echo "usage: webm [input-video] [output.webm]" >&2
+		return 2
+	fi
+
+	if (( $# == 0 )); then
+		local -a recordings
+		recordings=(./Screen\ Recording*.mov(N.om[1]))
+		if (( ${#recordings[@]} == 0 )); then
+			echo "webm: no Screen Recording*.mov found in $PWD" >&2
+			return 1
+		fi
+		input="${recordings[1]}"
+	else
+		input="$1"
+	fi
+
+	if [[ ! -f "$input" ]]; then
+		echo "webm: input file not found: $input" >&2
+		return 1
+	fi
+
+	if (( $# == 2 )); then
+		output="$2"
+	else
+		output="${input%.*}.webm"
+	fi
+
+	command ffmpeg -n -i "$input" -vf "scale=2560:-2" -c:v libvpx-vp9 -row-mt 1 -crf 32 -b:v 0 -an "$output"
 }

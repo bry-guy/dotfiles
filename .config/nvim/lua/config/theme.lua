@@ -1,11 +1,56 @@
 local M = {}
 
-local function explicit_theme()
-  local theme = vim.g.dotfiles_theme or vim.env.DOTFILES_NVIM_THEME
+local sunfly_variants = {
+  paper = true,
+  bright = true,
+}
+
+local function normalize_sunfly_variant(variant)
+  if variant == nil or variant == "" then
+    return "paper"
+  end
+
+  variant = tostring(variant):lower()
+  variant = variant:gsub("^sunfly%-", "")
+
+  if not sunfly_variants[variant] then
+    return "paper"
+  end
+
+  return variant
+end
+
+function M.sunfly_variant()
+  return normalize_sunfly_variant(vim.g.dotfiles_sunfly_variant or vim.env.DOTFILES_SUNFLY_VARIANT)
+end
+
+local function sunfly_theme()
+  return "sunfly-" .. M.sunfly_variant()
+end
+
+local function is_sunfly_theme(theme)
+  return theme == "sunfly" or theme:match("^sunfly%-") ~= nil
+end
+
+local function normalize_theme(theme)
   if theme == nil or theme == "" then
     return nil
   end
+
+  theme = tostring(theme):lower()
+  if theme == "paper" or theme == "bright" then
+    return "sunfly-" .. normalize_sunfly_variant(theme)
+  end
+
+  if theme == "sunfly" then
+    return sunfly_theme()
+  end
+
   return theme
+end
+
+local function explicit_theme()
+  return normalize_theme(vim.g.dotfiles_theme or vim.env.DOTFILES_NVIM_THEME)
 end
 
 local function system_appearance()
@@ -29,14 +74,14 @@ function M.current()
 
   local appearance = system_appearance()
   if appearance == "light" then
-    return "sunfly"
+    return sunfly_theme()
   end
 
   return "moonfly"
 end
 
 function M.is(name)
-  return M.current() == name
+  return M.current() == normalize_theme(name)
 end
 
 local function sync_lualine()
@@ -95,10 +140,17 @@ function M.apply()
 
   reset_theme_modules()
 
-  if theme == "sunfly" then
-    vim.cmd("colorscheme sunfly")
+  if is_sunfly_theme(theme) then
+    local ok = pcall(vim.cmd, "colorscheme " .. theme)
+    if ok then
+      M._active_theme = theme
+    else
+      vim.cmd("colorscheme sunfly")
+      M._active_theme = "sunfly"
+    end
   else
     vim.cmd("colorscheme moonfly")
+    M._active_theme = "moonfly"
   end
 
   sync_devicons()
@@ -123,8 +175,16 @@ function M.setup()
 end
 
 function M.lualine_theme()
-  if M.is("sunfly") then
-    return "sunfly"
+  local theme = M._active_theme or M.current()
+  if is_sunfly_theme(theme) then
+    if theme ~= "sunfly" then
+      local lualine_theme_path = "lua/lualine/themes/" .. theme .. ".lua"
+      if vim.fn.globpath(vim.o.runtimepath, lualine_theme_path) == "" then
+        return "sunfly"
+      end
+    end
+
+    return theme
   end
 
   return "moonfly"
