@@ -2,6 +2,7 @@
 
 - Prefer project-local instructions from `AGENTS.md` / `CLAUDE.md` files closer to the working directory when they are more specific.
 - Use the repository's documented workflow commands instead of invoking lower-level build/test tools directly. In Lumora repos, use `just` recipes and run `just --list` to discover them.
+- Invariant: never add, stage, or commit `AGENTS.md` files to git.
 - Invariant: machine-local tool activation may wrap project workflow commands, but project workflow commands must not invoke machine-local tool activation.
   - Local environment/tool managers may run `just`.
   - `justfile` / `justfile.local` recipes must call underlying tools directly and assume required tools are already on `PATH`.
