@@ -19,6 +19,7 @@ Implemented locally on 2026-05-05:
 - generated Sunfly variant extras now exist for Ghostty, Pi, Posting, and tmux
 - dotfiles now default light-mode Sunfly to `paper`, with `DOTFILES_SUNFLY_VARIANT=bright` available for the lighter background
 - `theme-sync`, `sunfly-install`, and `nvim-preview-sunfly` understand the variants
+- Ghostty variant themes use dark ink for ANSI color 0 so ANSI-based light UIs remain readable
 - the temporary Neovim-only red override remains removed
 
 Remaining publication step: decide whether to first complete the standalone Neovim migration in `docs/plans/sunfly-standalone.md`, then commit/push/tag the `bry-guy/sunfly` changes and update the dotfiles plugin pin / `sunfly-install` default ref as appropriate.

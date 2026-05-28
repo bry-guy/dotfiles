@@ -75,7 +75,7 @@ ghostty_config="${home_dir}/.config/ghostty/config"
 tmux_theme_target="${home_dir}/.config/tmux/theme.conf"
 
 claude_theme_dark="${CLAUDE_THEME_DARK:-dark-ansi}"
-claude_theme_light="${CLAUDE_THEME_LIGHT:-light-ansi}"
+claude_theme_light="${CLAUDE_THEME_LIGHT:-light}"
 
 sunfly_variant="${DOTFILES_SUNFLY_VARIANT:-${SUNFLY_VARIANT:-paper}}"
 sunfly_variant="${sunfly_variant#sunfly-}"

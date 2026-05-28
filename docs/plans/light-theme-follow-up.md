@@ -111,17 +111,18 @@ Even with automatic config rewriting, some tools may only fully reflect theme ch
 - [ ] If not, move runtime theme state into local generated/untracked files or app-specific override layers.
 - [ ] Prefer a design where tracked files express mappings/defaults and local runtime files hold the current mode.
 
-#### 6. Claude light theme quality still needs a taste check
+#### 6. Claude light theme quality
 
 - Current mapping:
   - dark -> `dark-ansi`
-  - light -> `light-ansi`
-- This is still a usability question, not a correctness issue.
+  - light -> `light`
+- Rationale: `light-ansi` depends on the terminal ANSI palette, and Sunfly previously mapped ANSI color 0 to the light background, making some Claude diff/question UI invisible.
+- Sunfly Ghostty variants now use dark ink for ANSI color 0, but Claude light mode still defaults to plain `light` because it is less terminal-palette-sensitive.
 
 ##### Follow-up checklist
 
-- [ ] Compare `light-ansi` vs plain `light` in a fresh Claude session.
-- [ ] If `light` is cleaner, update `CLAUDE_THEME_LIGHT` default in `~/script/theme-sync`.
+- [x] Compare `light-ansi` vs plain `light` in a fresh Claude session.
+- [x] If `light` is cleaner, update `CLAUDE_THEME_LIGHT` default in `~/script/theme-sync`.
 
 ## Recommended execution order
 

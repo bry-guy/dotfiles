@@ -32,6 +32,6 @@
   "effortLevel": "high",
   "alwaysThinkingEnabled": true,
   "skipDangerousModePermissionPrompt": true,
-  "theme": "light-ansi",
+  "theme": "light",
   "editorMode": "vim"
 }

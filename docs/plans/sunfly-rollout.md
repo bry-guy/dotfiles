@@ -96,11 +96,11 @@ This gives Posting a real Moonfly/Sunfly pairing instead of a generic Textual fa
 Claude Code CLI theming:
 
 - Theme is selected via `/theme` / `/config`
-- 6 built-in themes: `dark`, `light`, `dark-high-contrast`, `light-high-contrast`, `dark-ansi`, `light-ansi`
+- Built-in themes include `dark`, `light`, `dark-ansi`, and `light-ansi`
 - No custom color themes (open feature request: anthropics/claude-code#1302)
-- Practical note: `theme` is not recognized in `~/.claude/settings.json`; Claude's docs and issue tracker point to user preferences being stored in `~/.claude.json`
+- Practical note: Claude's active user preference is stored in `~/.claude.json`; current defaults are also tracked in `~/.claude/settings.json`
 - **Implemented**: `~/script/theme-sync` now rewrites the top-level `theme` field in `~/.claude.json`, so Claude is part of the automatic switching path too
-- Default mapping uses ANSI modes (`dark-ansi` / `light-ansi`) so Claude tracks the terminal palette as closely as current Claude behavior allows
+- Default mapping uses `dark-ansi` for dark mode and plain `light` for light mode; `light-ansi` proved too sensitive to terminal ANSI palette choices on Sunfly
 
 ### macOS auto-switching architecture
 
@@ -155,4 +155,4 @@ macOS automation is handled by `dark-notify` running under the tracked `launchd`
 4. ~~Posting custom moonfly / Sunfly variant themes~~ ✓
 5. ~~Pi / Posting / Harlequin sync script~~ ✓
 6. ~~dark-notify + launchd automation~~ ✓
-7. Fine-tune Claude theme choice if `light-ansi` proves visually worse than `light`
+7. ~~Fine-tune Claude theme choice; light mode now uses plain `light` instead of `light-ansi`~~ ✓
