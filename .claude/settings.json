@@ -25,8 +25,13 @@
   "enabledPlugins": {
     "gopls-lsp@claude-plugins-official": true,
     "lua-lsp@claude-plugins-official": true,
-    "jdtls-lsp@claude-plugins-official": true
+    "jdtls-lsp@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": true
   },
   "syntaxHighlightingDisabled": false,
-  "skipDangerousModePermissionPrompt": true
+  "effortLevel": "high",
+  "alwaysThinkingEnabled": true,
+  "skipDangerousModePermissionPrompt": true,
+  "theme": "light-ansi",
+  "editorMode": "vim"
 }
