@@ -60,6 +60,8 @@ local M = {
     })
   end,
   opts = {
+    -- Rendering is enabled by Goyo Zen mode; \<leader>vm remains available for a manual toggle.
+    enabled = false,
     -- Keep the rendered view consistent even while the cursor is on a heading.
     anti_conceal = {
       enabled = false,

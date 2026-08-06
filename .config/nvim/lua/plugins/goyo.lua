@@ -55,6 +55,13 @@ local M = {
       end
     end
 
+    local function set_markdown_rendering(enabled)
+      local ok, render_markdown = pcall(require, "render-markdown")
+      if ok then
+        render_markdown.set(enabled)
+      end
+    end
+
     local function set_markdown_zen_wrap(enabled)
       if vim.bo.filetype ~= "markdown" then
         return
@@ -92,6 +99,7 @@ local M = {
     vim.api.nvim_create_autocmd("User", {
       pattern = "GoyoEnter",
       callback = function()
+        set_markdown_rendering(true)
         require("lualine").hide()
         set_markdown_zen_wrap(true)
       end,
@@ -99,6 +107,7 @@ local M = {
     vim.api.nvim_create_autocmd("User", {
       pattern = "GoyoLeave",
       callback = function()
+        set_markdown_rendering(false)
         require("lualine").hide({ unhide = true })
         set_markdown_zen_wrap(false)
       end,
