@@ -62,6 +62,19 @@ local M = {
       }
     })
 
+    vim.lsp.config('pyright', {
+      capabilities = capabilities,
+      settings = {
+        python = {
+          analysis = {
+            autoSearchPaths = true,
+            diagnosticMode = "workspace",
+            useLibraryCodeForTypes = true,
+          },
+        },
+      },
+    })
+
     vim.lsp.config('lua_ls', {
       capabilities = capabilities,
       settings = {
@@ -89,6 +102,7 @@ local M = {
     enable_if_executable('eslint', { 'vscode-eslint-language-server', 'eslint-language-server' })
     enable_if_executable('ts_ls', 'typescript-language-server')
     enable_if_executable('gopls', 'gopls')
+    enable_if_executable('pyright', 'pyright-langserver')
     enable_if_executable('lua_ls', 'lua-language-server')
     enable_if_executable('metals', 'metals')
   end

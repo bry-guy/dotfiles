@@ -75,7 +75,6 @@ ghostty_config="${home_dir}/.config/ghostty/config"
 tmux_theme_target="${home_dir}/.config/tmux/theme.conf"
 
 claude_theme_dark="${CLAUDE_THEME_DARK:-dark-ansi}"
-claude_theme_light="${CLAUDE_THEME_LIGHT:-light}"
 
 sunfly_variant="${DOTFILES_SUNFLY_VARIANT:-${SUNFLY_VARIANT:-paper}}"
 sunfly_variant="${sunfly_variant#sunfly-}"
@@ -92,6 +91,7 @@ case "$sunfly_variant" in
     ;;
 esac
 sunfly_theme="sunfly-${sunfly_variant}"
+claude_theme_light="${CLAUDE_THEME_LIGHT:-custom:${sunfly_theme}}"
 
 ghostty_status="native"
 tmux_status="not-configured"
@@ -107,7 +107,7 @@ else
   pi_theme="$sunfly_theme"
   nvim_theme="$sunfly_theme"
   posting_theme="$sunfly_theme"
-  harlequin_theme="solarized-light"
+  harlequin_theme="$sunfly_theme"
   tmux_theme_source="${home_dir}/.config/tmux/theme.light.${sunfly_variant}.conf"
   claude_theme="$claude_theme_light"
 
@@ -118,6 +118,8 @@ else
     [[ ! -f "${home_dir}/.pi/agent/themes/${sunfly_theme}.json" ]] && missing_extras+=(pi)
     [[ ! -f "${home_dir}/.local/share/posting/themes/${sunfly_theme}.yaml" ]] && missing_extras+=(posting)
     [[ ! -f "$tmux_theme_source" ]] && missing_extras+=(tmux)
+    [[ ! -f "${home_dir}/.claude/themes/${sunfly_theme}.json" ]] && missing_extras+=(claude)
+    [[ ! -f "${home_dir}/.config/harlequin/sunfly_textual_themes.py" ]] && missing_extras+=(harlequin)
     if [[ ${#missing_extras[@]} -gt 0 ]]; then
       "$sunfly_install" --variant "$sunfly_variant" "${missing_extras[@]}"
     fi

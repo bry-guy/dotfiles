@@ -13,11 +13,13 @@ Extras:
   pi        -> updates ~/.pi/agent/themes/sunfly-paper|bright.json
   posting   -> updates ~/.local/share/posting/themes/sunfly-paper|bright.yaml
   tmux      -> updates ~/.config/tmux/theme.light.paper|bright.conf
-  all       -> install all extras above
+  claude    -> updates ~/.claude/themes/sunfly-paper|bright.json
+  harlequin -> updates ~/.config/harlequin/sunfly_textual_themes.py
+  all       -> install all extras above; with --variant all, also refresh legacy sunfly compatibility aliases
 
 Examples:
-  ~/script/sunfly-install --variant paper ghostty pi
-  ~/script/sunfly-install --variant bright tmux posting
+  ~/script/sunfly-install --variant paper ghostty pi claude
+  ~/script/sunfly-install --variant bright tmux posting harlequin
   ~/script/sunfly-install --variant all all
   ~/script/sunfly-install --source-dir ~/.local/share/nvim/lazy/sunfly --variant paper all
 
@@ -72,7 +74,7 @@ while [[ $# -gt 0 ]]; do
       source_dir="$2"
       shift 2
       ;;
-    ghostty|pi|posting|tmux|all)
+    ghostty|pi|posting|tmux|claude|harlequin|all)
       extras+=("$1")
       shift
       ;;
@@ -118,7 +120,7 @@ install_file() {
 expanded=()
 for extra in "${extras[@]}"; do
   if [[ "$extra" == "all" ]]; then
-    expanded+=(ghostty pi posting tmux)
+    expanded+=(ghostty pi posting tmux claude harlequin)
   else
     expanded+=("$extra")
   fi
@@ -133,6 +135,25 @@ for extra in "${expanded[@]}"; do
   fi
 done
 
+global_extras=()
+variant_extras=()
+for extra in "${unique[@]}"; do
+  case "$extra" in
+    harlequin) global_extras+=("$extra") ;;
+    *) variant_extras+=("$extra") ;;
+  esac
+done
+
+if [[ ${#global_extras[@]} -gt 0 ]]; then
+  for extra in "${global_extras[@]}"; do
+    case "$extra" in
+      harlequin)
+        install_file "harlequin" "extras/harlequin-textual/sunfly_textual_themes.py" "$HOME/.config/harlequin/sunfly_textual_themes.py"
+        ;;
+    esac
+  done
+fi
+
 variants=()
 if [[ "$variant" == "all" ]]; then
   variants=(paper bright)
@@ -140,25 +161,49 @@ else
   variants=("$variant")
 fi
 
-for current_variant in "${variants[@]}"; do
-  display="$(variant_display "$current_variant")"
-  for extra in "${unique[@]}"; do
+if [[ ${#variant_extras[@]} -gt 0 ]]; then
+  for current_variant in "${variants[@]}"; do
+    display="$(variant_display "$current_variant")"
+    for extra in "${variant_extras[@]}"; do
+      case "$extra" in
+        ghostty)
+          install_file "ghostty (${current_variant})" "extras/ghostty/${display}" "$HOME/.config/ghostty/themes/${display}"
+          ;;
+        pi)
+          install_file "pi (${current_variant})" "extras/pi/sunfly-${current_variant}.json" "$HOME/.pi/agent/themes/sunfly-${current_variant}.json"
+          ;;
+        posting)
+          install_file "posting (${current_variant})" "extras/posting/sunfly-${current_variant}.yaml" "$HOME/.local/share/posting/themes/sunfly-${current_variant}.yaml"
+          ;;
+        tmux)
+          install_file "tmux (${current_variant})" "extras/tmux/sunfly-${current_variant}.conf" "$HOME/.config/tmux/theme.light.${current_variant}.conf"
+          ;;
+        claude)
+          install_file "claude (${current_variant})" "extras/claude/sunfly-${current_variant}.json" "$HOME/.claude/themes/sunfly-${current_variant}.json"
+          ;;
+      esac
+    done
+  done
+fi
+
+if [[ "$variant" == "all" && ${#variant_extras[@]} -gt 0 ]]; then
+  for extra in "${variant_extras[@]}"; do
     case "$extra" in
       ghostty)
-        install_file "ghostty (${current_variant})" "extras/ghostty/${display}" "$HOME/.config/ghostty/themes/${display}"
+        install_file "ghostty (compat)" "extras/ghostty/Sunfly" "$HOME/.config/ghostty/themes/Sunfly"
         ;;
       pi)
-        install_file "pi (${current_variant})" "extras/pi/sunfly-${current_variant}.json" "$HOME/.pi/agent/themes/sunfly-${current_variant}.json"
+        install_file "pi (compat)" "extras/pi/sunfly.json" "$HOME/.pi/agent/themes/sunfly.json"
         ;;
       posting)
-        install_file "posting (${current_variant})" "extras/posting/sunfly-${current_variant}.yaml" "$HOME/.local/share/posting/themes/sunfly-${current_variant}.yaml"
+        install_file "posting (compat)" "extras/posting/sunfly.yaml" "$HOME/.local/share/posting/themes/sunfly.yaml"
         ;;
       tmux)
-        install_file "tmux (${current_variant})" "extras/tmux/sunfly-${current_variant}.conf" "$HOME/.config/tmux/theme.light.${current_variant}.conf"
+        install_file "tmux (compat)" "extras/tmux/sunfly.conf" "$HOME/.config/tmux/theme.light.conf"
         ;;
     esac
   done
-done
+fi
 
 source_label="${repo}@${ref}"
 [[ -n "$source_dir" ]] && source_label="$source_dir"

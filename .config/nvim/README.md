@@ -13,6 +13,18 @@ Preview Sunfly variants:
 ~/script/nvim-preview-sunfly bright path/to/file
 ```
 
+## Python LSP setup
+
+Python buffers use Pyright when `pyright-langserver` is available on `PATH`. A project-local `mise.local.toml` can provide the interpreter and the language server, for example:
+
+```toml
+[tools]
+python = "latest"
+"npm:pyright" = "latest"
+```
+
+Then run `mise install` from that project and open Neovim from a shell with the mise environment active.
+
 ## AI / ACP setup
 
 This config uses `agentic.nvim` with the `pi-acp` provider and keeps AI provider CLIs outside Neovim. Neovim expects `pi-acp` and `pi` to already be available on `PATH` in the project where Neovim is launched.

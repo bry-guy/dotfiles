@@ -47,20 +47,18 @@ Make the Moonfly/Sunfly automatic switching path reliable and readable across th
   - track it as an upstream-only bug, or
   - add a stronger local workaround (for example, app relaunch or AppleScript-driven reload).
 
-#### 2. Harlequin light theme needs a final readability pass
+#### 2. Harlequin light theme now uses a Sunfly Textual theme
 
 - Current mapping is:
   - dark -> `harlequin`
-  - light -> `solarized-light`
+  - light -> selected `sunfly-paper` / `sunfly-bright`
 - Project-local `.harlequin.toml` files now only set `default_profile`, so this mapping is controlled centrally from `~/script/theme-sync` and `~/.harlequin.toml`.
+- Harlequin does not natively load custom theme files from config, so `~/.local/bin/harlequin` registers the generated Textual themes from `~/.config/harlequin/sunfly_textual_themes.py` before delegating to Harlequin.
 
 ##### Follow-up checklist
 
-- [ ] Launch Harlequin in light mode and verify catalog, editor, tabs, and result grid contrast with `solarized-light`.
-- [ ] If `solarized-light` is still weak, test these built-in alternatives:
-  - `flexoki`
-  - `catppuccin-latte`
-  - `textual-light`
+- [x] Replace the weak `solarized-light` approximation with generated Sunfly Textual themes.
+- [ ] Launch Harlequin in light mode and verify catalog, editor, tabs, and result grid contrast with `sunfly-paper`.
 - [ ] Keep the chosen light theme aligned in `~/script/theme-sync` + docs.
 
 #### 3. tmux light palette still needs a real-world readability pass
@@ -115,19 +113,20 @@ Even with automatic config rewriting, some tools may only fully reflect theme ch
 
 - Current mapping:
   - dark -> `dark-ansi`
-  - light -> `light`
-- Rationale: `light-ansi` depends on the terminal ANSI palette, and Sunfly previously mapped ANSI color 0 to the light background, making some Claude diff/question UI invisible.
-- Sunfly Ghostty variants now use dark ink for ANSI color 0, but Claude light mode still defaults to plain `light` because it is less terminal-palette-sensitive.
+  - light -> selected `custom:sunfly-paper` / `custom:sunfly-bright`
+- Rationale: `light-ansi` depends on the terminal ANSI palette. Sunfly now has Claude Code custom themes with explicit hex diff backgrounds, so light mode no longer depends on ANSI diff colors.
+- The Sunfly Ghostty ANSI palette also now keeps ANSI black as dark ink and ANSI white / bright-white as light paper tints, which fixes the specific inverse/diff contrast failure seen in Claude `light-ansi`.
 
 ##### Follow-up checklist
 
 - [x] Compare `light-ansi` vs plain `light` in a fresh Claude session.
-- [x] If `light` is cleaner, update `CLAUDE_THEME_LIGHT` default in `~/script/theme-sync`.
+- [x] Replace plain `light` with generated `custom:sunfly-*` Claude themes.
+- [x] Fix Sunfly terminal ANSI white/bright-white mappings for Claude `light-ansi` contrast.
 
 ## Recommended execution order
 
 1. Verify Ghostty after the new reload-signal mitigation.
-2. Re-check Harlequin contrast with `solarized-light`.
+2. Re-check Harlequin contrast with `sunfly-paper`.
 3. Inspect tmux under light mode and fine-tune the new synced light template if needed.
-4. Re-check Claude light theme choice.
+4. Re-check Claude custom `sunfly-*` themes in a real session.
 5. Update docs once the final light-mode decisions are settled.

@@ -1,77 +1,67 @@
+@AGENTS.md
+
 Never add Claude attribution to git commits or PRs.
 Do not include "Co-Authored-By: Claude", "Generated with Claude Code", or similar footers.
 
 ## Cost-aware Claude Code delegation
 
-The top-level Claude agent is responsible for planning, architecture, tradeoff analysis, final review, and any explicitly approved staging/prod action.
+**Claude owns serialized work.** The top-level Claude agent is responsible for planning, architecture, tradeoff analysis, serialized implementation, integration, final review, and any explicitly approved staging/prod action. Subagents are an optimization for work that can be handed off without tight, step-by-step Claude judgment — especially independent work that can run in parallel.
 
-Use `fetcher` for compact context capsules:
-- multi-file repository search/read
-- docs or web lookup
-- dependency tracing
-- diagnostic `just` commands
-- summarizing noisy output before planning/review
+**Use `coder` for delegatable, parallelizable implementation packages.** A `coder` task should have a concrete objective, bounded scope, disjoint file ownership, acceptance criteria, and enough supplied context that the coder can execute without rediscovering the whole repository. If the implementation is inherently serialized — one coherent edit/review loop, shared core types, migrations, generated files, broad formatting sweeps, or a sequence where each step depends on Claude inspecting the previous result — Claude should do the work itself instead of delegating to `coder` serially.
 
-Use `coder` for implementation only after Claude has a concrete plan:
-- scoped code changes
-- mechanical refactors
-- tests/validation when expected behavior is specified
+**Cost model.** Delegation is not free: each subagent spends its own context and returns a compressed summary. It pays off when it enables parallel progress or keeps noisy implementation churn out of Claude's main context. It loses when the packet plus reintegration is larger than simply doing the serialized work directly.
 
-Do not ask subagents to run `--prod`, `--production`, or `--staging`; Claude may do so only with explicit user instruction.
+Hard rules — these are not guidelines:
+- NEVER ask subagents to run `--prod`, `--production`, or `--staging`. Claude does so only with explicit user instruction in the current turn. `kubectl` is forbidden for everyone — wrap in `just` or ask the user to paste output.
+- NEVER print secrets, tokens, credentials, or auth headers. Redact in all summaries.
+- Delegate command-output collection when output would exceed ~500 lines / ~50 KB, or when the work is a multi-step shell pipeline (loops, retries, chained commands). Direct Bash is allowed for single bounded-output commands.
+- Subagent output is evidence, not truth. After `coder` completes, Claude MUST inspect the diff before declaring work complete.
 
-When delegating, provide:
-- objective
-- scope
-- exclusions
-- relevant facts, file paths, symbols, and prior findings Claude has already gathered
-- exact command or command family if command output is needed
-- stop condition
-- expected brevity
+### Default routing
 
-Prefer these delegation packets:
+Claude should choose the smallest workflow that preserves correctness and context:
 
-Fetcher packet:
-- Question to answer, with success criteria
-- Starting paths/symbols/search terms
-- Allowed command, if command output is needed
-- Exclusions and stop condition
-- Output limit: compact `Result / Evidence / Caveats`; no full code maps unless requested
+| Task pattern | Required first move |
+|---|---|
+| Serialized implementation, tightly coupled edit/review loop, single coherent change | Claude works it directly |
+| Independent implementation packages with disjoint file ownership | `coder`; parallelize when there are multiple packages |
+| Mechanical refactor across separable files/modules | split by ownership, then dispatch one or more `coder` tasks |
+| Follow-up fix after a `coder` task that stays inside the same delegated package | send back to that `coder` package if still parallel/isolated; otherwise Claude fixes directly after reviewing the diff |
+| "review PR", "PR comments", "what did reviewer mean" | `gh-fetcher` gathers PR/comment/diff/check evidence; Claude decides response |
+| CI/check failure triage (failed job, log fetch, suspect line lookup) | `gh-fetcher` or `basher` gathers compact evidence; Claude decides fix strategy |
+| "where is this defined", "how does this flow", "which files use X" across multiple files | `fetcher` gathers repository/docs evidence |
+| Small single-file investigation where Claude needs the content for reasoning | Claude reads it directly |
+| "run tests", "lint", "build", "what failed", local Docker/Postgres/Flyway state | `basher` runs narrow command diagnostics when output/noise is the main concern; Claude may run single bounded commands directly |
+| Git rescue (stash recovery, reflog spelunking, conflict-state diagnosis, unfamiliar branch state) | `basher` runs read-only inspection first if noisy; Claude decides recovery |
+| "logs from staging", "AWS describe/list/get", multi-step AWS pipelines | `remoter` runs read-only AWS via aws-vault `-readonly` profiles |
+| merge-conflict resolution | Claude decides and usually applies serialized resolution directly; use `coder` only for disjoint conflict hunks/packages |
+| "commit and push" | Claude reviews status/diff directly, then commits/pushes itself |
 
-Coder packet:
-- Objective and exact edit scope
-- Allowed files/directories and files/directories to avoid
-- Known context: relevant symbols, snippets, prior fetcher findings, and constraints
-- Acceptance criteria
-- Validation instruction: either exact narrow command(s), or "do not run validation"
-- Stop condition: finish assigned edits only, then return `Changed / Validation readiness / Review notes`
+Do not use `coder` for:
+- Ambiguous design/product decisions, final architectural judgment, final review.
+- Serialized implementation where Claude needs to inspect and decide after each step.
+- Tiny edits where writing the delegation packet costs more than doing the edit.
+- Work touching shared core types, migrations, generated files, or broad formatting unless it can be split into non-overlapping packages with a clear integration plan.
+- Anything where file ownership overlaps another active `coder` task.
 
-When dispatching `coder`, pass enough relevant context to minimize fetcher-like work by the coder: concrete plan, known files/symbols, key constraints, prior fetcher findings, and any important snippets or line references already discovered. Do not ask coder to read whole plans/docs or rediscover the repository unless the task is explicitly a targeted read of a named section. Coder should generally make the assigned edits and return promptly; Claude decides integration, linting, testing, and review strategy unless validation was explicitly delegated.
+### Delegation packets
 
-Split implementation before delegating when the work spans multiple concepts, broad refactors, generated/schema/API changes, or more than a few files. Each coder task should be small enough to complete without hitting its turn limit and should have clear file ownership. Lower-level packages are better than one broad "implement feature" prompt.
+Every delegated task MUST include: objective, exact scope, exclusions, stop condition, relevant file paths/symbols, prior findings, acceptance criteria, expected brevity, and the exact command when command output is needed. Ask every agent for `Result / Evidence / Caveats` framing; for `coder`, swap `Evidence` for `Changed files`.
 
-Bundle related low-judgment fact-gathering into one `fetcher` task instead of many tiny subagent calls. Do not delegate tiny one-file checks, ambiguous design/product decisions, final architectural judgment, or final review.
-
-Good/bad examples:
-- Bad coder task: "Implement the availability summary backend; read the plan and run tests."
-- Good coder task: "Edit only `DefaultDataReader.java` and `GeneratorAvailabilitySummaryRow.java`. Add fields X/Y/Z following the existing load-summary mapping pattern. Use these known symbols: ... Do not run validation; return changed files and compile-risk notes."
-- Bad fetcher task: "Explore availability fixtures."
-- Good fetcher task: "Find one existing integration-test fixture that inserts generator availability data. Return path, helper method names, and setup command only; stop after the first usable fixture."
-
-Treat subagent output as evidence, not truth. After `coder` completes, Claude must inspect/review before declaring work complete.
+When dispatching `coder`, pass enough context to avoid fetcher-like work: concrete plan, known files/symbols, key constraints, and snippet/line references. If context is missing, run `fetcher` first or ask one concise clarification — do NOT let `coder` rediscover what Claude already knows.
 
 ### Parallel delegation
 
-Prefer parallel subagents when work is independent and context-bounded.
-
-Parallelize freely for `fetcher` tasks when investigations are independent, such as separate modules, APIs, frontend consumers, docs, tests, or logs.
-
-Parallelize `coder` only when Claude can assign disjoint ownership:
-- each coder gets a concrete work package
-- each package lists allowed files/directories
-- no two coders edit the same file or tightly coupled code path
-- each package has its own acceptance criteria and validation command, if validation should be run by that coder
+Prefer parallel `coder` only when Claude can assign independent work packages:
+- each package has disjoint file/directory ownership
+- no shared core types, migrations, generated files, or formatting sweeps
+- each package has its own acceptance criteria and optional validation command
 - each coder returns changed files, validation readiness, and review notes
 
-Do not parallelize coders when the work shares core types, migrations, broad refactors, generated files, formatting-only sweeps, or unclear ownership. In those cases, use one coder serially or have fetchers map the work first.
-
 Before dispatching parallel coders, Claude should write a brief integration plan: work packages, file ownership, expected merge/review order, and conflicts to avoid. After parallel coders return, Claude must inspect the combined diff, resolve integration issues, and run or request final validation.
+
+**Single-writer invariant**: never run parallel `coder` on overlapping files or shared core types. One file = one writer per turn.
+
+**Structured-output discipline**: when dispatching parallel subagents, require structured returns — bullets, file:line refs, diffs — not narrative prose. Lossy summaries from parallel agents are the failure mode that turns a token win into a correctness loss.
+
+@RTK.md

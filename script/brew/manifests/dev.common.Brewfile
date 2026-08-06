@@ -1,4 +1,5 @@
 brew "duckdb"
+brew "glow"
 brew "httpie"
 brew "hugo"
 brew "jj"

@@ -9,6 +9,9 @@ mise.local.toml
 .harlequin/
 .harlequin.toml
 harlequin/
+!.config/harlequin/
+!.config/harlequin/sunfly_textual_themes.py
+.config/harlequin/__pycache__/
 harlequin.toml
 
 go/**/*
@@ -34,6 +37,7 @@ second-brain/**/*
 .claude.json.backup*
 .claude/settings.local.json
 .config/tmux/theme.conf
+.ez*
 
 
 Library/**/*

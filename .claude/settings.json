@@ -8,15 +8,34 @@
       "WebSearch",
       "WebFetch(domain:*.github.io)",
       "WebFetch(domain:*.golang.org)",
-      "WebFetch(domain:github.com)",
-      "Bash(go *)",
-      "Bash(mise *)",
-      "Bash(git commit:*)",
-      "Bash(chmod:*)"
+      "WebFetch(domain:github.com)"
     ],
-    "defaultMode": "default"
+    "defaultMode": "bypassPermissions"
   },
   "model": "opus[1m]",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "rtk hook claude"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"/Users/bryan/.claude/hooks/context-mode-cache-heal.mjs\""
+          }
+        ]
+      }
+    ]
+  },
   "statusLine": {
     "type": "command",
     "command": "ccusage statusline",
@@ -26,12 +45,23 @@
     "gopls-lsp@claude-plugins-official": true,
     "lua-lsp@claude-plugins-official": true,
     "jdtls-lsp@claude-plugins-official": true,
-    "typescript-lsp@claude-plugins-official": true
+    "typescript-lsp@claude-plugins-official": true,
+    "context-mode@context-mode": true
+  },
+  "extraKnownMarketplaces": {
+    "context-mode": {
+      "source": {
+        "source": "github",
+        "repo": "mksglu/context-mode"
+      }
+    }
   },
   "syntaxHighlightingDisabled": false,
-  "effortLevel": "high",
   "alwaysThinkingEnabled": true,
+  "effortLevel": "medium",
+  "tui": "fullscreen",
   "skipDangerousModePermissionPrompt": true,
-  "theme": "light",
-  "editorMode": "vim"
+  "theme": "custom:sunfly-paper",
+  "editorMode": "vim",
+  "skipAutoPermissionPrompt": true
 }

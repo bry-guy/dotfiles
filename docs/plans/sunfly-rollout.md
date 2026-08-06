@@ -69,13 +69,14 @@ Pi has a `"theme"` field in `~/.pi/agent/settings.json`.
 Harlequin is a Textual TUI app. Theming:
 
 - Supports built-in Textual themes via `--theme <name>` flag or config file
-- No moonfly/sunfly custom theme support without writing Textual CSS
+- Does not natively load arbitrary custom theme files from Harlequin config
+- Local launcher support is tracked at `~/.local/bin/harlequin`; it registers Sunfly Textual themes from `~/.config/harlequin/sunfly_textual_themes.py` before importing Harlequin
 - Config file is tracked at `~/.harlequin.toml`
 - **Implemented plan**: `~/script/theme-sync` rewrites profile themes to:
   - dark → `harlequin`
-  - light → `solarized-light`
+  - light → selected `sunfly-paper` / `sunfly-bright`
 
-This is a best-effort approximation rather than a custom Sunfly port.
+This gives Harlequin a real Sunfly light port without patching the installed package.
 
 ### Posting
 
@@ -97,10 +98,11 @@ Claude Code CLI theming:
 
 - Theme is selected via `/theme` / `/config`
 - Built-in themes include `dark`, `light`, `dark-ansi`, and `light-ansi`
-- No custom color themes (open feature request: anthropics/claude-code#1302)
+- Custom themes are supported in `~/.claude/themes/*.json`; selecting one stores `custom:<slug>` as the theme preference
+- Local custom themes are tracked at `~/.claude/themes/sunfly-{paper,bright}.json`
 - Practical note: Claude's active user preference is stored in `~/.claude.json`; current defaults are also tracked in `~/.claude/settings.json`
 - **Implemented**: `~/script/theme-sync` now rewrites the top-level `theme` field in `~/.claude.json`, so Claude is part of the automatic switching path too
-- Default mapping uses `dark-ansi` for dark mode and plain `light` for light mode; `light-ansi` proved too sensitive to terminal ANSI palette choices on Sunfly
+- Default mapping uses `dark-ansi` for dark mode and `custom:sunfly-*` for light mode; this avoids Claude `light-ansi` diff rendering sensitivity while keeping an explicit Sunfly match
 
 ### macOS auto-switching architecture
 
@@ -121,7 +123,12 @@ Implemented scripts and automation:
   - `~/.local/share/darkman/light-mode.d/50-theme-sync`
 - local Posting theme files:
   - `~/.local/share/posting/themes/moonfly.yaml` (tracked)
-  - `~/.local/share/posting/themes/sunfly-paper.yaml` / `sunfly-bright.yaml` (tracked, refreshed from the public Sunfly repo)
+  - `~/.local/share/posting/themes/sunfly.yaml` compatibility alias plus `sunfly-paper.yaml` / `sunfly-bright.yaml` (tracked, refreshed from the public Sunfly repo)
+- local Claude Code theme files:
+  - `~/.claude/themes/sunfly-paper.json` / `sunfly-bright.json` (tracked, refreshed from the public Sunfly repo)
+- local Harlequin theme helper:
+  - `~/.config/harlequin/sunfly_textual_themes.py` (tracked, refreshed from the public Sunfly repo)
+  - `~/.local/bin/harlequin` registers those themes before delegating to Harlequin
 
 `theme-sync` rewrites:
 - `~/.pi/agent/settings.json`
@@ -143,7 +150,7 @@ macOS automation is handled by `dark-notify` running under the tracked `launchd`
 **What needs the script:**
 - Pi — settings.json rewrite to local custom `moonfly` / selected `sunfly-*` variant themes
 - Posting — switch between local custom `moonfly` / selected `sunfly-*` variant themes
-- Harlequin — switch between built-in dark/light themes
+- Harlequin — switch between built-in dark theme and local Sunfly Textual light themes
 - tmux — switch between tracked dark / tracked Sunfly light theme templates and reload the server when available
 - Claude Code — `~/.claude.json` theme rewrite
 
@@ -155,4 +162,4 @@ macOS automation is handled by `dark-notify` running under the tracked `launchd`
 4. ~~Posting custom moonfly / Sunfly variant themes~~ ✓
 5. ~~Pi / Posting / Harlequin sync script~~ ✓
 6. ~~dark-notify + launchd automation~~ ✓
-7. ~~Fine-tune Claude theme choice; light mode now uses plain `light` instead of `light-ansi`~~ ✓
+7. ~~Fine-tune Claude theme choice; light mode now uses custom `sunfly-*` instead of ANSI-dependent `light-ansi`~~ ✓

@@ -110,6 +110,8 @@ M.tab_hotkeys = {
 M.view_hotkeys = {
   { "<leader>vc", "<Cmd>CompletionToggle<CR>", { desc = "Completion Toggle" } },
   { "<leader>vd", "<Cmd>ViewDiagnosticsToggle<CR>", { desc = "Diagnostics Virtual Text Toggle" } },
+  { "<leader>vm", "<Cmd>RenderMarkdown toggle<CR>", { desc = "Markdown Render Toggle" } },
+  { "<leader>vp", "<Cmd>RenderMarkdown preview<CR>", { desc = "Markdown Render Side Preview" } },
   { "<leader>vh", "<Cmd>ViewInlayHintsToggle<CR>", { desc = "Inlay Hints Toggle" } },
   { "<leader>vr", "<Cmd>ThemeRefresh<CR>", { desc = "Theme Refresh" } },
   { "<leader>vw", "<Cmd>ViewWrapToggle<CR>", { desc = "Wrap Toggle" } },
@@ -127,11 +129,6 @@ M.obsidian_hotkeys = {
   { "<leader>wg", "<Cmd>ObsidianFollowLink<CR>", { desc = "Wiki Follow Link" } },
 }
 
--- markdown view
-M.markview_hotkeys = {
-  { "<leader>vm", "<CMD>MarkdownReadModeToggle<CR>", desc = "Markdown Read Mode Toggle" },
-}
-
 -- session
 M.session_hotkeys = {
   { "<leader>sl", function() require("persistence").load({ last = true }) end, desc = "Session Last" },
@@ -141,7 +138,7 @@ M.session_hotkeys = {
 
 -- goyo
 M.goyo_hotkeys = {
-  { "<leader>vz", "<CMD>Goyo<CR>", { desc = "Zen (Goyo) Toggle" } },
+  { "<leader>vz", "<CMD>Goyo<CR>", desc = "Zen (Goyo) Toggle" },
 }
 
 -- agentic (ai)

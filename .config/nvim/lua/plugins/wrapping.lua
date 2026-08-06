@@ -1,7 +1,6 @@
 local M = {
   "andrewferrier/wrapping.nvim",
-  -- Markdown uses an explicit reading mode (<leader>vm) so editing remains
-  -- plain/unwrapped by default. Keep wrapping.nvim only for generic text files.
+  -- Keep Markdown editing plain/unwrapped; use Glow for rendered reading.
   ft = { "text" },
 }
 

@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "0.76.0",
+  "lastChangelogVersion": "0.83.0",
   "theme": "sunfly-paper",
   "packages": [
     "git:github.com/nicobailon/pi-mcp-adapter",
@@ -9,8 +9,8 @@
     "git:github.com/bry-guy/pi-ez-delegate"
   ],
   "defaultProvider": "openai-codex",
-  "defaultModel": "gpt-5.5",
-  "defaultThinkingLevel": "xhigh",
+  "defaultModel": "gpt-5.6-luna",
+  "defaultThinkingLevel": "max",
   "editorPaddingX": 2,
   "hideThinkingBlock": false,
   "quietStartup": true,
@@ -19,5 +19,11 @@
     "enabled": true,
     "reserveTokens": 32768,
     "keepRecentTokens": 16384
-  }
+  },
+  "enabledModels": [
+    "openai-codex/gpt-5.5",
+    "openai-codex/gpt-5.6-terra",
+    "openai-codex/gpt-5.6-sol",
+    "openai-codex/gpt-5.6-luna"
+  ]
 }

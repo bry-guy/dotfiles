@@ -96,3 +96,187 @@ webm() {
 
 	command ffmpeg -n -i "$input" -vf "scale=2560:-2" -c:v libvpx-vp9 -row-mt 1 -crf 32 -b:v 0 -an "$output"
 }
+
+tok() {
+	local since until
+
+	case $# in
+		0)
+			if since=$(date -v-7d +%F 2>/dev/null); then
+				:
+			else
+				since=$(date -d '7 days ago' +%F)
+			fi
+			;;
+		1)
+			case "$1" in
+				-h|--help)
+					echo "usage: tok [since [until]]  # default: since 7 days ago; until now unless provided" >&2
+					return 0
+					;;
+			esac
+			since="$1"
+			;;
+		2)
+			since="$1"
+			until="$2"
+			;;
+		*)
+			echo "usage: tok [since [until]]  # default: since 7 days ago; until now unless provided" >&2
+			return 2
+			;;
+	esac
+
+	local -a args
+	args=(session --json --offline --since "$since")
+	[[ -n "$until" ]] && args+=(--until "$until")
+
+	local color=0
+	if [[ -t 1 && -z "$NO_COLOR" && "$TERM" != "dumb" ]]; then
+		color=1
+	fi
+	[[ -n "$FORCE_COLOR" ]] && color=1
+
+	local tool_since="$since" tool_until="$until"
+	if [[ "$tool_since" == [0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9] ]]; then
+		tool_since="${tool_since[1,4]}-${tool_since[5,6]}-${tool_since[7,8]}"
+	fi
+	if [[ "$tool_until" == [0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9] ]]; then
+		tool_until="${tool_until[1,4]}-${tool_until[5,6]}-${tool_until[7,8]}"
+	fi
+
+	local pi_paths="${PI_AGENT_DIR:-$HOME/.pi/agent/sessions}"
+	local -a pi_roots
+	pi_roots=("${(@s:,:)pi_paths}")
+
+	local tools_json
+	tools_json=$(
+		{
+			for root in "$HOME/.claude/projects" "$HOME/.config/claude/projects"; do
+				[[ -d "$root" ]] || continue
+				find "$root" -type f -name '*.jsonl' -print0 2>/dev/null | while IFS= read -r -d '' file; do
+					jq -rc -s --arg since "$tool_since" --arg until "$tool_until" '
+						def day: (tostring | .[0:10]);
+						def clean_model: (tostring | sub("^\\[[^]]+\\] "; ""));
+						(map((.timestamp // .message.timestamp // .data.timestamp // "") | day) | map(select(test("^[0-9]{4}-[0-9]{2}-[0-9]{2}$"))) | max // "") as $last
+						| select($last >= $since and ($until == "" or $last <= $until))
+						| .[] as $e
+						| select($e.type == "assistant")
+						| ($e.message.model // "unknown" | clean_model) as $m
+						| (($e.message.content // []) | if type == "array" then .[] else empty end) as $c
+						| select($c.type == "tool_use")
+						| {h:"claude", m:$m, id:($c.id // "\($e.message.id // $e.uuid // input_filename):\($e.requestId // ""):\($c.name // "tool")")}
+					' "$file" 2>/dev/null
+				done
+			done
+
+			for root in "${pi_roots[@]}"; do
+				[[ -d "$root" ]] || continue
+				find "$root" -type f \( -name '*.jsonl' -o -name '*.json' \) -print0 2>/dev/null | while IFS= read -r -d '' file; do
+					jq -rc -s --arg since "$tool_since" --arg until "$tool_until" '
+						def day: (tostring | .[0:10]);
+						def clean_model: (tostring | sub("^\\[[^]]+\\] "; ""));
+						(map((.timestamp // .message.timestamp // .data.timestamp // "") | day) | map(select(test("^[0-9]{4}-[0-9]{2}-[0-9]{2}$"))) | max // "") as $last
+						| select($last >= $since and ($until == "" or $last <= $until))
+						| .[] as $e
+						| select($e.type == "message" and $e.message.role == "assistant")
+						| ($e.message.model // "unknown" | clean_model) as $m
+						| (($e.message.content // []) | if type == "array" then .[] else empty end) as $c
+						| select($c.type == "toolCall")
+						| {h:"pi", m:$m, id:($c.id // "\($e.id // input_filename):\($c.name // "tool")")}
+					' "$file" 2>/dev/null
+				done
+			done
+		} | jq -s 'unique_by(.h, .m, .id) | sort_by(.h, .m) | group_by(.h, .m) | map({h:.[0].h, m:.[0].m, tools:length})'
+	)
+	[[ -n "$tools_json" ]] || tools_json='[]'
+
+	ccusage "${args[@]}" | jq -r --argjson tools "$tools_json" '
+		def pct($n; $d): if $d == 0 then 0 else (($n * 1000 / $d) | round / 10) end;
+		def pct_s: tostring + "%";
+		def tool_count($h; $m): ([ $tools[]? | select(.h == $h and .m == $m) | .tools ] | add // 0);
+		[
+			.session[]? as $s
+			| ($s.agent // "unknown") as $h
+			| $s.modelBreakdowns[]?
+			| {
+				h: $h,
+				m: ((.modelName // "unknown") | sub("^\\[[^]]+\\] "; "")),
+				in: (.inputTokens // 0),
+				out: (.outputTokens // 0)
+			}
+		]
+		| sort_by(.h, .m)
+		| group_by(.h)[]
+		| . as $hrows
+		| ($hrows | reduce .[] as $r ({in:0,out:0}; .in += $r.in | .out += $r.out)) as $tot
+		| (
+			$hrows
+			| group_by(.m)
+			| map(
+				.[0] as $first
+				| reduce .[] as $r ({h:$first.h,m:$first.m,in:0,out:0};
+					.in += $r.in
+					| .out += $r.out
+				)
+			)
+			| map(. + {
+				tools: tool_count(.h; .m),
+				inPct: pct(.in; $tot.in),
+				outPct: pct(.out; $tot.out)
+			})
+		) as $rows
+		| ($rows | map(.tools) | max) as $maxTools
+		| ($rows | map(.inPct) | max) as $maxInPct
+		| ($rows | map(.outPct) | max) as $maxOutPct
+		| $rows[]
+		| [
+			.h,
+			.m,
+			(.tools | tostring),
+			(.in | tostring),
+			(.out | tostring),
+			(.inPct | pct_s),
+			(.outPct | pct_s),
+			(.tools == $maxTools and $maxTools > 0),
+			(.inPct == $maxInPct),
+			(.outPct == $maxOutPct)
+		]
+		| @tsv
+	' | TOK_COLOR="$color" awk -F '\t' '
+		function max(a,b) { return a > b ? a : b }
+		function spaces(n) { return n > 0 ? sprintf("%" n "s", "") : "" }
+		function style(s, c) { return color && c != "" ? c s reset : s }
+		function cell(s, w, c) { return style(s, c) spaces(w - length(s)) }
+		BEGIN {
+			color = ENVIRON["TOK_COLOR"] == "1"
+			esc = sprintf("%c", 27)
+			reset = esc "[0m"
+			header_style = esc "[1;34m"
+			harness_style = esc "[36m"
+			pct_style = esc "[33m"
+			max_style = esc "[1;32m"
+			hdr[1] = "harness"; hdr[2] = "model"; hdr[3] = "tools"; hdr[4] = "in"; hdr[5] = "out"; hdr[6] = "in_pct"; hdr[7] = "out_pct"
+			for (i = 1; i <= 7; i++) width[i] = length(hdr[i])
+		}
+		{
+			n++
+			for (i = 1; i <= 10; i++) row[n,i] = $i
+			for (i = 1; i <= 7; i++) width[i] = max(width[i], length($i))
+		}
+		END {
+			if (n == 0) { print "No tok data."; exit }
+			print cell(hdr[1], width[1], header_style) "  " cell(hdr[2], width[2], header_style) "  " cell(hdr[3], width[3], header_style) "  " cell(hdr[4], width[4], header_style) "  " cell(hdr[5], width[5], header_style) "  " cell(hdr[6], width[6], header_style) "  " cell(hdr[7], width[7], header_style)
+			for (r = 1; r <= n; r++) {
+				if (r > 1 && row[r,1] != row[r-1,1]) print ""
+				print cell(row[r,1], width[1], harness_style) "  " \
+					cell(row[r,2], width[2], "") "  " \
+					cell(row[r,3], width[3], row[r,8] == "true" ? max_style : pct_style) "  " \
+					cell(row[r,4], width[4], pct_style) "  " \
+					cell(row[r,5], width[5], pct_style) "  " \
+					cell(row[r,6], width[6], row[r,9] == "true" ? max_style : pct_style) "  " \
+					cell(row[r,7], width[7], row[r,10] == "true" ? max_style : pct_style)
+			}
+		}
+	'
+}

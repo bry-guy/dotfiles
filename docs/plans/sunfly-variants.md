@@ -16,10 +16,10 @@ Make Sunfly explicit as two coordinated light-theme variants so a terminal sessi
 Implemented locally on 2026-05-05:
 
 - the local `bry-guy/sunfly` checkout now exposes `sunfly-paper` and `sunfly-bright` Neovim colorschemes
-- generated Sunfly variant extras now exist for Ghostty, Pi, Posting, and tmux
+- generated Sunfly variant extras now exist for Ghostty, Pi, Posting, tmux, Claude Code, and Harlequin
 - dotfiles now default light-mode Sunfly to `paper`, with `DOTFILES_SUNFLY_VARIANT=bright` available for the lighter background
 - `theme-sync`, `sunfly-install`, and `nvim-preview-sunfly` understand the variants
-- Ghostty variant themes use dark ink for ANSI color 0 so ANSI-based light UIs remain readable
+- Ghostty variant themes use dark ink for ANSI color 0 and paper-tint ANSI white/bright-white slots so ANSI-based light UIs remain readable
 - the temporary Neovim-only red override remains removed
 
 Remaining publication step: decide whether to first complete the standalone Neovim migration in `docs/plans/sunfly-standalone.md`, then commit/push/tag the `bry-guy/sunfly` changes and update the dotfiles plugin pin / `sunfly-install` default ref as appropriate.
@@ -79,6 +79,9 @@ Compatibility option:
      - `extras/posting/sunfly-bright.yaml`
      - `extras/tmux/sunfly-paper.conf`
      - `extras/tmux/sunfly-bright.conf`
+     - `extras/claude/sunfly-paper.json`
+     - `extras/claude/sunfly-bright.json`
+     - `extras/harlequin-textual/sunfly_textual_themes.py`
 
 3. Tune both variants separately. **Initial pass done locally; taste-testing still needed.**
    - Start from current values:
@@ -111,11 +114,11 @@ Compatibility option:
 
 4. Update `script/sunfly-install`. **Done locally.**
    - Add `--variant paper|bright|all`.
-   - Install the matching Ghostty/Pi/Posting/tmux generated files.
+   - Install the matching Ghostty/Pi/Posting/tmux/Claude/Harlequin generated files.
 
 5. Update `script/theme-sync`. **Done locally.**
    - Resolve a single `sunfly_variant` in light mode.
-   - Use matching app theme names for Pi, Posting, tmux, and Ghostty status output.
+   - Use matching app theme names for Pi, Posting, tmux, Harlequin, Claude Code, and Ghostty status output.
    - Ensure Neovim remote refresh selects the same variant as the terminal.
 
 6. Update preview workflow. **Done locally.**

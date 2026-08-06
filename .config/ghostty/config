@@ -24,3 +24,7 @@ keybind = super+w=ignore
 
 # Pi docs recommend this mapping for better terminal ergonomics.
 keybind = alt+backspace=text:\x1b\x7f
+
+# Do not let Ctrl-H collapse to the legacy Backspace byte. Send an enhanced
+# keyboard-protocol Ctrl-H sequence so TUIs can bind it separately.
+keybind = ctrl+h=csi:104;5u

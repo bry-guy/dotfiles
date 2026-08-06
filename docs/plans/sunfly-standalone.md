@@ -14,7 +14,7 @@ The desired final model is:
 palette/sunfly.json
   -> Neovim Sunfly palettes/highlights
   -> lualine themes
-  -> Ghostty / Pi / Posting / tmux extras
+  -> Ghostty / Pi / Posting / tmux / Claude Code / Harlequin extras
 ```
 
 No hidden Moonfly base layer, no `require("moonfly").custom_colors(...)`, and no `vim.cmd("colorscheme moonfly")` during Sunfly load.
@@ -35,7 +35,7 @@ This is pragmatic, but it couples Sunfly to Moonfly internals and makes debuggin
 
 - Do not redesign the Sunfly palettes during the standalone migration.
 - Do not remove the generated extras path.
-- Do not rewrite terminal/Pi/Posting/tmux themes except as needed to keep generation aligned.
+- Do not rewrite terminal/Pi/Posting/tmux/Claude Code/Harlequin themes except as needed to keep generation aligned.
 - Do not solve every taste issue in the same change; preserve current visual output first, then tune later.
 
 ## Success criteria
