@@ -1,2 +1,4 @@
-# Intentionally empty.
+[tools]
+"npm:skills" = "latest"
+# Global exceptions to the normal policy below.
 # Prefer Brew for machine-global tools and project-local mise.toml files for project tooling.
