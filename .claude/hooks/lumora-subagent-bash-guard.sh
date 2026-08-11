@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-mode="${1:-coder}"
+mode="${1:-unknown}"
 input="$(cat)"
 
 block() {
@@ -81,15 +81,7 @@ if [ "$mode" = "gh-fetcher" ]; then
   block "gh-fetcher command is outside the read-only gh allowlist."
 fi
 
-# Coder is trusted for implementation Bash, except operational commands and the global staging/prod guard above.
-if [ "$mode" = "coder" ]; then
-  if printf '%s\n' "$cmd" | grep -Eiq '(^|[[:space:]])just[[:space:]]+(release|deploy)([[:space:]]|$)|(^|[[:space:]])(release|deploy)([[:space:]]|$)'; then
-    block "coder may not run operational release/deploy commands."
-  fi
-  exit 0
-fi
-
-# Basher is Haiku. Two tiers:
+# Basher has two tiers:
 #   * Scratchpad sandbox (relaxed) — commands operating inside the session
 #     scratchpad get a throwaway local sandbox: chaining, pipes, redirection,
 #     file mutation, and local build/test tooling are all allowed.
@@ -227,36 +219,7 @@ if [ "$mode" = "basher" ]; then
   block "basher command is outside the allowed diagnostic command set."
 fi
 
-# Fetcher is Haiku: it gets only simple single just commands, not arbitrary shell.
-if [ "$mode" = "fetcher" ]; then
-  case "$cmd" in
-    *$'\n'*) block "fetcher may only run one-line just commands." ;;
-  esac
-
-  if printf '%s\n' "$cmd" | grep -Eq '[;&|<>`]|\$\('; then
-    block "fetcher may only run simple just commands without shell operators, command substitution, pipes, or redirection."
-  fi
-
-  case "$cmd" in
-    just\ *) ;;
-    just) block "fetcher may not run bare 'just'; specify an explicit recipe or 'just --list'." ;;
-    *) block "fetcher may only run simple just commands." ;;
-  esac
-
-  # Keep fetcher in the current repo's justfile and avoid option-based indirection.
-  if printf '%s\n' "$cmd" | grep -Eq '(^|[[:space:]])(--justfile|--working-directory|--dotenv-path|-f|-d)(=|[[:space:]]|$)'; then
-    block "fetcher may not override the justfile, working directory, or dotenv path."
-  fi
-
-  # Fetcher may not run release/deploy recipes. Coder may, subject to the global staging/prod guard.
-  if printf '%s\n' "$cmd" | grep -Eiq '(^|[[:space:]])(release|deploy)([[:space:]]|$)'; then
-    block "fetcher may not run operational release/deploy commands."
-  fi
-
-  exit 0
-fi
-
-# Remoter is Haiku: read-only AWS diagnostics via aws-vault with -readonly profiles only.
+# Remoter runs read-only AWS diagnostics via aws-vault with -readonly profiles only.
 if [ "$mode" = "remoter" ]; then
   case "$cmd" in
     *$'\n'*) block "remoter may only run one-line commands." ;;
