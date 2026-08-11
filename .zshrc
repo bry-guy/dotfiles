@@ -211,8 +211,6 @@ if [ -n "$(command -v direnv)" ]; then
 fi
 
 if [ -n "$(command -v op)" ]; then
-		eval "$(op completion zsh)"; compdef _op op
-
 		load-gemini-api-key() {
 				if [ -n "${GEMINI_API_KEY:-}" ]; then
 						return 0
