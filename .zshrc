@@ -201,6 +201,7 @@ zle -N zle-line-finish
 # AI
 # ===============================
 export OPENCODE_DISABLE_LSP_DOWNLOAD=true
+alias rpiv='PI_CODING_AGENT_DIR="$HOME/.pi/profiles/rpiv" pi'
 
 
 # ===============================

@@ -1,30 +1,27 @@
 {
-  "lastChangelogVersion": "0.83.0",
-  "theme": "sunfly-paper",
+  "theme": "dark",
   "packages": [
-    "git:github.com/nicobailon/pi-mcp-adapter",
-    "git:github.com/nicobailon/pi-web-access",
-    "git:github.com/lajarre/pi-vim",
-    "git:github.com/bry-guy/pi-ez-worktree",
-    "npm:pi-subagents",
-    "npm:context-mode",
+    "npm:@juicesharp/rpiv-pi",
+    "npm:@tintinweb/pi-subagents",
     "npm:@juicesharp/rpiv-ask-user-question",
-    "npm:@dietrichgebert/ponytail",
-    "npm:@narumitw/pi-lsp",
     "npm:@juicesharp/rpiv-todo",
     "npm:@juicesharp/rpiv-advisor",
+    "npm:@juicesharp/rpiv-i18n",
+    "npm:@juicesharp/rpiv-web-tools",
+    "npm:@juicesharp/rpiv-args",
+    "npm:@juicesharp/rpiv-workflow",
     "npm:@juicesharp/rpiv-btw"
   ],
   "defaultProvider": "openai-codex",
   "defaultModel": "gpt-5.6-luna",
-  "defaultThinkingLevel": "max",
+  "defaultThinkingLevel": "xhigh",
   "editorPaddingX": 2,
-  "hideThinkingBlock": false,
+  "hideThinkingBlock": true,
   "quietStartup": true,
   "treeFilterMode": "default",
   "compaction": {
     "enabled": true,
-    "reserveTokens": 32768,
+    "reserveTokens": 68000,
     "keepRecentTokens": 16384
   },
   "enabledModels": [
@@ -32,5 +29,10 @@
     "openai-codex/gpt-5.6-terra",
     "openai-codex/gpt-5.6-sol",
     "openai-codex/gpt-5.6-luna"
-  ]
+  ],
+  "steeringMode": "all",
+  "followUpMode": "all",
+  "httpIdleTimeoutMs": 60000,
+  "showCacheMissNotices": true,
+  "tuiMode": "fullscreen"
 }

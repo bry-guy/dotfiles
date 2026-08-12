@@ -138,6 +138,12 @@ Apply a full profile:
 ~/script/brew-apply-profile personal-macos
 ```
 
+### Pi profiles
+
+The default Pi profile uses Ponytail in `lite` mode through `~/.config/ponytail/config.json`.
+The isolated RPIV profile lives at `~/.pi/profiles/rpiv`; run it with the `rpiv` shell alias.
+Only its declarative `settings.json` is tracked—credentials, installed packages, generated agents, and sessions remain machine-local.
+
 ### Automatic theme sync
 
 The tracked theme sync pieces are:

@@ -17,6 +17,8 @@ harlequin.toml
 go/**/*
 second-brain/**/*
 .pi/agent/sessions/**/*
+.pi/profiles/*/*
+!.pi/profiles/*/settings.json
 .npm/**/*
 .local/share/**/*
 !.local/share/posting/
@@ -37,6 +39,7 @@ second-brain/**/*
 .claude.json.backup*
 .claude/settings.local.json
 .config/tmux/theme.conf
+.config/rpiv-web-tools/config.json
 .ez*
 
 
