@@ -2,6 +2,12 @@ local M = {
   "lewis6991/gitsigns.nvim",
   event = { "BufReadPre", "BufNewFile" },
   opts = {
+    worktrees = {
+      {
+        toplevel = vim.env.HOME,
+        gitdir = vim.env.HOME .. "/.local/share/yadm/repo.git",
+      },
+    },
     on_attach = function(bufnr)
       local gitsigns = require("gitsigns")
       local keymaps = require("config.keymaps")

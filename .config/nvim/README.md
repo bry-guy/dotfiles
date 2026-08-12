@@ -71,6 +71,7 @@ Gitsigns attaches to Git-backed buffers and exposes the `<leader>g` group:
 - `<leader>gp` — preview the current hunk
 - `<leader>gd` — open a diff against the index (unstaged changes)
 - `<leader>gD` — open a diff against `HEAD` (staged and unstaged changes)
+- `<leader>gdm` — open the current-file diff against the local `main` tip
 - `<leader>gq` / `<leader>gQ` — put this buffer's / the repository's hunks in quickfix
 - `<leader>gb` / `<leader>gB` — show blame for the current line / toggle line blame
 - `<leader>gs` / `<leader>gr` — stage / discard the current hunk; use them in Visual mode for a selected range

@@ -99,6 +99,7 @@ M.gitsigns_hotkeys = function(gitsigns)
     { "<leader>gp", gitsigns.preview_hunk, { desc = "Git Preview Hunk" } },
     { "<leader>gd", gitsigns.diffthis, { desc = "Git Diff Index" } },
     { "<leader>gD", function() gitsigns.diffthis("HEAD") end, { desc = "Git Diff HEAD" } },
+    { "<leader>gdm", function() gitsigns.diffthis("main") end, { desc = "Git Diff Main" } },
     { "<leader>gb", function() gitsigns.blame_line({ full = true }) end, { desc = "Git Blame Line" } },
     { "<leader>gB", gitsigns.toggle_current_line_blame, { desc = "Git Toggle Line Blame" } },
     { "<leader>gq", function() gitsigns.setqflist(0, { open = true }) end, { desc = "Git Hunks Quickfix" } },
