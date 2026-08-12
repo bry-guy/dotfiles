@@ -19,6 +19,7 @@ local M = {
       { "<leader>c", group = "Multiple Cursors" },
       { "<leader>d", group = "Debug (DAP)" },
       { "<leader>f", group = "Find (Telescope)" },
+      { "<leader>g", group = "Git (Gitsigns/Fugitive)" },
       { "<leader>r", group = "Remote" },
       { "<leader>s", group = "Session" },
       { "<leader>v", group = "View" },

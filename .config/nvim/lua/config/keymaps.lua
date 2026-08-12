@@ -80,6 +80,32 @@ M.multicursors_hotkeys = {
   }
 }
 
+-- git
+M.gitsigns_hotkeys = function(gitsigns)
+  local visual_hunk_range = function()
+    local first = vim.fn.line(".")
+    local last = vim.fn.line("v")
+    return { math.min(first, last), math.max(first, last) }
+  end
+
+  return {
+    { "<leader>gn", function() gitsigns.nav_hunk("next") end, { desc = "Git Next Hunk" } },
+    { "<leader>gN", function() gitsigns.nav_hunk("prev") end, { desc = "Git Previous Hunk" } },
+    { "<leader>gs", gitsigns.stage_hunk, { desc = "Git Stage Hunk" } },
+    { "<leader>gs", function() gitsigns.stage_hunk(visual_hunk_range()) end, { mode = "v", desc = "Git Stage Hunk" } },
+    { "<leader>gr", gitsigns.reset_hunk, { desc = "Git Reset Hunk" } },
+    { "<leader>gr", function() gitsigns.reset_hunk(visual_hunk_range()) end, { mode = "v", desc = "Git Reset Hunk" } },
+    { "<leader>gS", gitsigns.stage_buffer, { desc = "Git Stage Buffer" } },
+    { "<leader>gp", gitsigns.preview_hunk, { desc = "Git Preview Hunk" } },
+    { "<leader>gd", gitsigns.diffthis, { desc = "Git Diff Index" } },
+    { "<leader>gD", function() gitsigns.diffthis("HEAD") end, { desc = "Git Diff HEAD" } },
+    { "<leader>gb", function() gitsigns.blame_line({ full = true }) end, { desc = "Git Blame Line" } },
+    { "<leader>gB", gitsigns.toggle_current_line_blame, { desc = "Git Toggle Line Blame" } },
+    { "<leader>gq", function() gitsigns.setqflist(0, { open = true }) end, { desc = "Git Hunks Quickfix" } },
+    { "<leader>gQ", function() gitsigns.setqflist("all", { open = true }) end, { desc = "Git All Hunks Quickfix" } },
+  }
+end
+
 -- telescope
 M.telescope_hotkeys = {
   { "<leader>fF", "<cmd>lua require('telescope.builtin').find_files()<CR>", { desc = "Tele Find All Files" } },

@@ -62,3 +62,26 @@ Useful mappings:
 - `<leader>ad` adds current buffer diagnostics
 - `<leader>as` stops generation
 - `<leader>at` toggles Agentic between right and bottom layouts
+
+## Git diff review
+
+Gitsigns attaches to Git-backed buffers and exposes the `<leader>g` group:
+
+- `<leader>gn` / `<leader>gN` — next / previous hunk
+- `<leader>gp` — preview the current hunk
+- `<leader>gd` — open a diff against the index (unstaged changes)
+- `<leader>gD` — open a diff against `HEAD` (staged and unstaged changes)
+- `<leader>gq` / `<leader>gQ` — put this buffer's / the repository's hunks in quickfix
+- `<leader>gb` / `<leader>gB` — show blame for the current line / toggle line blame
+- `<leader>gs` / `<leader>gr` — stage / discard the current hunk; use them in Visual mode for a selected range
+- `<leader>gS` — stage the entire buffer
+
+A quick local review loop is:
+
+1. Open a changed file.
+2. Use `<leader>gn` and `<leader>gN` to move between hunks.
+3. Use `<leader>gp` for a compact preview.
+4. Use `<leader>gd` or `<leader>gD` when you need a side-by-side diff.
+5. Use `<leader>gq` or `<leader>gQ`, then `:copen`, to collect hunks for navigation across files.
+
+Gitsigns reviews the current buffer and its hunks; it is not a whole-branch file-list UI. Fugitive remains available through `:Git` for broader Git operations, and no branch push is needed for any of these views.
