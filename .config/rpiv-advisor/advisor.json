@@ -1,0 +1,7 @@
+{
+  "modelKey": "openai-codex/gpt-5.6-sol",
+  "effort": "xhigh",
+  "disabledForModels": [
+    "openai-codex/gpt-5.6-terra"
+  ]
+}
