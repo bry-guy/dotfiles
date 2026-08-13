@@ -20,7 +20,6 @@ if ! command -v dark-notify >/dev/null 2>&1; then
 fi
 
 mkdir -p "$HOME/log"
-"$HOME/script/theme-sync" auto
 launchctl bootout "gui/$UID" "$plist" >/dev/null 2>&1 || true
 launchctl bootstrap "gui/$UID" "$plist"
 launchctl kickstart -k "gui/$UID/$label"

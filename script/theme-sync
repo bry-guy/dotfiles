@@ -1,21 +1,45 @@
 #!/bin/bash
 set -euo pipefail
-shopt -s nullglob
 
 usage() {
   cat <<'EOF'
-Usage: ~/script/theme-sync [auto|dark|light]
+Usage: ~/script/theme-sync [auto|dark|light|status]
 
-Syncs terminal app themes to the requested appearance.
-If omitted, appearance is detected from macOS.
-
-Light mode uses DOTFILES_SUNFLY_VARIANT/SUNFLY_VARIANT when set:
-  paper  -> Sunfly Paper / sunfly-paper (default)
-  bright -> Sunfly Bright / sunfly-bright
+Synchronizes the local terminal theme projection. `auto` detects macOS or
+Linux appearance; an explicit mode is useful for testing. Running `status`
+reports the last applied appearance and display profile.
 EOF
 }
 
-detect_mode() {
+home_dir="$HOME"
+state_dir="${XDG_STATE_HOME:-$home_dir/.local/state}/dotfiles"
+state_file="$state_dir/theme-sync"
+lock_file="$state_dir/theme-sync.lock"
+
+read_state() {
+  [[ -f "$state_file" ]] || return 0
+  while IFS='=' read -r key value; do
+    case "$key" in
+      appearance) saved_appearance="$value" ;;
+      display) saved_display="$value" ;;
+      font_recommendation) saved_font_recommendation="$value" ;;
+      font_profile) saved_font_profile="$value" ;;
+    esac
+  done < "$state_file"
+}
+
+if [[ "${1:-auto}" == "status" ]]; then
+  saved_appearance="unknown"
+  saved_display="unknown"
+  saved_font_recommendation="unknown"
+  saved_font_profile="unknown"
+  read_state
+  printf 'Theme sync state: appearance=%s display=%s recommended-font=%s actual-font=%s\n' \
+    "$saved_appearance" "$saved_display" "$saved_font_recommendation" "$saved_font_profile"
+  exit 0
+fi
+
+detect_appearance() {
   case "$(uname -s)" in
     Darwin)
       if defaults read -g AppleInterfaceStyle >/dev/null 2>&1; then
@@ -49,6 +73,14 @@ detect_mode() {
   esac
 }
 
+detect_display() {
+  if [[ -x "$home_dir/script/display-profile" ]]; then
+    "$home_dir/script/display-profile"
+  else
+    echo other
+  fi
+}
+
 mode="${1:-auto}"
 case "$mode" in
   -h|--help)
@@ -56,7 +88,7 @@ case "$mode" in
     exit 0
     ;;
   auto)
-    mode="$(detect_mode)"
+    mode="$(detect_appearance)"
     ;;
   dark|light)
     ;;
@@ -66,171 +98,183 @@ case "$mode" in
     ;;
 esac
 
-home_dir="${HOME}"
-pi_settings="${home_dir}/.pi/agent/settings.json"
-claude_state="${home_dir}/.claude.json"
-harlequin_config="${home_dir}/.harlequin.toml"
-posting_config="${home_dir}/.config/posting/config.yaml"
-ghostty_config="${home_dir}/.config/ghostty/config"
-tmux_theme_target="${home_dir}/.config/tmux/theme.conf"
-
-claude_theme_dark="${CLAUDE_THEME_DARK:-dark-ansi}"
-
-sunfly_variant="${DOTFILES_SUNFLY_VARIANT:-${SUNFLY_VARIANT:-paper}}"
-sunfly_variant="${sunfly_variant#sunfly-}"
-case "$sunfly_variant" in
-  paper)
-    sunfly_ghostty_theme="Sunfly Paper"
-    ;;
-  bright)
-    sunfly_ghostty_theme="Sunfly Bright"
-    ;;
-  *)
-    echo "Unknown Sunfly variant: $sunfly_variant" >&2
-    exit 1
-    ;;
-esac
-sunfly_theme="sunfly-${sunfly_variant}"
-claude_theme_light="${CLAUDE_THEME_LIGHT:-custom:${sunfly_theme}}"
-
-ghostty_status="native"
-tmux_status="not-configured"
-
-if [[ "$mode" == "dark" ]]; then
-  pi_theme="moonfly"
-  nvim_theme="moonfly"
-  posting_theme="moonfly"
-  harlequin_theme="harlequin"
-  tmux_theme_source="${home_dir}/.config/tmux/theme.dark.conf"
-  claude_theme="$claude_theme_dark"
+display="$(detect_display)"
+if [[ "$display" == "studio" ]]; then
+  font_profile="sfmono-thick"
 else
-  pi_theme="$sunfly_theme"
-  nvim_theme="$sunfly_theme"
-  posting_theme="$sunfly_theme"
-  harlequin_theme="$sunfly_theme"
-  tmux_theme_source="${home_dir}/.config/tmux/theme.light.${sunfly_variant}.conf"
-  claude_theme="$claude_theme_light"
+  font_profile="sfmono"
+fi
 
-  sunfly_install="${home_dir}/script/sunfly-install"
-  if [[ -x "$sunfly_install" ]]; then
-    missing_extras=()
-    [[ ! -f "${home_dir}/.config/ghostty/themes/${sunfly_ghostty_theme}" ]] && missing_extras+=(ghostty)
-    [[ ! -f "${home_dir}/.pi/agent/themes/${sunfly_theme}.json" ]] && missing_extras+=(pi)
-    [[ ! -f "${home_dir}/.local/share/posting/themes/${sunfly_theme}.yaml" ]] && missing_extras+=(posting)
-    [[ ! -f "$tmux_theme_source" ]] && missing_extras+=(tmux)
-    [[ ! -f "${home_dir}/.claude/themes/${sunfly_theme}.json" ]] && missing_extras+=(claude)
-    [[ ! -f "${home_dir}/.config/harlequin/sunfly_textual_themes.py" ]] && missing_extras+=(harlequin)
-    if [[ ${#missing_extras[@]} -gt 0 ]]; then
-      "$sunfly_install" --variant "$sunfly_variant" "${missing_extras[@]}"
-    fi
+mkdir -p "$state_dir"
+lock_acquired=false
+lock_temp="$lock_file.$$"
+printf '%s\n' "$$" > "$lock_temp"
+for _ in {1..100}; do
+  if ln "$lock_temp" "$lock_file" 2>/dev/null; then
+    lock_acquired=true
+    break
   fi
-fi
 
-if [[ -f "$ghostty_config" ]]; then
-  python3 - "$ghostty_config" "$sunfly_ghostty_theme" <<'PY'
-import pathlib
-import re
-import sys
-
-path = pathlib.Path(sys.argv[1])
-light_theme = sys.argv[2]
-text = path.read_text()
-text, count = re.subn(r'(?m)^theme = dark:Moonfly,light:.*$', f'theme = dark:Moonfly,light:{light_theme}', text, count=1)
-if count == 0:
-    text += f'\ntheme = dark:Moonfly,light:{light_theme}\n'
-path.write_text(text)
-PY
-fi
-
-python3 - "$pi_settings" "$pi_theme" <<'PY'
-import json
-import pathlib
-import sys
-
-path = pathlib.Path(sys.argv[1])
-theme = sys.argv[2]
-data = json.loads(path.read_text())
-data["theme"] = theme
-path.write_text(json.dumps(data, indent=2) + "\n")
-PY
-
-python3 - "$harlequin_config" "$harlequin_theme" <<'PY'
-import pathlib
-import re
-import sys
-
-path = pathlib.Path(sys.argv[1])
-theme = sys.argv[2]
-text = path.read_text()
-text, count = re.subn(r'(?m)^theme = ".*"$', f'theme = "{theme}"', text)
-if count == 0:
-    raise SystemExit(f"No theme entries found in {path}")
-path.write_text(text)
-PY
-
-python3 - "$posting_config" "$posting_theme" <<'PY'
-import pathlib
-import re
-import sys
-
-path = pathlib.Path(sys.argv[1])
-theme = sys.argv[2]
-text = path.read_text()
-text, count = re.subn(r'(?m)^theme: .*$', f'theme: {theme}', text, count=1)
-if count == 0:
-    text = f'theme: {theme}\n' + text
-path.write_text(text)
-PY
-
-if [[ -f "$tmux_theme_source" ]]; then
-  mkdir -p "$(dirname "$tmux_theme_target")"
-  cp "$tmux_theme_source" "$tmux_theme_target"
-  tmux_status="theme-file updated"
-  if command -v tmux >/dev/null 2>&1 && tmux ls >/dev/null 2>&1; then
-    if tmux source-file "$home_dir/.tmux.conf" >/dev/null 2>&1; then
-      tmux_status="reloaded"
-    else
-      tmux_status="theme-file updated (reload failed)"
-    fi
+  lock_pid="$(cat "$lock_file" 2>/dev/null || true)"
+  if [[ ! "$lock_pid" =~ ^[0-9]+$ ]] || ! kill -0 "$lock_pid" 2>/dev/null; then
+    rm -f "$lock_file"
   fi
+  sleep 0.1
+done
+rm -f "$lock_temp"
+if [[ "$lock_acquired" != true ]]; then
+  echo "theme-sync could not acquire its reconciliation lock." >&2
+  exit 1
 fi
+release_lock() {
+  if [[ "$(cat "$lock_file" 2>/dev/null || true)" == "$$" ]]; then
+    rm -f "$lock_file"
+  fi
+}
+trap release_lock EXIT
 
-claude_status="manual"
-if [[ -f "$claude_state" ]]; then
-  claude_status="$(python3 - "$claude_state" "$claude_theme" <<'PY'
-import json
-import pathlib
-import sys
+selected_theme="$([[ "$mode" == dark ]] && echo moonfly || echo sunfly)"
+pi_theme="$home_dir/.pi/agent/themes/adaptive.json"
+pi_source="$home_dir/.pi/agent/themes/$selected_theme.json"
+claude_theme="$home_dir/.claude/themes/adaptive.json"
+claude_source="$home_dir/.claude/themes/$selected_theme.json"
+posting_theme="$home_dir/.local/share/posting/themes/adaptive.yaml"
+posting_source="$home_dir/.local/share/posting/themes/$selected_theme.yaml"
+tmux_theme_source="$home_dir/.config/tmux/theme.$([[ "$mode" == dark ]] && echo dark || echo light).conf"
+tmux_theme_target="$home_dir/.config/tmux/theme.conf"
+ghostty_theme_override="$home_dir/.config/ghostty/theme-profile.local.conf"
 
-path = pathlib.Path(sys.argv[1])
-theme = sys.argv[2]
-data = json.loads(path.read_text())
-data["theme"] = theme
-path.write_text(json.dumps(data, indent=2) + "\n")
-print("updated")
-PY
-  )"
-fi
-
-for sock in /tmp/nvim*.sock; do
-  nvim --server "$sock" --remote-send "<Cmd>lua vim.g.dotfiles_sunfly_variant = '${sunfly_variant}'; require('config.theme').apply()<CR>" >/dev/null 2>&1 || true
+for source in "$pi_source" "$claude_source" "$posting_source" "$tmux_theme_source"; do
+  [[ -f "$source" ]] || { echo "Missing theme source: $source" >&2; exit 1; }
 done
 
-if [[ "$(uname -s)" == "Darwin" ]] && pgrep -x ghostty >/dev/null 2>&1; then
-  if pkill -USR2 -x ghostty >/dev/null 2>&1; then
-    ghostty_status="native + reload-signal"
+atomic_write() {
+  local destination="$1"
+  local temporary
+  mkdir -p "$(dirname "$destination")"
+  temporary="$(mktemp "${destination}.tmp.XXXXXX")"
+  cat > "$temporary"
+  if [[ -f "$destination" ]] && cmp -s "$temporary" "$destination"; then
+    rm -f "$temporary"
+    return
+  fi
+  chmod 644 "$temporary"
+  mv "$temporary" "$destination"
+}
+
+# A stable active theme name lets applications reload the projection in place.
+python3 - "$pi_source" "$pi_theme" "$claude_source" "$claude_theme" "$posting_source" "$posting_theme" <<'PY'
+import json
+import os
+from pathlib import Path
+import re
+import sys
+import tempfile
+
+pi_source, pi_target, claude_source, claude_target, posting_source, posting_target = map(Path, sys.argv[1:7])
+
+
+def replace_atomically(path: Path, text: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    if path.exists() and path.read_text() == text:
+        return
+    temporary = None
+    try:
+        with tempfile.NamedTemporaryFile("w", dir=path.parent, prefix=f".{path.name}.", delete=False) as file:
+            file.write(text)
+            temporary = Path(file.name)
+        os.chmod(temporary, 0o644)
+        os.replace(temporary, path)
+        temporary = None
+    finally:
+        if temporary is not None:
+            temporary.unlink(missing_ok=True)
+
+
+pi = json.loads(pi_source.read_text())
+pi["name"] = "adaptive"
+replace_atomically(pi_target, json.dumps(pi, indent=2) + "\n")
+
+claude = json.loads(claude_source.read_text())
+claude["name"] = "Adaptive"
+replace_atomically(claude_target, json.dumps(claude, indent=2) + "\n")
+
+posting = posting_source.read_text()
+posting, count = re.subn(r"(?m)^name:\s*.*$", "name: adaptive", posting, count=1)
+if count != 1:
+    raise SystemExit(f"Posting theme source has no name field: {posting_source}")
+replace_atomically(posting_target, posting)
+PY
+
+# Theme selections live in tracked settings; runtime sync only replaces the
+# ignored adaptive projections above.
+atomic_write "$tmux_theme_target" < "$tmux_theme_source"
+if [[ "${1:-auto}" == "auto" ]]; then
+  rm -f "$ghostty_theme_override"
+else
+  atomic_write "$ghostty_theme_override" <<EOF
+# Temporary explicit appearance override from theme-sync $mode.
+theme = $([[ "$mode" == dark ]] && echo Moonfly || echo Sunfly)
+EOF
+fi
+tmux_status="theme-file updated"
+if command -v tmux >/dev/null 2>&1 && tmux ls >/dev/null 2>&1; then
+  if tmux source-file "$home_dir/.tmux.conf" >/dev/null 2>&1; then
+    tmux_status="reloaded"
   else
-    ghostty_status="native (reload signal failed)"
+    tmux_status="theme-file updated (reload failed)"
   fi
 fi
+
+nvim_status="state published"
+if command -v nvim >/dev/null 2>&1 && compgen -G '/tmp/nvim*.sock' >/dev/null; then
+  nvim_status="reloaded"
+  for socket in /tmp/nvim*.sock; do
+    nvim --server "$socket" --remote-send "<Cmd>lua require('config.theme').apply()<CR>" >/dev/null 2>&1 || nvim_status="some servers unavailable"
+  done
+fi
+
+font_status="not configured"
+actual_font_profile="unknown"
+ghostty_status="not running"
+if [[ "$(uname -s)" == "Darwin" ]]; then
+  if [[ -x "$home_dir/script/ghostty-font" ]]; then
+    font_output="$(DOTFILES_DISPLAY="$display" "$home_dir/script/ghostty-font" sync 2>&1)"
+    font_status="$font_output"
+    actual_font_profile="$("$home_dir/script/ghostty-font" status-name)"
+  fi
+  if pgrep -x ghostty >/dev/null 2>&1; then
+    if pkill -USR2 -x ghostty >/dev/null 2>&1; then
+      ghostty_status="theme/font reload signal sent"
+    else
+      ghostty_status="theme/font reload signal failed"
+    fi
+  else
+    ghostty_status="not running"
+  fi
+fi
+
+# The launcher watches this state and updates already-running Neovim and
+# Harlequin instances. It is also the source for the next process startup.
+atomic_write "$state_file" <<EOF
+appearance=$mode
+display=$display
+font_recommendation=$font_profile
+font_profile=$actual_font_profile
+updated_at=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+EOF
 
 cat <<EOF
 Synced appearance: $mode
-- Neovim: $nvim_theme
-- Pi: $pi_theme
-- Posting: $posting_theme
-- Harlequin: $harlequin_theme
+display: $display
+recommended font: $font_profile
+actual font: $actual_font_profile
+- Neovim: $selected_theme ($nvim_status)
+- Pi: adaptive -> $selected_theme (active file; existing sessions may need /reload)
+- Posting: adaptive -> $selected_theme (active file watcher; restart if stale)
+- Harlequin: adaptive -> $selected_theme (state watcher)
 - tmux: $tmux_status
-- Ghostty: $ghostty_status (dark:Moonfly,light:$sunfly_ghostty_theme)
-- Claude Code: $claude_status ($( [[ "$claude_status" == "updated" ]] && echo "$claude_theme via ~/.claude.json" || echo "set via /theme $claude_theme" ))
+- Ghostty: Moonfly/Sunfly native; $ghostty_status
+- Ghostty font: $font_status
+- Claude Code: adaptive -> $mode (file updated; existing sessions need restart or select custom:adaptive once)
 EOF

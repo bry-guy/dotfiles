@@ -91,6 +91,7 @@ If no profile is selected, `~/script/setup` still performs the baseline bootstra
 - `auth.1password`
 - `base.core`
 - `base.desktop-macos`
+- `fonts.coding`
 - `dev.common`
 - `infra.common`
 - `infra.personal`
@@ -104,6 +105,7 @@ If no profile is selected, `~/script/setup` still performs the baseline bootstra
 - `auth.1password`
 - `base.core`
 - `base.desktop-macos`
+- `fonts.coding`
 - `dev.common`
 - `infra.common`
 - `infra.work`
@@ -117,6 +119,7 @@ If no profile is selected, `~/script/setup` still performs the baseline bootstra
 - `auth.1password`
 - `base.core`
 - `base.desktop-macos`
+- `fonts.coding`
 - `dev.common`
 - `infra.common`
 - `infra.personal`
@@ -130,6 +133,22 @@ If no profile is selected, `~/script/setup` still performs the baseline bootstra
 - `apps.work`
 
 `ai.common` currently includes shared AI/dev tooling such as `ccusage`, `claude-code`, `codex`, and `pi-coding-agent`.
+
+`fonts.coding` provides a shared set of legible coding fonts with intermediate weights, including SF Mono, Google Sans Code, JetBrains Mono, Iosevka Term, Maple Mono, Monaspace, Recursive Mono, Caskaydia Cove, Commit Mono, and Atkinson Hyperlegible Mono.
+
+Ghostty can switch among Regular/Medium and Medium/Bold mappings for Liga SFMono, Google Sans Code, and the experimental, locally installed Hack Medium trial without changing tracked configuration:
+
+```sh
+~/script/ghostty-font sfmono       # Regular text, Medium emphasis
+~/script/ghostty-font sfmono-thick # Medium text, Bold emphasis
+~/script/ghostty-font google       # Regular text, Medium emphasis
+~/script/ghostty-font google-thick # Medium text, Bold emphasis
+~/script/ghostty-font hack         # Regular text, Medium emphasis
+~/script/ghostty-font hack-thick   # Medium text, Bold emphasis
+~/script/ghostty-font status
+```
+
+The Hack profiles use Hack Nerd Font Mono for Regular text, symbols, or both. The active profile override is machine-local; Hack Medium is not part of the Brew manifest while it lacks a stable upstream release.
 
 ### Useful commands
 
@@ -148,27 +167,35 @@ Only its declarative `settings.json` is tracked—credentials, installed package
 ### Automatic theme sync
 
 The tracked theme sync pieces are:
-- `~/script/theme-sync` — applies `dark` / `light` themes across Neovim, Pi, Posting, Harlequin, tmux, Ghostty, and Claude Code, and sends a best-effort Ghostty reload signal on macOS; light mode uses the selected Sunfly variant from `DOTFILES_SUNFLY_VARIANT` / `SUNFLY_VARIANT` (`paper` by default, or `bright`); shared Harlequin profiles/themes live in `~/.harlequin.toml`, while project-local `.harlequin.toml` files should only set `default_profile` because Harlequin shallow-merges top-level config tables; Posting theme state is owned by `~/.config/posting/config.yaml`, while project-local overrides should use `posting.env` / `POSTING_*` and usually omit `POSTING_THEME`; Claude Code light mode uses the matching `custom:sunfly-*` theme instead of ANSI-dependent `light-ansi`
-- `~/script/sunfly-install --variant paper|bright|all <extra...>` — updates the tracked local Sunfly variant config files from `github.com/bry-guy/sunfly` or `SUNFLY_SOURCE_DIR`; required extras are explicit (`ghostty`, `pi`, `posting`, `tmux`, `claude`, `harlequin`, or `all`)
-- `~/script/theme-watch` — macOS watcher wrapper around `dark-notify`
+- `~/script/theme-sync` — publishes the current `dark` / `light` appearance and display state, updates adaptive theme projections, reloads tmux and Ghostty, and coordinates display-aware font switching; light mode uses Sunfly and dark mode uses Moonfly
+- `~/script/sunfly-install <extra...>` — updates tracked local Sunfly config files from `github.com/bry-guy/sunfly` or `SUNFLY_SOURCE_DIR`; required extras are explicit (`ghostty`, `pi`, `posting`, `tmux`, `claude`, `harlequin`, or `all`)
+- `~/script/theme-watch` — macOS watcher combining `dark-notify` appearance events with Studio Display polling
 - `~/Library/LaunchAgents/net.bryguy.theme-sync.plist` — user launch agent for automatic macOS syncing
 - `~/.local/share/darkman/{dark-mode.d,light-mode.d}/50-theme-sync` — Linux darkman hooks
-- `~/.local/share/posting/themes/{moonfly,sunfly,sunfly-paper,sunfly-bright}.yaml` — tracked local Posting themes; `sunfly-install --variant ... posting` refreshes the Sunfly variant themes from the public Sunfly repo, and `--variant all` also refreshes the compatibility `sunfly` alias
-- `~/.pi/agent/themes/{moonfly,sunfly,sunfly-paper,sunfly-bright}.json` — tracked local Pi themes; `sunfly-install --variant ... pi` refreshes the Sunfly variant themes from the public Sunfly repo, and `--variant all` also refreshes the compatibility `sunfly` alias
-- `~/.config/tmux/theme.dark.conf`, `~/.config/tmux/theme.light.conf`, and `~/.config/tmux/theme.light.{paper,bright}.conf` — tracked tmux templates; `sunfly-install --variant ... tmux` refreshes the light templates from the public Sunfly repo and `theme-sync` copies the active template to `~/.config/tmux/theme.conf`
-- `~/.config/ghostty/themes/Sunfly` and `~/.config/ghostty/themes/Sunfly {Paper,Bright}` — tracked local Ghostty light variants; `sunfly-install --variant ... ghostty` refreshes them from the public Sunfly repo; Sunfly light ANSI palettes keep ANSI black as ink and ANSI white/bright-white as paper tints for Claude `light-ansi`/inverse-color readability
-- `~/.claude/themes/sunfly-{paper,bright}.json` — tracked Claude Code custom themes; `theme-sync` selects `custom:sunfly-*` in light mode
-- `~/.config/harlequin/sunfly_textual_themes.py`, `~/.local/bin/harlequin`, and `~/.harlequin.toml` — tracked Harlequin support that registers Sunfly Textual themes before delegating to Harlequin, selects `sunfly-*` in light mode, adds previous-buffer support, and layers a terminal-safe `pane-nav` keymap (`Ctrl-Left/Down/Up/Right` for pane focus and `Ctrl-H/L` for tabs when distinguishable from Backspace) over the default `vscode` keymap
+- `~/.local/share/posting/themes/{moonfly,sunfly}.yaml` — tracked explicit Posting themes; ignored `adaptive.yaml` is the live selected projection
+- `~/.pi/agent/themes/{moonfly,sunfly}.json` — tracked local Pi themes
+- `~/.config/tmux/theme.dark.conf` and `~/.config/tmux/theme.light.conf` — tracked complete tmux templates; `theme-sync` atomically copies the active template to `~/.config/tmux/theme.conf`
+- `~/.config/ghostty/themes/Sunfly` — tracked Ghostty light theme with dark ANSI ink and paper-tint ANSI white slots
+- `~/.claude/themes/{moonfly,sunfly}.json` — explicit Claude Code themes; ignored `adaptive.json` is the live selected projection
+- `~/.config/harlequin/sunfly_textual_themes.py`, `~/.local/bin/harlequin`, and `~/.harlequin.toml` — Harlequin support that registers Moonfly/Sunfly, follows the shared state file while running in adaptive mode, adds previous-buffer support, and layers a terminal-safe `pane-nav` keymap (`Ctrl-Left/Down/Up/Right` for pane focus and `Ctrl-H/L` for tabs when distinguishable from Backspace) over the default `vscode` keymap
 - `~/.config/nvim/lua/plugins/sunfly.lua` — tracked Neovim Sunfly loader glue; the current Sunfly Neovim implementation still uses Moonfly under the hood, so `bluz71/vim-moonfly-colors` remains a required dependency
 - `~/docs/plans/light-theme-follow-up.md` — follow-up bug plan for remaining light-mode polish and automation issues
 
 Useful commands:
 ```sh
-~/script/sunfly-install --variant all all
-DOTFILES_SUNFLY_VARIANT=paper ~/script/theme-sync auto
+~/script/sunfly-install all
+~/script/theme-sync auto
+~/script/theme-sync status
+~/script/ghostty-font auto
+~/script/ghostty-font sfmono-thick  # manual override; pauses display switching
+~/script/ghostty-font sync            # reconcile automatic font after display changes
 ~/script/theme-sync-enable
 ~/script/theme-sync-disable
 ```
+
+### Claude Vim cursor shapes
+
+`~/.local/bin/claude` points to the tracked `~/script/claude` launcher. For interactive sessions, the launcher proxies the terminal while `~/script/claude-statusline` forwards Claude's `vim.mode` over a local socket: block for Normal/Visual and bar for Insert. The proxy also uses a bar while Claude's slash-command line is open and restores the block when it closes. Noninteractive Claude invocations pass straight through to the installed executable. Ghostty defaults to a nonblinking bar for shell input. This is a local workaround for [anthropics/claude-code#32469](https://github.com/anthropics/claude-code/issues/32469).
 
 `brew-apply-profile` automatically taps any required taps declared by the manifests and will continue past a failing manifest, then report a skipped-manifest summary at the end.
 

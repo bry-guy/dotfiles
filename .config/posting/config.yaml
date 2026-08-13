@@ -1,9 +1,10 @@
-# Theme is managed centrally by ~/script/theme-sync in this file:
-#   dark  -> moonfly
-#   light -> sunfly
+# Theme selection is stable; ~/script/theme-sync replaces the ignored
+# adaptive theme file that Posting watches:
+#   dark  -> Moonfly colors
+#   light -> Sunfly colors
 # Project-local overrides can live in ./posting.env via POSTING_* variables,
 # but should usually omit POSTING_THEME so system light/dark sync keeps working.
-theme: sunfly-paper
+theme: adaptive
 load_user_themes: true
 watch_themes: true
 

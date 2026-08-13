@@ -1,0 +1,25 @@
+#!/usr/bin/env python3
+import json
+import os
+import socket
+import subprocess
+import sys
+
+payload = sys.stdin.read()
+try:
+    status = json.loads(payload)
+except json.JSONDecodeError:
+    status = {}
+
+socket_path = os.environ.get("CLAUDE_CURSOR_SOCKET")
+vim_mode = (status.get("vim") or {}).get("mode", "INSERT")
+if socket_path:
+    try:
+        mode_socket = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
+        mode_socket.sendto(vim_mode.encode(), socket_path)
+        mode_socket.close()
+    except OSError:
+        pass
+
+result = subprocess.run(["ccusage", "statusline"], input=payload, text=True)
+raise SystemExit(result.returncode)

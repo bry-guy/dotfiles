@@ -1,0 +1,119 @@
+#!/usr/bin/env python3
+import fcntl
+import os
+from pathlib import Path
+import pty
+import select
+import signal
+import socket
+import sys
+import tempfile
+import termios
+import tty
+
+
+def find_claude():
+    wrapper = Path(__file__).resolve()
+    for directory in os.environ.get("PATH", "").split(os.pathsep):
+        candidate = Path(directory) / "claude"
+        try:
+            if candidate.is_file() and os.access(candidate, os.X_OK) and candidate.resolve() != wrapper:
+                return candidate
+        except OSError:
+            continue
+    raise SystemExit("claude executable not found")
+
+
+def set_cursor(terminal, mode):
+    block_modes = {"NORMAL", "VISUAL", "VISUAL LINE"}
+    os.write(terminal, b"\033[2 q" if mode in block_modes else b"\033[6 q")
+
+
+def copy_window_size(source, destination):
+    size = fcntl.ioctl(source, termios.TIOCGWINSZ, b"\0" * 8)
+    fcntl.ioctl(destination, termios.TIOCSWINSZ, size)
+
+
+def proxy_claude(executable):
+    terminal = os.open("/dev/tty", os.O_WRONLY | os.O_NONBLOCK)
+    original_attributes = termios.tcgetattr(sys.stdin.fileno())
+    state = {"mode": "INSERT", "command_line": False}
+
+    with tempfile.TemporaryDirectory(prefix="claude-cursor-", dir="/tmp") as directory:
+        socket_path = str(Path(directory) / "mode.sock")
+        mode_socket = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
+        mode_socket.bind(socket_path)
+        mode_socket.setblocking(False)
+
+        environment = os.environ.copy()
+        environment["CLAUDE_CURSOR_SOCKET"] = socket_path
+        child, master = pty.fork()
+        if child == 0:
+            os.execve(executable, [str(executable), *sys.argv[1:]], environment)
+
+        copy_window_size(sys.stdin.fileno(), master)
+        signal.signal(signal.SIGWINCH, lambda *_: copy_window_size(sys.stdin.fileno(), master))
+        tty.setraw(sys.stdin.fileno())
+        set_cursor(terminal, "INSERT")
+        child_status = None
+
+        try:
+            while child_status is None:
+                readable, _, _ = select.select([sys.stdin.fileno(), master, mode_socket], [], [], 0.1)
+
+                if sys.stdin.fileno() in readable:
+                    user_input = os.read(sys.stdin.fileno(), 4096)
+                    if not user_input:
+                        break
+                    if user_input == b"\x1b":
+                        state["command_line"] = False
+                        state["mode"] = "NORMAL"
+                        set_cursor(terminal, "NORMAL")
+                    elif state["mode"] == "NORMAL" and user_input == b"/":
+                        state["command_line"] = True
+                        set_cursor(terminal, "INSERT")
+                    elif state["command_line"] and user_input in {b"\r", b"\n"}:
+                        state["command_line"] = False
+                        set_cursor(terminal, "NORMAL")
+                    os.write(master, user_input)
+
+                if master in readable:
+                    try:
+                        output = os.read(master, 65536)
+                    except OSError:
+                        output = b""
+                    if not output:
+                        break
+                    os.write(sys.stdout.fileno(), output)
+
+                if mode_socket in readable:
+                    try:
+                        state["mode"] = mode_socket.recv(64).decode()
+                        if not state["command_line"]:
+                            set_cursor(terminal, state["mode"])
+                    except (BlockingIOError, OSError, UnicodeDecodeError):
+                        pass
+
+                ended, status = os.waitpid(child, os.WNOHANG)
+                if ended:
+                    child_status = status
+        finally:
+            termios.tcsetattr(sys.stdin.fileno(), termios.TCSADRAIN, original_attributes)
+            set_cursor(terminal, "INSERT")
+            os.close(terminal)
+            os.close(master)
+
+        if child_status is None:
+            _, child_status = os.waitpid(child, 0)
+        return os.waitstatus_to_exitcode(child_status)
+
+
+def main():
+    executable = find_claude()
+    if not all(os.isatty(fd) for fd in (sys.stdin.fileno(), sys.stdout.fileno(), sys.stderr.fileno())):
+        os.execve(executable, [str(executable), *sys.argv[1:]], os.environ)
+    return proxy_claude(executable)
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

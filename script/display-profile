@@ -1,0 +1,48 @@
+#!/usr/bin/env python3
+import json
+import os
+import subprocess
+import sys
+
+
+def main() -> int:
+    override = os.environ.get("DOTFILES_DISPLAY")
+    if override:
+        print(override)
+        return 0
+
+    if sys.platform != "darwin":
+        print("other")
+        return 0
+
+    result = subprocess.run(
+        ["system_profiler", "SPDisplaysDataType", "-json"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if result.returncode != 0:
+        print("other")
+        return 0
+
+    try:
+        data = json.loads(result.stdout)
+    except json.JSONDecodeError:
+        print("other")
+        return 0
+
+    def has_studio_display(value):
+        if isinstance(value, dict):
+            if value.get("_name") == "Studio Display":
+                return True
+            return any(has_studio_display(child) for child in value.values())
+        if isinstance(value, list):
+            return any(has_studio_display(child) for child in value)
+        return False
+
+    print("studio" if has_studio_display(data) else "other")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

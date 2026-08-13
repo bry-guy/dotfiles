@@ -6,9 +6,9 @@ accent: '#74b2ff'
 background: '#080808'
 surface: '#121212'
 panel: '#1c1c1c'
-error: '#ff5d5d'
+error: '#ff5189'
 success: '#36c692'
-warning: '#e3c78a'
+warning: '#c6c684'
 author: Bryan + Pi
 description: Moonfly-inspired dark Posting theme.
 text_area:
@@ -30,4 +30,4 @@ method:
   get: '#74b2ff'
   post: '#36c692'
   put: '#cf87e8'
-  delete: '#ff5d5d'
+  delete: '#ff5189'

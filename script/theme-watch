@@ -2,12 +2,13 @@
 set -euo pipefail
 
 if [[ "$(uname -s)" != "Darwin" ]]; then
-  echo "theme-watch currently uses dark-notify and is macOS-only." >&2
+  echo "theme-watch currently uses dark-notify and display polling on macOS only." >&2
   echo "On Linux, call ~/script/theme-sync from darkman or your desktop's appearance hooks." >&2
   exit 1
 fi
 
 sync_script="$HOME/script/theme-sync"
+display_script="$HOME/script/display-profile"
 dark_notify_bin="$(command -v dark-notify || true)"
 
 if [[ ! -x "$sync_script" ]]; then
@@ -19,6 +20,35 @@ if [[ -z "$dark_notify_bin" ]]; then
   echo "dark-notify is not installed or not on PATH." >&2
   exit 1
 fi
+if [[ ! -x "$display_script" ]]; then
+  echo "Missing display profile helper: $display_script" >&2
+  exit 1
+fi
 
 "$sync_script" auto
-exec "$dark_notify_bin" -c "$sync_script"
+
+# dark-notify handles appearance events. Display polling is deliberately slow:
+# monitor hot-plug is uncommon, while system_profiler is relatively expensive.
+display_watcher() {
+  local last_display="$($display_script)"
+  local display
+  while sleep 10; do
+    display="$($display_script)"
+    if [[ "$display" != "$last_display" && -n "$last_display" ]]; then
+      if DOTFILES_DISPLAY="$display" "$sync_script" auto >/dev/null 2>&1; then
+        last_display="$display"
+      fi
+    fi
+  done
+}
+
+display_watcher &
+display_watcher_pid=$!
+"$dark_notify_bin" --only-changes -c "$sync_script" &
+dark_notify_pid=$!
+cleanup() {
+  kill "$display_watcher_pid" "$dark_notify_pid" 2>/dev/null || true
+  wait "$display_watcher_pid" "$dark_notify_pid" 2>/dev/null || true
+}
+trap cleanup EXIT INT TERM
+wait "$dark_notify_pid"

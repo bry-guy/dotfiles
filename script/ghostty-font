@@ -1,0 +1,208 @@
+#!/bin/zsh
+set -euo pipefail
+
+config_dir="${XDG_CONFIG_HOME:-$HOME/.config}/ghostty"
+active_profile="$config_dir/font-profile.local.conf"
+auto_profile="$config_dir/font-profile.auto.conf"
+mode_file="$config_dir/font-profile.mode"
+
+usage() {
+  cat <<'EOF'
+Usage: ~/script/ghostty-font [status|auto|sync|google|google-thick|hack|hack-thick|sfmono|sfmono-thick]
+
+Switch Ghostty fonts manually, or use `auto` to select SF Mono weight by
+whether a Studio Display is connected. Manual selection pauses auto switching.
+EOF
+}
+
+profile_name() {
+  case "$(readlink "$1" 2>/dev/null || true)" in
+    font-profiles/google-sans-code.conf) print 'google' ;;
+    font-profiles/google-sans-code-thick.conf) print 'google-thick' ;;
+    font-profiles/hack-medium.conf) print 'hack' ;;
+    font-profiles/hack-medium-thick.conf) print 'hack-thick' ;;
+    font-profiles/liga-sfmono.conf) print 'sfmono' ;;
+    font-profiles/liga-sfmono-thick.conf) print 'sfmono-thick' ;;
+    *) print 'unknown' ;;
+  esac
+}
+
+profile_mode() {
+  case "$(cat "$mode_file" 2>/dev/null || true)" in
+    auto|manual) print "$(cat "$mode_file")" ;;
+    *)
+      local active_target auto_target
+      active_target="$(readlink "$active_profile" 2>/dev/null || true)"
+      auto_target="$(readlink "$auto_profile" 2>/dev/null || true)"
+      if [[ -n "$auto_target" && "$active_target" == "$auto_target" ]] || [[ -z "$active_target" && -n "$auto_target" ]]; then
+        print 'auto'
+      else
+        print 'manual'
+      fi
+      ;;
+  esac
+}
+
+active_name() {
+  local link="$active_profile"
+  [[ -L "$link" ]] || link="$auto_profile"
+  case "$(profile_mode)" in
+    auto) print "auto:$(profile_name "$link")" ;;
+    manual) print "manual:$(profile_name "$link")" ;;
+  esac
+}
+
+display_name() {
+  if [[ -x "$HOME/script/display-profile" ]]; then
+    "$HOME/script/display-profile"
+  else
+    print 'other'
+  fi
+}
+
+profile_for_display() {
+  if [[ "$(display_name)" == "studio" ]]; then
+    print 'liga-sfmono-thick.conf'
+  else
+    print 'liga-sfmono.conf'
+  fi
+}
+
+reload_ghostty() {
+  if [[ "$(uname -s)" == "Darwin" ]] && pgrep -x ghostty >/dev/null 2>&1; then
+    if pkill -USR2 -x ghostty >/dev/null 2>&1; then
+      print 'Reloaded running Ghostty instances.'
+    else
+      print -u2 'Warning: switch succeeded, but Ghostty could not be reloaded.'
+    fi
+  fi
+}
+
+set_profile() {
+  local link="$1" target="$2" temporary="${1}.tmp.$$"
+  mkdir -p "$config_dir"
+  rm -f "$temporary"
+  ln -s "font-profiles/$target" "$temporary"
+  mv -f "$temporary" "$link"
+}
+
+set_mode() {
+  local temporary="${mode_file}.tmp.$$"
+  printf '%s\n' "$1" > "$temporary"
+  mv -f "$temporary" "$mode_file"
+}
+
+selection="${1:-status}"
+case "$selection" in
+  status-name)
+    name="$(active_name)"
+    print "${name#*:}"
+    ;;
+  status)
+    name="$(active_name)"
+    case "$name" in
+      auto:*) print "Ghostty font: automatic display profile (${name#auto:}, $(display_name))" ;;
+      manual:google) print 'Ghostty font: GoogleSansCode Nerd Font Mono (Regular/Medium)' ;;
+      manual:google-thick) print 'Ghostty font: GoogleSansCode Nerd Font Mono (Medium/Bold)' ;;
+      manual:hack) print 'Ghostty font: Hack Nerd Font Mono with Hack Medium emphasis (Regular/Medium)' ;;
+      manual:hack-thick) print 'Ghostty font: Hack Medium with Nerd Font fallback (Medium/Bold)' ;;
+      manual:sfmono) print 'Ghostty font: Liga SFMono Nerd Font (Regular/Medium)' ;;
+      manual:sfmono-thick) print 'Ghostty font: Liga SFMono Nerd Font (Medium/Bold)' ;;
+      *) print -u2 "Unknown Ghostty font override: $active_profile"; exit 1 ;;
+    esac
+    ;;
+  auto)
+    desired="$(profile_for_display)"
+    set_profile "$auto_profile" "$desired"
+    rm -f "$active_profile"
+    set_mode auto
+    print "Ghostty font: automatic display profile ($(profile_name "$auto_profile"), $(display_name))"
+    reload_ghostty
+    ;;
+  sync)
+    if [[ "$(profile_mode)" == manual ]]; then
+      name="$(active_name)"
+      print "Ghostty font: manual override (${name#manual:}); automatic display switching is paused."
+    else
+      desired="$(profile_for_display)"
+      if [[ "$(profile_mode)" != auto || "$(readlink "$active_profile" 2>/dev/null || true)" != "font-profiles/$desired" || "$(readlink "$auto_profile" 2>/dev/null || true)" != "font-profiles/$desired" ]]; then
+        set_profile "$auto_profile" "$desired"
+        rm -f "$active_profile"
+        set_mode auto
+        print "Ghostty font: automatic display profile ($(profile_name "$auto_profile"), $(display_name))"
+        reload_ghostty
+      else
+        print "Ghostty font: automatic display profile ($(profile_name "$auto_profile"), $(display_name)) (unchanged)"
+      fi
+    fi
+    ;;
+  google|google-sans-code|googlesanscode)
+    [[ -f "$HOME/Library/Fonts/GoogleSansCodeNerdFontMono-Regular.ttf" ]] || { print -u2 'GoogleSansCode Nerd Font Mono is not installed.'; exit 1; }
+    rm -f "$auto_profile"
+    set_profile "$active_profile" 'google-sans-code.conf'
+    set_mode manual
+    print 'Ghostty font: GoogleSansCode Nerd Font Mono (Regular/Medium)'
+    reload_ghostty
+    ;;
+  google-thick)
+    [[ -f "$HOME/Library/Fonts/GoogleSansCodeNerdFontMono-Medium.ttf" ]] || { print -u2 'GoogleSansCode Nerd Font Mono is not installed.'; exit 1; }
+    rm -f "$auto_profile"
+    set_profile "$active_profile" 'google-sans-code-thick.conf'
+    set_mode manual
+    print 'Ghostty font: GoogleSansCode Nerd Font Mono (Medium/Bold)'
+    reload_ghostty
+    ;;
+  hack|hack-medium)
+    missing=()
+    for font in HackNerdFontMono-Regular.ttf HackNerdFontMono-Italic.ttf Hack-Medium.ttf Hack-MediumItalic.ttf; do
+      [[ -f "$HOME/Library/Fonts/$font" ]] || missing+=("$font")
+    done
+    if (( ${#missing[@]} )); then
+      print -u2 'Hack Regular/Medium is not installed. Missing:'
+      printf '  %s\n' "${missing[@]}" >&2
+      exit 1
+    fi
+    rm -f "$auto_profile"
+    set_profile "$active_profile" 'hack-medium.conf'
+    set_mode manual
+    print 'Ghostty font: Hack Nerd Font Mono with Hack Medium emphasis (Regular/Medium)'
+    reload_ghostty
+    ;;
+  hack-thick)
+    missing=()
+    for font in Hack-Medium.ttf Hack-MediumItalic.ttf HackMedium-Bold.ttf HackMedium-BoldItalic.ttf; do
+      [[ -f "$HOME/Library/Fonts/$font" ]] || missing+=("$font")
+    done
+    if (( ${#missing[@]} )); then
+      print -u2 'Hack Medium/Bold is not installed. Missing:'
+      printf '  %s\n' "${missing[@]}" >&2
+      exit 1
+    fi
+    rm -f "$auto_profile"
+    set_profile "$active_profile" 'hack-medium-thick.conf'
+    set_mode manual
+    print 'Ghostty font: Hack Medium with Nerd Font fallback (Medium/Bold)'
+    reload_ghostty
+    ;;
+  sfmono|liga|liga-sfmono)
+    rm -f "$auto_profile"
+    set_profile "$active_profile" 'liga-sfmono.conf'
+    set_mode manual
+    print 'Ghostty font: Liga SFMono Nerd Font (Regular/Medium)'
+    reload_ghostty
+    ;;
+  sfmono-thick|liga-sfmono-thick)
+    rm -f "$auto_profile"
+    set_profile "$active_profile" 'liga-sfmono-thick.conf'
+    set_mode manual
+    print 'Ghostty font: Liga SFMono Nerd Font (Medium/Bold)'
+    reload_ghostty
+    ;;
+  -h|--help|help)
+    usage
+    ;;
+  *)
+    usage >&2
+    exit 2
+    ;;
+esac

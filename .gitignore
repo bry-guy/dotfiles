@@ -6,11 +6,19 @@
 .mise.local.toml
 mise.local.toml
 .config/nvim-sunfly-preview/lazy-lock.json
+.config/ghostty/font-profile.local.conf
+.config/ghostty/font-profile.auto.conf
+.config/ghostty/font-profile.mode
+.config/ghostty/theme-profile.local.conf
+.pi/agent/themes/adaptive.json
+.claude/themes/adaptive.json
+.local/share/posting/themes/adaptive.yaml
 .harlequin/
 .harlequin.toml
 harlequin/
 !.config/harlequin/
 !.config/harlequin/sunfly_textual_themes.py
+!.config/harlequin/adaptive_textual_themes.py
 .config/harlequin/__pycache__/
 harlequin.toml
 
@@ -25,8 +33,6 @@ second-brain/**/*
 !.local/share/posting/themes/
 !.local/share/posting/themes/moonfly.yaml
 !.local/share/posting/themes/sunfly.yaml
-!.local/share/posting/themes/sunfly-paper.yaml
-!.local/share/posting/themes/sunfly-bright.yaml
 .local/state/**/*
 .local/opt/**/*
 .kube/cache/**/*
@@ -41,6 +47,7 @@ second-brain/**/*
 .config/tmux/theme.conf
 .config/rpiv-web-tools/config.json
 .ez*
+.claude/skills/migration-own-pr/
 
 
 Library/**/*

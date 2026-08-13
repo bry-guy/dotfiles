@@ -1,4 +1,4 @@
-# Sunfly Bright — terminal-optimized light companion to Moonfly
+# Sunfly — terminal-optimized light companion to Moonfly
 # Generated from palette/sunfly.json
 palette = 0=#271e17
 palette = 1=#9b1b23
@@ -16,9 +16,9 @@ palette = 12=#1b4fae
 palette = 13=#5530bb
 palette = 14=#00727f
 palette = 15=#fffefb
-background = #f8f2ea
-foreground = #271e17
-cursor-color = #75685b
-cursor-text = #f8f2ea
+background = #f0e8da
+foreground = #372d25
+cursor-color = #6f6256
+cursor-text = #f0e8da
 selection-background = #d2c5b5
-selection-foreground = #271e17
+selection-foreground = #372d25

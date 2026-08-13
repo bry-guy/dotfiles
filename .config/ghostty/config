@@ -1,16 +1,16 @@
 # Ghostty config tuned to mirror the existing Alacritty setup closely.
 # Tracked via yadm.
 
-# Match font setup.
-font-family = Hack Nerd Font Mono
-font-style = Regular
-font-style-bold = Bold
-font-style-italic = Italic
-font-style-bold-italic = Bold Italic
+config-file = font-profiles/liga-sfmono.conf
+config-file = ?font-profile.auto.conf
+config-file = ?font-profile.local.conf
 font-size = 14
+cursor-style = bar
+cursor-style-blink = false
 
-# Auto-switch between Moonfly (dark) and the selected Sunfly variant (light) based on macOS appearance.
-theme = dark:Moonfly,light:Sunfly Paper
+# Auto-switch between Moonfly and Sunfly based on macOS appearance.
+theme = dark:Moonfly,light:Sunfly
+config-file = ?theme-profile.local.conf
 
 # Match Alacritty's left-option-only Alt behavior.
 macos-option-as-alt = left

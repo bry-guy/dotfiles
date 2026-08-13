@@ -1,33 +1,33 @@
 name: sunfly
 dark: false
-primary: '#1b4fae'
-secondary: '#594800'
-accent: '#004ca8'
-background: '#f8f2ea'
-surface: '#fffefb'
-panel: '#f2ebe2'
-error: '#9b1b23'
-success: '#0d5f20'
-warning: '#6b5200'
+primary: '#005868'
+secondary: '#6e5000'
+accent: '#004ca0'
+background: '#f0e8da'
+surface: '#f8f2ea'
+panel: '#e0d5c5'
+error: '#b01018'
+success: '#006840'
+warning: '#605200'
 author: Bryan Guy
-description: Sunfly Bright light Posting theme tuned to match Moonfly semantics.
+description: Sunfly light Posting theme tuned to match Moonfly semantics.
 text_area:
   cursor: reverse
-  cursor_line: 'on #f2ebe2'
+  cursor_line: 'on #e0d5c5'
   selection: reverse
   gutter: '#8b7d6f'
-  matched_bracket: 'bold #0d5f20'
+  matched_bracket: 'bold #00523f'
 url:
-  base: '#1b4fae'
-  protocol: 'bold #5530bb'
+  base: '#105c98'
+  protocol: 'bold #801898'
 syntax:
-  json_key: '#004ca8'
-  json_number: '#4a38c0'
-  json_string: '#594800'
-  json_boolean: '#8a3578'
-  json_null: '#75685b'
+  json_key: '#004ca0'
+  json_number: '#884200'
+  json_string: '#6e5000'
+  json_boolean: '#8a356f'
+  json_null: '#6f6256'
 method:
-  get: '#004ca8'
-  post: '#0d5f20'
-  put: '#5530bb'
-  delete: '#9b1b23'
+  get: '#004ca0'
+  post: '#00523f'
+  put: '#801898'
+  delete: '#b01018'

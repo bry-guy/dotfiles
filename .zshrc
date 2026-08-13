@@ -187,13 +187,26 @@ vim_cmd_mode="%{$fg[magenta]%}$%{$reset_color%}"
 vim_mode=$vim_ins_mode
 
 function zle-keymap-select {
-    vim_mode="${${KEYMAP/vicmd/${vim_cmd_mode}}/(main|viins)/${vim_ins_mode}}"
+    if [[ $KEYMAP == vicmd ]]; then
+        vim_mode=$vim_cmd_mode
+        printf '\033[2 q'
+    else
+        vim_mode=$vim_ins_mode
+        printf '\033[6 q'
+    fi
     zle reset-prompt
 }
 zle -N zle-keymap-select
 
+function zle-line-init {
+    vim_mode=$vim_ins_mode
+    printf '\033[6 q'
+}
+zle -N zle-line-init
+
 function zle-line-finish {
     vim_mode=$vim_ins_mode
+    printf '\033[6 q'
 }
 zle -N zle-line-finish
 

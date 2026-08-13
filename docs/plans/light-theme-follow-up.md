@@ -12,17 +12,19 @@ Make the Moonfly/Sunfly automatic switching path reliable and readable across th
 
 ### Good / verified enough
 
-- Posting now launches and the Sunfly variant themes are available as `sunfly-paper` / `sunfly-bright`.
-- Pi / Claude / Posting / Harlequin / Neovim are all on the `theme-sync` path.
-- Harlequin now keeps shared profiles/themes in `~/.harlequin.toml`; project-local `.harlequin.toml` files only set `default_profile` because Harlequin shallow-merges top-level config tables.
-- tmux is now also on the `theme-sync` path via generated light/dark theme includes.
+- Posting now launches with the generated `sunfly` theme.
+- Pi / Claude / Posting / Harlequin / Neovim are all on the shared appearance-state path.
+- Pi, Claude, and Posting use stable `adaptive` selections with ignored runtime projections.
+- Harlequin keeps shared profiles/themes in `~/.harlequin.toml`; its local launcher registers Moonfly/Sunfly and watches shared state in adaptive mode.
+- tmux is on the `theme-sync` path via complete generated light/dark theme includes.
+- Ghostty font selection can follow Studio Display presence; manual font profiles pause that automation.
 - macOS appearance changes are being observed by `dark-notify` via the tracked `launchd` agent.
 
 ### Known issues / follow-ups
 
 #### 1. Ghostty does not always visibly switch on macOS appearance change
 
-- Expected: Ghostty should handle `theme = dark:Moonfly,light:Sunfly Paper` (or `Sunfly Bright`) natively.
+- Expected: Ghostty should handle `theme = dark:Moonfly,light:Sunfly` natively.
 - Observed: after switching macOS to light mode, Ghostty did not visibly update as expected.
 - Evidence:
   - config uses native dark/light syntax in `~/.config/ghostty/config`
@@ -47,86 +49,65 @@ Make the Moonfly/Sunfly automatic switching path reliable and readable across th
   - track it as an upstream-only bug, or
   - add a stronger local workaround (for example, app relaunch or AppleScript-driven reload).
 
-#### 2. Harlequin light theme now uses a Sunfly Textual theme
+#### 2. Harlequin now follows adaptive state
 
 - Current mapping is:
-  - dark -> `harlequin`
-  - light -> selected `sunfly-paper` / `sunfly-bright`
-- Project-local `.harlequin.toml` files now only set `default_profile`, so this mapping is controlled centrally from `~/script/theme-sync` and `~/.harlequin.toml`.
-- Harlequin does not natively load custom theme files from config, so `~/.local/bin/harlequin` registers the generated Textual themes from `~/.config/harlequin/sunfly_textual_themes.py` before delegating to Harlequin.
+  - dark -> `moonfly`
+  - light -> `sunfly`
+- Project-local `.harlequin.toml` files now only set `default_profile`; the shared profile theme is `adaptive`.
+- `~/.local/bin/harlequin` registers the generated Sunfly theme plus local adaptive Moonfly/Sunfly definitions, then switches the running Textual app when shared state changes.
 
 ##### Follow-up checklist
 
 - [x] Replace the weak `solarized-light` approximation with generated Sunfly Textual themes.
-- [ ] Launch Harlequin in light mode and verify catalog, editor, tabs, and result grid contrast with `sunfly-paper`.
+- [ ] Launch Harlequin in light mode and verify catalog, editor, tabs, and result grid contrast with `sunfly`.
 - [ ] Keep the chosen light theme aligned in `~/script/theme-sync` + docs.
 
 #### 3. tmux light palette still needs a real-world readability pass
 
 - tmux is now on the `theme-sync` path.
-- `~/script/theme-sync` copies either:
-  - `~/.config/tmux/theme.dark.conf`, or
-  - `~/.config/tmux/theme.light.paper.conf` or `~/.config/tmux/theme.light.bright.conf` (tracked locally, refreshed from `github.com/bry-guy/sunfly`)
-  into `~/.config/tmux/theme.conf`, then reloads tmux when a server is running.
+- `~/script/theme-sync` copies either `~/.config/tmux/theme.dark.conf` or `~/.config/tmux/theme.light.conf` into `~/.config/tmux/theme.conf`, then reloads tmux when a server is running.
 - This resolves the original "tmux is static" problem, but the light palette still needs practical validation.
 
 ##### Follow-up checklist
 
-- [ ] Check tmux status line, copy-mode highlight, active border, and window-status colors in both Sunfly/Ghostty light variants.
-- [ ] If inactive text is still too faint, darken `window-status-style` further in the published Sunfly tmux variant themes (`extras/tmux/sunfly-{paper,bright}.conf` in `github.com/bry-guy/sunfly`), then reinstall them locally.
+- [ ] Check tmux status line, copy-mode highlight, active border, and window-status colors with Sunfly.
+- [ ] If inactive text is still too faint, darken `window-status-style` in `extras/tmux/sunfly.conf` in `github.com/bry-guy/sunfly`, then reinstall it locally.
 - [ ] If copy-mode or borders still feel weak, tune `mode-style` / `pane-active-border-style` in the light theme template.
 
-#### 4. Startup-only vs live-reload behavior still differs by app
+#### 4. Runtime behavior now has explicit contracts
 
-Even with automatic config rewriting, some tools may only fully reflect theme changes on relaunch.
+- Pi, Claude, and Posting watch the active adaptive projection files.
+- Harlequin and Neovim poll the shared state file while running.
+- tmux is explicitly reloaded.
+- Ghostty uses native appearance selection plus a best-effort reload signal.
+- Fresh-session and already-running behavior still needs the deferred matrix in `docs/plans/adaptive-theme-validation.md`.
 
-##### Follow-up checklist
+#### 5. Runtime theme projection is now local-only
 
-- [ ] Verify live behavior vs relaunch-required behavior for:
-  - Ghostty
-  - Pi
-  - Claude Code
-  - Posting
-  - Harlequin
-  - tmux inside Ghostty
-- [ ] Document any app that only reads theme config on startup.
-
-#### 5. Theme-sync dirties tracked dotfiles when the OS theme flips
-
-- Today, `theme-sync` rewrites tracked config files in place.
-- That means macOS appearance changes can create normal-but-noisy `yadm status` drift.
-- Likely affected files:
-  - `~/.pi/agent/settings.json`
-  - `~/.config/posting/config.yaml`
-  - `~/.harlequin.toml`
-  - `~/.config/ghostty/config` when switching Sunfly variants
-  - any other tracked config file we later place on the sync path
-- Posting project-local overrides should prefer `posting.env` without `POSTING_THEME`, so the synced home config remains the single theme authority unless a project deliberately opts out.
-
-##### Follow-up checklist
-
-- [ ] Decide whether this repo should tolerate theme-driven drift in tracked files.
-- [ ] If not, move runtime theme state into local generated/untracked files or app-specific override layers.
-- [ ] Prefer a design where tracked files express mappings/defaults and local runtime files hold the current mode.
+- Tracked settings select `adaptive` once.
+- Appearance changes replace ignored adaptive files and `.local/state/dotfiles/theme-sync`.
+- tmux and explicit Ghostty overrides are local runtime projections.
+- A final tracked-file cleanliness check remains in the deferred validation plan.
 
 #### 6. Claude light theme quality
 
 - Current mapping:
-  - dark -> `dark-ansi`
-  - light -> selected `custom:sunfly-paper` / `custom:sunfly-bright`
+  - dark -> `custom:moonfly`
+  - light -> `custom:sunfly`
 - Rationale: `light-ansi` depends on the terminal ANSI palette. Sunfly now has Claude Code custom themes with explicit hex diff backgrounds, so light mode no longer depends on ANSI diff colors.
 - The Sunfly Ghostty ANSI palette also now keeps ANSI black as dark ink and ANSI white / bright-white as light paper tints, which fixes the specific inverse/diff contrast failure seen in Claude `light-ansi`.
 
 ##### Follow-up checklist
 
 - [x] Compare `light-ansi` vs plain `light` in a fresh Claude session.
-- [x] Replace plain `light` with generated `custom:sunfly-*` Claude themes.
+- [x] Replace plain `light` with the generated `custom:sunfly` Claude theme.
 - [x] Fix Sunfly terminal ANSI white/bright-white mappings for Claude `light-ansi` contrast.
 
-## Recommended execution order
+## Recommended validation order
 
-1. Verify Ghostty after the new reload-signal mitigation.
-2. Re-check Harlequin contrast with `sunfly-paper`.
-3. Inspect tmux under light mode and fine-tune the new synced light template if needed.
-4. Re-check Claude custom `sunfly-*` themes in a real session.
-5. Update docs once the final light-mode decisions are settled.
+1. Run `docs/plans/adaptive-theme-validation.md` on fresh and existing sessions.
+2. Re-check Harlequin contrast with both `moonfly` and `sunfly`.
+3. Inspect tmux under both modes, including command messages and copy mode.
+4. Re-check Claude, Pi, and Posting adaptive reload behavior in real sessions.
+5. Validate Studio Display connect/disconnect and manual font override recovery.

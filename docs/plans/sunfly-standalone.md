@@ -6,7 +6,7 @@ Date: 2026-05-05
 
 ## Goal
 
-Make the Neovim Sunfly colorschemes (`sunfly-paper`, `sunfly-bright`, and compatibility `sunfly`) fully standalone, with no runtime dependency on `bluz71/vim-moonfly-colors`.
+Make the Neovim `sunfly` colorscheme fully standalone, with no runtime dependency on `bluz71/vim-moonfly-colors`.
 
 The desired final model is:
 
@@ -23,11 +23,10 @@ No hidden Moonfly base layer, no `require("moonfly").custom_colors(...)`, and no
 
 Today Sunfly still works by:
 
-1. selecting a Sunfly variant palette
-2. passing that palette into Moonfly via `require("moonfly").custom_colors(...)`
-3. loading Moonfly with `vim.cmd("colorscheme moonfly")`
-4. applying Sunfly-specific overrides
-5. renaming `vim.g.colors_name` to `sunfly-paper` / `sunfly-bright`
+1. passing its palette into Moonfly via `require("moonfly").custom_colors(...)`
+2. loading Moonfly with `vim.cmd("colorscheme moonfly")`
+3. applying Sunfly-specific overrides
+4. renaming `vim.g.colors_name` to `sunfly`
 
 This is pragmatic, but it couples Sunfly to Moonfly internals and makes debugging color behavior less obvious.
 
@@ -40,14 +39,12 @@ This is pragmatic, but it couples Sunfly to Moonfly internals and makes debuggin
 
 ## Success criteria
 
-- `sunfly-paper` and `sunfly-bright` load in Neovim without Moonfly installed.
+- `sunfly` loads in Neovim without Moonfly installed.
 - `:colorscheme moonfly` is never invoked while loading Sunfly.
 - `bluz71/vim-moonfly-colors` is no longer a required dependency of `bry-guy/sunfly`.
 - Dotfiles no longer list Moonfly as a Sunfly dependency, though Moonfly may remain installed for dark mode.
-- Existing variant backgrounds remain exact:
-  - paper: `#f0e8da`
-  - bright: `#f8f2ea`
-- Headless smoke tests pass for both variants.
+- The `#f0e8da` background remains exact.
+- The headless smoke test passes.
 - Real-world checks cover Java, Lua, Markdown, justfiles, diffs, diagnostics, completion/floats, Telescope, lualine, and tmux-in-terminal.
 
 ## Phase 1 — Snapshot current behavior
@@ -59,9 +56,7 @@ Tasks:
 1. Add a temporary/development dump script in the Sunfly repo, for example:
    - `scripts/dump-nvim-highlights.lua`, or
    - `scripts/dump-nvim-highlights.sh`
-2. Dump resolved highlight groups for both variants:
-   - `sunfly-paper`
-   - `sunfly-bright`
+2. Dump resolved highlight groups for `sunfly`.
 3. Include:
    - group name
    - resolved `fg`, `bg`, `sp`
@@ -88,11 +83,10 @@ Tasks:
    - `lua/sunfly/generated_palette.lua`
 3. Update `scripts/build-extras.py` or add a sibling generator so both extras and Lua palette data come from the same JSON.
 4. Ensure generated Lua includes:
-   - variants
    - neutrals
    - accents
    - terminal colors used by Neovim `:terminal`
-   - lualine colors / variant metadata
+   - lualine colors and metadata
 5. Add `--check` coverage so generated Lua and extras cannot drift.
 
 Deliverable:
@@ -108,15 +102,14 @@ Tasks:
 1. Create a clean loader flow:
 
    ```lua
-   function M.load(variant)
-     local active_variant = M.set_variant(variant or M.current_variant())
+   function M.load()
      vim.cmd("highlight clear")
      if vim.fn.exists("syntax_on") == 1 then
        vim.cmd("syntax reset")
      end
      vim.o.background = "light"
-     vim.g.colors_name = M.variants[active_variant].colors_name
-     M.apply_terminal_colors(active_variant)
+     vim.g.colors_name = "sunfly"
+     M.apply_terminal_colors()
      M.apply_highlights()
    end
    ```
@@ -141,7 +134,7 @@ Tasks:
 
 Deliverable:
 
-- `colors/sunfly-paper.lua` and `colors/sunfly-bright.lua` load without requiring or invoking Moonfly.
+- `colors/sunfly.lua` loads without requiring or invoking Moonfly.
 
 ## Phase 4 — Fill coverage previously inherited from Moonfly
 
@@ -224,7 +217,7 @@ Tasks:
 2. In dotfiles `.config/nvim/lua/plugins/sunfly.lua`:
    - remove Moonfly from Sunfly dependencies
    - keep Moonfly separately installed for dark mode via `.config/nvim/lua/plugins/moonfly.lua`
-3. Confirm `sunfly-paper` and `sunfly-bright` still load when Moonfly plugin is absent from runtimepath.
+3. Confirm `sunfly` still loads when the Moonfly plugin is absent from runtimepath.
 4. Update docs/plans that currently say Sunfly is Moonfly-backed.
 
 Deliverable:
@@ -240,8 +233,7 @@ cd ~/.local/share/nvim/lazy/sunfly
 python3 scripts/build-extras.py --check
 python3 -m py_compile scripts/build-extras.py
 
-SUNFLY_PLUGIN_DIR=$PWD DOTFILES_NVIM_THEME=sunfly-paper nvim --headless +qa
-SUNFLY_PLUGIN_DIR=$PWD DOTFILES_NVIM_THEME=sunfly-bright nvim --headless +qa
+SUNFLY_PLUGIN_DIR=$PWD DOTFILES_NVIM_THEME=sunfly nvim --headless +qa
 ```
 
 Suggested no-Moonfly smoke test:
@@ -267,7 +259,7 @@ Manual checks:
 
 Deliverable:
 
-- Both variants are acceptable before removing the Moonfly dependency from dotfiles.
+- Sunfly is acceptable before removing the Moonfly dependency from dotfiles.
 
 ## Phase 7 — Publish and consume
 
@@ -276,12 +268,11 @@ Tasks:
 1. Commit standalone changes in `bry-guy/sunfly`.
 2. Push and tag a release, for example `v0.2.0`.
 3. Update dotfiles to consume that tag or branch deliberately.
-4. Run `~/script/sunfly-install --variant all all` from the published ref.
+4. Run `~/script/sunfly-install all` from the published ref.
 5. Update `lazy-lock.json` through normal Neovim/lazy workflow.
 6. Update docs:
    - `docs/plans/sunfly-theme.md`
    - `docs/plans/sunfly-rollout.md`
-   - `docs/plans/sunfly-variants.md`
    - `README.md` if workflow commands change
 
 ## Risks and mitigations

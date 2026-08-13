@@ -6,11 +6,10 @@ Use `NVIM_APPNAME` to develop:
 NVIM_APPNAME=nvim2 nvim
 ```
 
-Preview Sunfly variants:
+Preview Sunfly:
 
 ```sh
-~/script/nvim-preview-sunfly paper path/to/file
-~/script/nvim-preview-sunfly bright path/to/file
+~/script/nvim-preview-sunfly path/to/file
 ```
 
 ## Python LSP setup

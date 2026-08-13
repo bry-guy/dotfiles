@@ -1,4 +1,7 @@
 {
+  "env": {
+    "CLAUDE_CODE_SUBAGENT_MODEL": "haiku"
+  },
   "attribution": {
     "commit": "",
     "pr": ""
@@ -13,10 +16,6 @@
     "defaultMode": "bypassPermissions"
   },
   "model": "sonnet",
-  "advisorModel": "opus",
-  "env": {
-    "CLAUDE_CODE_SUBAGENT_MODEL": "haiku"
-  },
   "hooks": {
     "PreToolUse": [
       {
@@ -42,7 +41,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "ccusage statusline",
+    "command": "/Users/bryan/script/claude-statusline",
     "padding": 0
   },
   "enabledPlugins": {
@@ -63,9 +62,10 @@
   "syntaxHighlightingDisabled": false,
   "alwaysThinkingEnabled": true,
   "effortLevel": "medium",
+  "advisorModel": "opus",
   "tui": "fullscreen",
   "skipDangerousModePermissionPrompt": true,
-  "theme": "custom:sunfly-paper",
+  "theme": "custom:adaptive",
   "editorMode": "vim",
   "skipAutoPermissionPrompt": true
 }

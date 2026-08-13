@@ -1,0 +1,145 @@
+#!/bin/sh
+set -eu
+
+python="${HARLEQUIN_PYTHON:-$HOME/.local/share/uv/tools/harlequin/bin/python}"
+if [ ! -x "$python" ]; then
+  echo "Harlequin Python environment not found at: $python" >&2
+  echo "Set HARLEQUIN_PYTHON or reinstall the Harlequin uv tool." >&2
+  exit 127
+fi
+
+exec "$python" -c '
+from __future__ import annotations
+
+from pathlib import Path
+import subprocess
+import sys
+import threading
+
+if sys.argv:
+    sys.argv[0] = "harlequin"
+
+config_dir = Path.home() / ".config" / "harlequin"
+sys.path.insert(0, str(config_dir))
+
+try:
+    from sunfly_textual_themes import register_sunfly_themes
+    from adaptive_textual_themes import register_adaptive_themes
+except Exception as exc:  # pragma: no cover - launcher diagnostics only
+    print(f"Failed to load local Harlequin themes: {exc}", file=sys.stderr)
+else:
+    register_sunfly_themes()
+    register_adaptive_themes()
+
+from harlequin import Harlequin
+from harlequin.actions import Action, HARLEQUIN_ACTIONS
+from harlequin.components import EditorCollection
+from textual.css.query import NoMatches
+from textual.widgets import TabPane
+
+
+def action_previous_buffer(self: EditorCollection) -> None:
+    active = self.active
+    if self.tab_count < 2 or active is None:
+        return
+    tabs = self.query(TabPane)
+    previous_tabs = tabs[-1:]
+    previous_tabs.extend(tabs[:-1])
+    lookup = {t.id: nt.id for t, nt in zip(tabs, previous_tabs, strict=False)}
+    self.active = lookup[active]  # type: ignore
+    self.post_message(self.EditorSwitched(active_editor=None))
+    try:
+        self.current_editor.focus()
+    except NoMatches:
+        pass
+
+
+EditorCollection.action_previous_buffer = action_previous_buffer
+HARLEQUIN_ACTIONS["code_editor.previous_buffer"] = Action(
+    target=EditorCollection,
+    action="previous_buffer",
+    description="Previous Buffer",
+    show=True,
+)
+
+# Pane-focus bindings should win over editor/table cursor bindings when they
+# intentionally reuse movement-like keys such as Ctrl+Arrow.
+for action_name in (
+    "focus_next",
+    "focus_previous",
+    "focus_data_catalog",
+    "focus_query_editor",
+    "focus_results_viewer",
+):
+    HARLEQUIN_ACTIONS[action_name].priority = True
+
+
+def current_appearance() -> str:
+    state_file = Path.home() / ".local" / "state" / "dotfiles" / "theme-sync"
+    try:
+        for line in state_file.read_text().splitlines():
+            if line.startswith("appearance="):
+                return line.partition("=")[2]
+    except OSError:
+        pass
+
+    if sys.platform == "darwin":
+        result = subprocess.run(
+            ["defaults", "read", "-g", "AppleInterfaceStyle"],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+        return "dark" if result.returncode == 0 else "light"
+    return "dark"
+
+
+def theme_for_appearance(appearance: str) -> str:
+    return "moonfly" if appearance == "dark" else "sunfly"
+
+
+original_init = Harlequin.__init__
+original_run = Harlequin.run
+
+
+def synced_init(self, *args, **kwargs):
+    self._dotfiles_theme_sync = kwargs.get("theme") == "adaptive"
+    if self._dotfiles_theme_sync:
+        kwargs["theme"] = theme_for_appearance(current_appearance())
+    original_init(self, *args, **kwargs)
+
+
+def synced_run(self, *args, **kwargs):
+    stop = threading.Event()
+    thread = None
+    if self._dotfiles_theme_sync:
+        last = {"appearance": current_appearance()}
+
+        def watch() -> None:
+            while not stop.wait(1):
+                appearance = current_appearance()
+                if appearance == last["appearance"]:
+                    continue
+                last["appearance"] = appearance
+                try:
+                    self.call_from_thread(setattr, self, "theme", theme_for_appearance(appearance))
+                except RuntimeError:
+                    return
+
+        thread = threading.Thread(target=watch, name="dotfiles-theme-sync", daemon=True)
+        thread.start()
+    try:
+        return original_run(self, *args, **kwargs)
+    finally:
+        stop.set()
+        if thread is not None:
+            thread.join(timeout=2)
+
+
+Harlequin.__init__ = synced_init
+Harlequin.run = synced_run
+
+from harlequin.cli import harlequin
+
+if __name__ == "__main__":
+    sys.exit(harlequin())
+' "$@"

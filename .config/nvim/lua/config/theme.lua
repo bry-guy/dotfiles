@@ -1,35 +1,12 @@
 local M = {}
-
-local sunfly_variants = {
-  paper = true,
-  bright = true,
-}
-
-local function normalize_sunfly_variant(variant)
-  if variant == nil or variant == "" then
-    return "paper"
-  end
-
-  variant = tostring(variant):lower()
-  variant = variant:gsub("^sunfly%-", "")
-
-  if not sunfly_variants[variant] then
-    return "paper"
-  end
-
-  return variant
+local state_root = vim.env.XDG_STATE_HOME
+if state_root == nil or state_root == "" then
+  state_root = vim.fn.expand("~/.local/state")
 end
-
-function M.sunfly_variant()
-  return normalize_sunfly_variant(vim.g.dotfiles_sunfly_variant or vim.env.DOTFILES_SUNFLY_VARIANT)
-end
-
-local function sunfly_theme()
-  return "sunfly-" .. M.sunfly_variant()
-end
+local state_file = state_root .. "/dotfiles/theme-sync"
 
 local function is_sunfly_theme(theme)
-  return theme == "sunfly" or theme:match("^sunfly%-") ~= nil
+  return theme == "sunfly"
 end
 
 local function normalize_theme(theme)
@@ -37,20 +14,29 @@ local function normalize_theme(theme)
     return nil
   end
 
-  theme = tostring(theme):lower()
-  if theme == "paper" or theme == "bright" then
-    return "sunfly-" .. normalize_sunfly_variant(theme)
-  end
-
-  if theme == "sunfly" then
-    return sunfly_theme()
-  end
-
-  return theme
+  return tostring(theme):lower()
 end
 
 local function explicit_theme()
   return normalize_theme(vim.g.dotfiles_theme or vim.env.DOTFILES_NVIM_THEME)
+end
+
+local function synced_theme()
+  local file = io.open(state_file, "r")
+  if not file then
+    return nil
+  end
+
+  for line in file:lines() do
+    local appearance = line:match("^appearance=(%a+)$")
+    if appearance then
+      file:close()
+      return appearance == "light" and "sunfly" or "moonfly"
+    end
+  end
+
+  file:close()
+  return nil
 end
 
 local function system_appearance()
@@ -72,9 +58,14 @@ function M.current()
     return theme
   end
 
+  local theme = synced_theme()
+  if theme then
+    return theme
+  end
+
   local appearance = system_appearance()
   if appearance == "light" then
-    return sunfly_theme()
+    return "sunfly"
   end
 
   return "moonfly"
@@ -121,7 +112,7 @@ local function sync_devicons()
 end
 
 local function ensure_focus_sync()
-  if M._focus_sync_initialized or explicit_theme() or vim.fn.has("mac") == 0 then
+  if M._focus_sync_initialized or explicit_theme() then
     return
   end
 
@@ -130,9 +121,31 @@ local function ensure_focus_sync()
   vim.api.nvim_create_autocmd("FocusGained", {
     group = group,
     callback = function()
-      M.apply()
+      if M.current() ~= M._active_theme then
+        M.apply()
+      end
     end,
   })
+  if vim.uv and vim.uv.new_timer then
+    local timer = vim.uv.new_timer()
+    if timer then
+      timer:start(1000, 2000, vim.schedule_wrap(function()
+        if M.current() ~= M._active_theme then
+          M.apply()
+          vim.cmd("redraw!")
+        end
+      end))
+      M._state_timer = timer
+      vim.api.nvim_create_autocmd("VimLeavePre", {
+        group = group,
+        once = true,
+        callback = function()
+          timer:stop()
+          timer:close()
+        end,
+      })
+    end
+  end
 end
 
 function M.apply()
@@ -141,13 +154,8 @@ function M.apply()
   reset_theme_modules()
 
   if is_sunfly_theme(theme) then
-    local ok = pcall(vim.cmd, "colorscheme " .. theme)
-    if ok then
-      M._active_theme = theme
-    else
-      vim.cmd("colorscheme sunfly")
-      M._active_theme = "sunfly"
-    end
+    vim.cmd("colorscheme sunfly")
+    M._active_theme = "sunfly"
   else
     vim.cmd("colorscheme moonfly")
     M._active_theme = "moonfly"
@@ -177,14 +185,7 @@ end
 function M.lualine_theme()
   local theme = M._active_theme or M.current()
   if is_sunfly_theme(theme) then
-    if theme ~= "sunfly" then
-      local lualine_theme_path = "lua/lualine/themes/" .. theme .. ".lua"
-      if vim.fn.globpath(vim.o.runtimepath, lualine_theme_path) == "" then
-        return "sunfly"
-      end
-    end
-
-    return theme
+    return "sunfly"
   end
 
   return "moonfly"
