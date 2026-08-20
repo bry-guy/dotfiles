@@ -9,6 +9,7 @@ mise.local.toml
 .config/ghostty/font-profile.local.conf
 .config/ghostty/font-profile.auto.conf
 .config/ghostty/font-profile.mode
+.config/ghostty/font-size.auto.conf
 .config/ghostty/theme-profile.local.conf
 .pi/agent/themes/adaptive.json
 .claude/themes/adaptive.json

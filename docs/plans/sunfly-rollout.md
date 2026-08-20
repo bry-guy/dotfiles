@@ -65,7 +65,8 @@ Implemented scripts and automation:
 Harlequin, publishes shared state for Neovim/Harlequin, reloads tmux, and
 signals Ghostty. Ghostty keeps native Moonfly/Sunfly selection. On macOS,
 `theme-watch` also polls for Studio Display changes and selects the thick or
-regular SF Mono profile automatically unless a manual font override is active.
+regular SF Mono profile automatically unless a manual font override is active;
+Ghostty uses 14pt on the Studio Display and 12pt on laptop/other displays.
 
 ## Remaining validation
 

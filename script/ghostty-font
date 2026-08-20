@@ -4,6 +4,7 @@ set -euo pipefail
 config_dir="${XDG_CONFIG_HOME:-$HOME/.config}/ghostty"
 active_profile="$config_dir/font-profile.local.conf"
 auto_profile="$config_dir/font-profile.auto.conf"
+font_size_file="$config_dir/font-size.auto.conf"
 mode_file="$config_dir/font-profile.mode"
 
 usage() {
@@ -11,7 +12,8 @@ usage() {
 Usage: ~/script/ghostty-font [status|auto|sync|google|google-thick|hack|hack-thick|sfmono|sfmono-thick]
 
 Switch Ghostty fonts manually, or use `auto` to select SF Mono weight by
-whether a Studio Display is connected. Manual selection pauses auto switching.
+whether a Studio Display is connected. Manual selection pauses automatic
+family/weight switching; display-aware font sizing continues.
 EOF
 }
 
@@ -53,15 +55,38 @@ active_name() {
 }
 
 display_name() {
-  if [[ -x "$HOME/script/display-profile" ]]; then
+  if [[ -n "${DOTFILES_DISPLAY:-}" ]]; then
+    print "$DOTFILES_DISPLAY"
+  elif [[ -x "$HOME/script/display-profile" ]]; then
     "$HOME/script/display-profile"
   else
     print 'other'
   fi
 }
 
+font_size_for_display() {
+  if [[ "$1" == "studio" ]]; then
+    print 14
+  else
+    print 12
+  fi
+}
+
+set_font_size() {
+  local size="$1" temporary="${font_size_file}.tmp.$$"
+  mkdir -p "$config_dir"
+  if [[ -f "$font_size_file" ]] && [[ "$(cat "$font_size_file")" == "font-size = $size" ]]; then
+    font_size_changed=false
+    return
+  fi
+  rm -f "$temporary"
+  printf 'font-size = %s\n' "$size" > "$temporary"
+  mv -f "$temporary" "$font_size_file"
+  font_size_changed=true
+}
+
 profile_for_display() {
-  if [[ "$(display_name)" == "studio" ]]; then
+  if [[ "$1" == "studio" ]]; then
     print 'liga-sfmono-thick.conf'
   else
     print 'liga-sfmono.conf'
@@ -112,28 +137,36 @@ case "$selection" in
     esac
     ;;
   auto)
-    desired="$(profile_for_display)"
+    display="$(display_name)"
+    set_font_size "$(font_size_for_display "$display")"
+    desired="$(profile_for_display "$display")"
     set_profile "$auto_profile" "$desired"
     rm -f "$active_profile"
     set_mode auto
-    print "Ghostty font: automatic display profile ($(profile_name "$auto_profile"), $(display_name))"
+    print "Ghostty font: automatic display profile ($(profile_name "$auto_profile"), $display)"
     reload_ghostty
     ;;
   sync)
+    display="$(display_name)"
+    set_font_size "$(font_size_for_display "$display")"
+    reload_needed="$font_size_changed"
     if [[ "$(profile_mode)" == manual ]]; then
       name="$(active_name)"
-      print "Ghostty font: manual override (${name#manual:}); automatic display switching is paused."
+      print "Ghostty font: manual override (${name#manual:}); automatic family/weight switching is paused."
     else
-      desired="$(profile_for_display)"
+      desired="$(profile_for_display "$display")"
       if [[ "$(profile_mode)" != auto || "$(readlink "$active_profile" 2>/dev/null || true)" != "font-profiles/$desired" || "$(readlink "$auto_profile" 2>/dev/null || true)" != "font-profiles/$desired" ]]; then
         set_profile "$auto_profile" "$desired"
         rm -f "$active_profile"
         set_mode auto
-        print "Ghostty font: automatic display profile ($(profile_name "$auto_profile"), $(display_name))"
-        reload_ghostty
+        print "Ghostty font: automatic display profile ($(profile_name "$auto_profile"), $display)"
+        reload_needed=true
       else
-        print "Ghostty font: automatic display profile ($(profile_name "$auto_profile"), $(display_name)) (unchanged)"
+        print "Ghostty font: automatic display profile ($(profile_name "$auto_profile"), $display) (unchanged)"
       fi
+    fi
+    if [[ "$reload_needed" == true ]]; then
+      reload_ghostty
     fi
     ;;
   google|google-sans-code|googlesanscode)

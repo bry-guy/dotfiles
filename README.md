@@ -176,6 +176,7 @@ The tracked theme sync pieces are:
 - `~/.pi/agent/themes/{moonfly,sunfly}.json` — tracked local Pi themes
 - `~/.config/tmux/theme.dark.conf` and `~/.config/tmux/theme.light.conf` — tracked complete tmux templates; `theme-sync` atomically copies the active template to `~/.config/tmux/theme.conf`
 - `~/.config/ghostty/themes/Sunfly` — tracked Ghostty light theme with dark ANSI ink and paper-tint ANSI white slots
+- `~/.config/ghostty/font-size.auto.conf` — ignored display-aware font-size projection: 14pt on Studio Display, 12pt on laptop/other displays
 - `~/.claude/themes/{moonfly,sunfly}.json` — explicit Claude Code themes; ignored `adaptive.json` is the live selected projection
 - `~/.config/harlequin/sunfly_textual_themes.py`, `~/.local/bin/harlequin`, and `~/.harlequin.toml` — Harlequin support that registers Moonfly/Sunfly, follows the shared state file while running in adaptive mode, adds previous-buffer support, and layers a terminal-safe `pane-nav` keymap (`Ctrl-Left/Down/Up/Right` for pane focus and `Ctrl-H/L` for tabs when distinguishable from Backspace) over the default `vscode` keymap
 - `~/.config/nvim/lua/plugins/sunfly.lua` — tracked Neovim Sunfly loader glue; the current Sunfly Neovim implementation still uses Moonfly under the hood, so `bluz71/vim-moonfly-colors` remains a required dependency
