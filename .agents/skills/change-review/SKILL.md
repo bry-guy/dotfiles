@@ -1,21 +1,21 @@
 ---
 name: change-review
-description: Review code or documentation changes, diffs, branches, PRs, stacked PRs, tests, designs, and reviewer comments. Use when asked to review, audit, critique, simplify, minimize a diff, assess implementation against a design, evaluate test value, triage PR feedback, or judge merge readiness.
+description: Review code or documentation changes, working-tree diffs, local branches, stacked branch diffs, tests, and designs. Use when asked to review, audit, critique, simplify, minimize a diff, assess implementation against a design, evaluate test value, or judge readiness. For any GitHub pull-request target, use pr-review first; pr-review may load this skill as its code-review rubric.
 ---
 
 # Change Review
 
 Review changes for the way a human coworker will understand, validate, and safely merge them. Prioritize correctness and narrow scope, then remove complexity that does not earn its place.
 
+This is not the entry point for a direct GitHub PR or PR-stack review. Use `pr-review` first so unresolved review threads cannot be skipped. Continue here when `pr-review` loads this skill for its general code-review rubric or when the target is not a GitHub PR.
+
 ## Establish the target
 
 Identify the intended behavior, invariants, non-goals, and exact comparison boundary before judging implementation.
 
 - **Working tree or branch:** inspect committed and relevant uncommitted changes against the intended base or merge base.
-- **PR:** inspect the diff, body, comments, checks, and relevant surrounding code.
-- **Stack:** map each PR's base and head, then inspect adjacent diffs.
+- **Branch stack:** map each branch's base and head, then inspect adjacent diffs.
 - **Design:** read both the design and implementation when one exists.
-- **Reviewer feedback:** inspect each comment against the current code, not only the commented revision.
 
 If ambiguity could materially change the verdict, ask. Otherwise state the assumption and proceed.
 
@@ -28,9 +28,8 @@ Read only the references needed for the request:
 | Stacked PRs, branch ownership, churn, or stack compression | `references/stack-review.md` |
 | Test quality, over-testing, missing coverage, or line reduction | `references/test-value-audit.md` |
 | Design critique or implementation-versus-design review | `references/design-conformance.md` |
-| Existing PR comments or review-thread dispositioning | `references/reviewer-comment-triage.md` |
 
-Several references may apply. Do not load all of them by default.
+Several references may apply. Do not load all of them by default. For unresolved GitHub review threads or plans to address/reject PR comments, use the dedicated `pr-review` skill instead.
 
 ## Posture
 
