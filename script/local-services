@@ -1,0 +1,455 @@
+#!/usr/bin/env python3
+"""Manage local machine services declared in ~/.config/local-services/services.toml.
+
+Subcommands:
+  list                        List configured services.
+  setup [name ...]            Install secret material from 1Password for the given
+                              services (default: all enabled).
+  up [name ...]               docker compose up -d for the given services.
+  down [name ...]             docker compose down for the given services.
+  restart [name ...]          down then up.
+  status [name ...]           docker compose ps + health probe.
+  logs <name> [...]           docker compose logs (additional args passed through).
+  doctor [name ...]           Preflight checks and remediation hints.
+
+Defaults:
+  When [name ...] is omitted, the command applies to all enabled services. `logs`
+  always requires an explicit service name.
+
+Config:
+  Edit ~/.config/local-services/services.toml to add/enable services. Compose
+  files live under ~/.config/local-services/services/<name>/...
+
+Bootstrapping:
+  setup never invents secret values. It installs material that already exists in
+  1Password (run `op signin` first). New Connect servers/tokens must be created
+  in 1Password.com and stored in the items referenced by services.toml.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import shlex
+import shutil
+import subprocess
+import sys
+import tomllib
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Iterable, Sequence
+from urllib.error import URLError
+from urllib.request import urlopen
+
+
+CONFIG_HOME = Path.home() / ".config" / "local-services"
+CONFIG_FILE = CONFIG_HOME / "services.toml"
+SERVICES_ROOT = CONFIG_HOME / "services"
+
+
+@dataclass
+class ProvisionSpec:
+    script: Path
+    description: str = ""
+
+    @classmethod
+    def from_dict(cls, raw: dict, service_root: Path) -> "ProvisionSpec":
+        script_raw = raw.get("script")
+        if not script_raw:
+            raise ValueError("provision requires 'script'")
+        script_path = Path(os.path.expanduser(script_raw))
+        if not script_path.is_absolute():
+            script_path = service_root / script_path
+        return cls(script=script_path, description=str(raw.get("description", "")))
+
+
+@dataclass
+class SecretSpec:
+    op: str
+    type: str = "field"
+    dest: Path | None = None
+    dest_env_file: Path | None = None
+    env_var: str | None = None
+    mode: int = 0o600
+
+    @classmethod
+    def from_dict(cls, raw: dict) -> "SecretSpec":
+        op = raw.get("op")
+        if not op:
+            raise ValueError("secret requires an 'op' reference")
+        secret_type = raw.get("type", "field")
+        if secret_type not in {"field", "document"}:
+            raise ValueError(f"unsupported secret type: {secret_type}")
+        dest = Path(os.path.expanduser(raw["dest"])) if raw.get("dest") else None
+        dest_env_file = Path(os.path.expanduser(raw["dest_env_file"])) if raw.get("dest_env_file") else None
+        env_var = raw.get("env_var")
+        if bool(dest) == bool(dest_env_file):
+            raise ValueError("secret must set exactly one of 'dest' or 'dest_env_file'")
+        if dest_env_file and not env_var:
+            raise ValueError("'dest_env_file' requires 'env_var'")
+        mode = int(raw.get("mode", "0600"), 8) if isinstance(raw.get("mode"), str) else int(raw.get("mode", 0o600))
+        return cls(op=op, type=secret_type, dest=dest, dest_env_file=dest_env_file, env_var=env_var, mode=mode)
+
+    @property
+    def target_path(self) -> Path:
+        assert self.dest or self.dest_env_file
+        return self.dest if self.dest else self.dest_env_file  # type: ignore[return-value]
+
+
+@dataclass
+class Service:
+    name: str
+    enabled: bool
+    description: str
+    compose: Path
+    health_url: str | None
+    provision: ProvisionSpec | None = None
+    secrets: list[SecretSpec] = field(default_factory=list)
+
+    @classmethod
+    def from_dict(cls, name: str, raw: dict) -> "Service":
+        compose_raw = raw.get("compose")
+        if not compose_raw:
+            raise ValueError(f"service {name}: 'compose' is required")
+        compose_path = SERVICES_ROOT / compose_raw
+        service_root = compose_path.parent
+        provision_raw = raw.get("provision")
+        provision = ProvisionSpec.from_dict(provision_raw, service_root) if provision_raw else None
+        secrets = [SecretSpec.from_dict(s) for s in raw.get("secrets", [])]
+        return cls(
+            name=name,
+            enabled=bool(raw.get("enabled", False)),
+            description=str(raw.get("description", "")),
+            compose=compose_path,
+            health_url=raw.get("health_url"),
+            provision=provision,
+            secrets=secrets,
+        )
+
+
+def load_services() -> list[Service]:
+    if not CONFIG_FILE.exists():
+        die(f"missing config: {CONFIG_FILE}")
+    with CONFIG_FILE.open("rb") as fh:
+        data = tomllib.load(fh)
+    services_raw = data.get("services", {})
+    services: list[Service] = []
+    for name, raw in services_raw.items():
+        try:
+            services.append(Service.from_dict(name, raw))
+        except ValueError as exc:
+            die(f"service {name}: {exc}")
+    return services
+
+
+def select(services: Sequence[Service], names: Sequence[str], require_enabled: bool = True) -> list[Service]:
+    if names:
+        by_name = {s.name: s for s in services}
+        chosen: list[Service] = []
+        for name in names:
+            if name not in by_name:
+                die(f"unknown service: {name}")
+            chosen.append(by_name[name])
+        return chosen
+    if require_enabled:
+        return [s for s in services if s.enabled]
+    return list(services)
+
+
+def color(text: str, code: str) -> str:
+    if not sys.stdout.isatty():
+        return text
+    return f"\033[{code}m{text}\033[0m"
+
+
+OK = lambda s: color(s, "32")  # green
+WARN = lambda s: color(s, "33")  # yellow
+FAIL = lambda s: color(s, "31")  # red
+DIM = lambda s: color(s, "2")
+
+
+def die(message: str) -> "_NoReturn":
+    print(f"error: {message}", file=sys.stderr)
+    sys.exit(1)
+
+
+def run(cmd: Sequence[str], *, check: bool = True, capture: bool = False, env: dict[str, str] | None = None) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        list(cmd),
+        check=check,
+        text=True,
+        capture_output=capture,
+        env={**os.environ, **(env or {})},
+    )
+
+
+def have(binary: str) -> bool:
+    return shutil.which(binary) is not None
+
+
+def docker_running() -> bool:
+    try:
+        result = run(["docker", "info"], check=False, capture=True)
+    except FileNotFoundError:
+        return False
+    return result.returncode == 0
+
+
+def compose_args(service: Service) -> list[str]:
+    if not service.compose.exists():
+        die(f"service {service.name}: compose file not found at {service.compose}")
+    return ["docker", "compose", "-p", service.name, "-f", str(service.compose)]
+
+
+def op_signed_in() -> bool:
+    if not have("op"):
+        return False
+    return run(["op", "account", "list"], check=False, capture=True).returncode == 0
+
+
+def op_read_field(reference: str) -> str:
+    result = run(["op", "read", reference], capture=True)
+    return result.stdout.rstrip("\n")
+
+
+def op_read_document(reference: str) -> bytes:
+    out_path: Path | None = None
+    try:
+        with subprocess.Popen(["op", "read", "--out-file", "/dev/stdout", reference], stdout=subprocess.PIPE) as proc:
+            assert proc.stdout is not None
+            data = proc.stdout.read()
+            proc.wait()
+            if proc.returncode != 0:
+                raise RuntimeError(f"op read failed for {reference}")
+            return data
+    finally:
+        if out_path and out_path.exists():
+            out_path.unlink(missing_ok=True)
+
+
+def install_secret(service: Service, spec: SecretSpec, force: bool) -> tuple[bool, str]:
+    target = spec.target_path
+    target.parent.mkdir(parents=True, exist_ok=True)
+    if target.exists() and not force:
+        if target.stat().st_size > 0:
+            return (False, f"already present at {target}")
+    if spec.type == "document":
+        data = op_read_document(spec.op)
+        target.write_bytes(data)
+    else:
+        value = op_read_field(spec.op)
+        if spec.dest:
+            target.write_text(value)
+        else:
+            assert spec.env_var
+            line = f"{spec.env_var}={value}\n"
+            target.write_text(line)
+    target.chmod(spec.mode)
+    return (True, f"installed {target}")
+
+
+def cmd_list(args: argparse.Namespace, services: list[Service]) -> int:
+    width = max((len(s.name) for s in services), default=0)
+    for service in services:
+        status = OK("enabled") if service.enabled else DIM("disabled")
+        compose_exists = service.compose.exists()
+        compose_note = "" if compose_exists else " " + WARN("(compose missing)")
+        print(f"{service.name.ljust(width)}  {status}  {service.description}{compose_note}")
+    return 0
+
+
+def needs_provision(service: Service, force: bool) -> bool:
+    if not service.provision:
+        return False
+    if force:
+        return True
+    for spec in service.secrets:
+        target = spec.target_path
+        if not target.exists() or target.stat().st_size == 0:
+            return True
+    return False
+
+
+def cmd_setup(args: argparse.Namespace, services: list[Service]) -> int:
+    targets = select(services, args.names)
+    if not targets:
+        print("no enabled services to set up")
+        return 0
+    if not op_signed_in():
+        die("1Password CLI is not signed in. Run `op signin` first.")
+    rc = 0
+    for service in targets:
+        print(f"[{service.name}] setup")
+        if service.provision and needs_provision(service, args.force):
+            if not service.provision.script.exists():
+                print(f"  {FAIL('fail')}  provision script missing: {service.provision.script}")
+                rc = 1
+                continue
+            print(f"  {OK('run')}    provision {service.provision.script}")
+            env = dict(os.environ)
+            if args.force:
+                env["LOCAL_SERVICES_FORCE"] = "1"
+            result = subprocess.run(["bash", str(service.provision.script)], env=env, check=False)
+            if result.returncode != 0:
+                print(f"  {FAIL('fail')}  provision exited with {result.returncode}")
+                rc = 1
+                continue
+        for spec in service.secrets:
+            try:
+                changed, msg = install_secret(service, spec, args.force)
+            except subprocess.CalledProcessError as exc:
+                print(f"  {FAIL('fail')}  {spec.op}: {exc.stderr.strip() if exc.stderr else exc}")
+                rc = 1
+                continue
+            except Exception as exc:  # noqa: BLE001
+                print(f"  {FAIL('fail')}  {spec.op}: {exc}")
+                rc = 1
+                continue
+            label = OK("write") if changed else DIM("keep")
+            print(f"  {label}   {spec.op} -> {msg}")
+    return rc
+
+
+def cmd_up(args: argparse.Namespace, services: list[Service]) -> int:
+    targets = select(services, args.names)
+    rc = 0
+    for service in targets:
+        print(f"[{service.name}] up")
+        result = run(compose_args(service) + ["up", "-d"], check=False)
+        rc = rc or result.returncode
+    return rc
+
+
+def cmd_down(args: argparse.Namespace, services: list[Service]) -> int:
+    targets = select(services, args.names, require_enabled=False)
+    rc = 0
+    for service in targets:
+        if not service.compose.exists():
+            print(f"[{service.name}] {WARN('skip')}: compose file missing")
+            continue
+        print(f"[{service.name}] down")
+        result = run(compose_args(service) + ["down"], check=False)
+        rc = rc or result.returncode
+    return rc
+
+
+def cmd_restart(args: argparse.Namespace, services: list[Service]) -> int:
+    rc = cmd_down(args, services)
+    return rc or cmd_up(args, services)
+
+
+def cmd_status(args: argparse.Namespace, services: list[Service]) -> int:
+    targets = select(services, args.names, require_enabled=False)
+    rc = 0
+    for service in targets:
+        print(f"[{service.name}] status")
+        if not service.compose.exists():
+            print(f"  {WARN('warn')}  compose file missing at {service.compose}")
+            continue
+        result = run(compose_args(service) + ["ps"], check=False)
+        rc = rc or result.returncode
+        if service.health_url:
+            print(f"  health: {probe_health(service.health_url)}")
+    return rc
+
+
+def probe_health(url: str) -> str:
+    try:
+        with urlopen(url, timeout=2) as resp:
+            return f"{OK('ok')} {url} ({resp.status})"
+    except URLError as exc:
+        return f"{FAIL('fail')} {url} ({exc.reason})"
+    except Exception as exc:  # noqa: BLE001
+        return f"{FAIL('fail')} {url} ({exc})"
+
+
+def cmd_logs(args: argparse.Namespace, services: list[Service]) -> int:
+    if not args.names:
+        die("logs requires a service name")
+    if len(args.names) > 1:
+        die("logs accepts only one service name")
+    targets = select(services, args.names, require_enabled=False)
+    return run(compose_args(targets[0]) + ["logs", *args.extra], check=False).returncode
+
+
+def cmd_doctor(args: argparse.Namespace, services: list[Service]) -> int:
+    targets = select(services, args.names, require_enabled=False)
+    issues = 0
+    print("preflight:")
+    for binary in ("docker", "op"):
+        if have(binary):
+            print(f"  {OK('ok')}   {binary}")
+        else:
+            print(f"  {FAIL('miss')} {binary} not on PATH")
+            issues += 1
+    if have("docker"):
+        if docker_running():
+            print(f"  {OK('ok')}   docker daemon reachable")
+        else:
+            print(f"  {FAIL('fail')} docker daemon not reachable (start Colima/Docker Desktop)")
+            issues += 1
+    if have("op"):
+        if op_signed_in():
+            print(f"  {OK('ok')}   op CLI signed in")
+        else:
+            print(f"  {WARN('warn')} op CLI not signed in (run `op signin` before setup)")
+            issues += 1
+    for service in targets:
+        print(f"[{service.name}]")
+        if not service.compose.exists():
+            print(f"  {FAIL('fail')} compose file missing at {service.compose}")
+            issues += 1
+        else:
+            print(f"  {OK('ok')}   compose file at {service.compose}")
+        for spec in service.secrets:
+            target = spec.target_path
+            if target.exists() and target.stat().st_size > 0:
+                print(f"  {OK('ok')}   secret {target}")
+            else:
+                print(f"  {FAIL('miss')} secret {target} (run `mise run services:setup`)")
+                issues += 1
+        if service.health_url and docker_running():
+            print(f"  health: {probe_health(service.health_url)}")
+    if issues:
+        print(f"\n{issues} issue(s) found")
+        return 1
+    print("\nall checks passed")
+    return 0
+
+
+COMMANDS = {
+    "list": cmd_list,
+    "setup": cmd_setup,
+    "up": cmd_up,
+    "down": cmd_down,
+    "restart": cmd_restart,
+    "status": cmd_status,
+    "logs": cmd_logs,
+    "doctor": cmd_doctor,
+}
+
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(prog="local-services", description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    subparsers = parser.add_subparsers(dest="cmd", required=True)
+    for name in COMMANDS:
+        sub = subparsers.add_parser(name)
+        sub.add_argument("names", nargs="*", help="service names")
+        if name == "setup":
+            sub.add_argument("--force", action="store_true", help="overwrite existing secret files")
+        if name == "logs":
+            sub.add_argument("extra", nargs=argparse.REMAINDER, help="extra args passed to docker compose logs")
+    return parser
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    parser = build_parser()
+    args = parser.parse_args(argv)
+    services = load_services()
+    handler = COMMANDS[args.cmd]
+    return handler(args, services)
+
+
+if __name__ == "__main__":
+    sys.exit(main())

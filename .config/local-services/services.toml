@@ -1,0 +1,59 @@
+# Local machine services managed via mise services:* tasks.
+#
+# Edit this file to enable, disable, or add services. The helper at
+# ~/script/local-services reads this and dispatches docker compose calls.
+#
+# Schema:
+#
+#   [services.<name>]
+#   enabled = true | false                          # default: false
+#   description = "human readable"                  # optional
+#   compose = "path-relative-to-services-dir.yaml"  # required
+#   health_url = "http://..."                       # optional, used by doctor
+#
+#   [services.<name>.provision]
+#   script = "relative/to/service-dir.sh"           # optional bootstrapper
+#   description = "..."
+#
+#   [[services.<name>.secrets]]
+#   op = "op://vault/item[/field]"                  # 1Password reference (used by doctor)
+#   type = "document" | "field"                     # default: field
+#   # Pick ONE destination form per secret:
+#   dest = "~/path/to/file"                         # whole secret -> file
+#   # or
+#   dest_env_file = "~/path/to/file.env"            # write KEY=value line
+#   env_var = "OP_CONNECT_TOKEN"                    # required with dest_env_file
+#   mode = "0600"                                   # default: 0600
+
+[services.1password-connect]
+enabled = true
+description = "Local 1Password Connect server (HTTP API on 127.0.0.1:8080)"
+compose = "1password-connect/compose.yaml"
+health_url = "http://127.0.0.1:8080/heartbeat"
+
+# When the credentials JSON or token env file is missing, run this provision
+# script first. The script uses the host `op` CLI to either restore material
+# from 1Password documents/items or to create a new Connect server + token via
+# `op connect server create` / `op connect token create`, then mirror the
+# results back to 1Password so other machines can re-setup.
+[services.1password-connect.provision]
+script = "provision.sh"
+description = "op connect server/token + mirror to 1Password"
+
+# Connect server credentials JSON. The provision step ensures this exists
+# both locally and as a 1Password Document item; the secrets entry then
+# tracks the canonical destination for doctor/status reporting.
+[[services.1password-connect.secrets]]
+op = "op://bry-guy/1password-connect-credentials/credentials.json"
+type = "document"
+dest = "~/.config/1password/connect/1password-credentials.json"
+mode = "0600"
+
+# Connect access token env file. The provision step writes this and uploads
+# the token to a 1Password Password item for re-installation.
+[[services.1password-connect.secrets]]
+op = "op://bry-guy/OP_CONNECT_TOKEN/credential"
+type = "field"
+dest_env_file = "~/.config/1password/connect/connect.env"
+env_var = "OP_CONNECT_TOKEN"
+mode = "0600"

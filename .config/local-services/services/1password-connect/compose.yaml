@@ -1,0 +1,26 @@
+# Local 1Password Connect server.
+#
+# Required machine-local files (installed by `mise run services:setup`):
+#   ~/.config/1password/connect/1password-credentials.json
+#   ~/.config/1password/connect/connect.env          # optional, holds OP_CONNECT_TOKEN
+#
+# Health: http://127.0.0.1:8080/heartbeat
+services:
+  op-connect-api:
+    image: 1password/connect-api:latest
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - ${HOME}/.config/1password/connect/1password-credentials.json:/home/opuser/.op/1password-credentials.json:ro
+      - op-connect-data:/home/opuser/.op/data
+
+  op-connect-sync:
+    image: 1password/connect-sync:latest
+    restart: unless-stopped
+    volumes:
+      - ${HOME}/.config/1password/connect/1password-credentials.json:/home/opuser/.op/1password-credentials.json:ro
+      - op-connect-data:/home/opuser/.op/data
+
+volumes:
+  op-connect-data:

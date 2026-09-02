@@ -4,3 +4,50 @@ node = "lts"
 "npm:vscode-langservers-extracted" = "latest"
 "aqua:LuaLS/lua-language-server" = "latest"
 lua-language-server = '3.7.4'
+
+[tasks."pi"]
+description = "Launch pi with default local chat VM image"
+env = { GONDOLIN_DEFAULT_IMAGE = "pi-ez-chat:latest" }
+run = '''
+#!/usr/bin/env bash
+set -euo pipefail
+
+exec pi "$@"
+'''
+
+# ---------------------------------------------------------------------------
+# Local machine services. Definitions live in ~/.config/local-services/.
+# See ~/script/local-services --help for the full CLI.
+# ---------------------------------------------------------------------------
+
+[tasks."services"]
+description = "List local machine services"
+run = "~/script/local-services list"
+
+[tasks."services:setup"]
+description = "Install local service secret material from 1Password"
+run = "~/script/local-services setup"
+
+[tasks."services:up"]
+description = "Start local services (docker compose up -d)"
+run = "~/script/local-services up"
+
+[tasks."services:down"]
+description = "Stop local services (docker compose down)"
+run = "~/script/local-services down"
+
+[tasks."services:restart"]
+description = "Restart local services"
+run = "~/script/local-services restart"
+
+[tasks."services:status"]
+description = "Show local service status and health probes"
+run = "~/script/local-services status"
+
+[tasks."services:logs"]
+description = "Tail logs for one local service (mise run services:logs -- <name> [extra])"
+run = "~/script/local-services logs"
+
+[tasks."services:doctor"]
+description = "Verify local service prerequisites and configuration"
+run = "~/script/local-services doctor"
