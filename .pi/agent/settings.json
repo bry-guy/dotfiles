@@ -1,6 +1,6 @@
 {
-  "lastChangelogVersion": "0.84.1",
-  "theme": "adaptive",
+  "lastChangelogVersion": "0.85.1",
+  "theme": "dark",
   "packages": [
     "git:github.com/nicobailon/pi-mcp-adapter",
     "git:github.com/nicobailon/pi-web-access",
@@ -13,13 +13,15 @@
     "npm:@juicesharp/rpiv-todo",
     "npm:@juicesharp/rpiv-advisor",
     "npm:@juicesharp/rpiv-btw",
-    "npm:@tintinweb/pi-subagents"
+    "npm:@tintinweb/pi-subagents",
+    "git:github.com/bry-guy/pi-sync",
+    "npm:pi-openai-fast-mode"
   ],
   "defaultProvider": "openai-codex",
-  "defaultModel": "gpt-5.6-luna",
-  "defaultThinkingLevel": "max",
+  "defaultModel": "gpt-5.6-sol",
+  "defaultThinkingLevel": "medium",
   "editorPaddingX": 2,
-  "hideThinkingBlock": true,
+  "hideThinkingBlock": false,
   "quietStartup": true,
   "treeFilterMode": "default",
   "compaction": {
