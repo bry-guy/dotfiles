@@ -50,13 +50,21 @@ Avoid comments that preserve development chronology, defend needless complexity,
 
 Required license headers, generated-code markers, tool directives, and contractual public-API documentation may be necessary. Keep them in their required form, but do not use the exception to justify unrelated prose.
 
+`ponytail:` marker comments are not an exception. Even though the ponytail skill/persona instructs marking deliberate simplifications this way, never write a `ponytail:` (or similarly self-referential tooling) comment into source code. Surface the same information as chat text instead, per the rule below.
+
+## Never write the comment into the file
+
+The gate above decides *whether a comment is warranted*, not where it goes. Regardless of the gate's outcome, do not add or edit a comment or docstring directly in a file. Instead, propose it in the chat response: cite the file and line, give the exact proposed wording, and say why (which gate question it satisfies). Only write it into the file if the user explicitly asks you to add it.
+
+This applies to every outcome below, including **Keep** and **Rewrite** — "keep" means the reasoning is worth keeping and proposing, not worth silently writing.
+
 ## Reviewing comments
 
 For each new or changed comment, recommend one of:
 
 - **Omit:** naming, structure, types, or nearby documentation already explains it.
 - **Rename/refactor:** make the code self-explanatory and remove the comment.
-- **Keep:** it captures important why-level reasoning that code cannot express.
-- **Rewrite:** preserve the reason with less prose or a short example.
+- **Keep:** it captures important why-level reasoning that code cannot express — propose the wording in chat, don't write it.
+- **Rewrite:** preserve the reason with less prose or a short example — propose the reworded version in chat, don't write it.
 
-When edits are authorized, apply the smallest resulting change. Otherwise return the exact recommendation and, for **keep** or **rewrite**, the concise proposed wording.
+Return the exact recommendation and, for **keep** or **rewrite**, the concise proposed wording, in the chat response. Only apply it to the file when the user explicitly authorizes that specific comment.

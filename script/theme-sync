@@ -226,14 +226,6 @@ if command -v tmux >/dev/null 2>&1 && tmux ls >/dev/null 2>&1; then
   fi
 fi
 
-nvim_status="state published"
-if command -v nvim >/dev/null 2>&1 && compgen -G '/tmp/nvim*.sock' >/dev/null; then
-  nvim_status="reloaded"
-  for socket in /tmp/nvim*.sock; do
-    nvim --server "$socket" --remote-send "<Cmd>lua require('config.theme').apply()<CR>" >/dev/null 2>&1 || nvim_status="some servers unavailable"
-  done
-fi
-
 font_status="not configured"
 actual_font_profile="unknown"
 ghostty_status="not running"
@@ -263,6 +255,14 @@ font_recommendation=$font_profile
 font_profile=$actual_font_profile
 updated_at=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 EOF
+
+nvim_status="state published"
+if command -v nvim >/dev/null 2>&1 && compgen -G '/tmp/nvim*.sock' >/dev/null; then
+  nvim_status="reloaded"
+  for socket in /tmp/nvim*.sock; do
+    nvim --server "$socket" --remote-send "<Cmd>lua require('config.theme').refresh()<CR>" >/dev/null 2>&1 || nvim_status="some servers unavailable"
+  done
+fi
 
 cat <<EOF
 Synced appearance: $mode

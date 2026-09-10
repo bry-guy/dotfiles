@@ -1,3 +1,93 @@
+unalias g 2>/dev/null
+g() {
+	if [[ "$1" == "cd" ]]; then
+		local branch="$2"
+		if [[ -z "$branch" ]]; then
+			echo "usage: g cd <branch>" >&2
+			return 2
+		fi
+
+		local worktree_path entry_path found_branch
+		while IFS= read -r line; do
+			if [[ "$line" == "worktree "* ]]; then
+				entry_path="${line#worktree }"
+			elif [[ "$line" == "branch refs/heads/"* ]]; then
+				found_branch="${line#branch refs/heads/}"
+				if [[ "$found_branch" == "$branch" ]]; then
+					worktree_path="$entry_path"
+					break
+				fi
+			fi
+		done < <(git worktree list --porcelain 2>/dev/null)
+
+		if [[ -n "$worktree_path" ]]; then
+			cd "$worktree_path"
+			return 0
+		fi
+
+		if git show-ref --verify --quiet "refs/heads/$branch"; then
+			local base_path
+			base_path=$(git worktree list --porcelain | awk '$1 == "worktree" { print $2; exit }')
+			if git -C "$base_path" checkout "$branch"; then
+				cd "$base_path"
+				return 0
+			fi
+			return 1
+		fi
+
+		echo "g cd: no such branch '$branch'" >&2
+		return 1
+	fi
+
+	if [[ "$1" == "wt" && "$2" == "recent" ]]; then
+		local -a entries
+		local entry_path branch
+
+		while IFS= read -r line; do
+			if [[ "$line" == "worktree "* ]]; then
+				entry_path="${line#worktree }"
+			elif [[ "$line" == "branch refs/heads/"* ]]; then
+				branch="${line#branch refs/heads/}"
+
+				local commit_time=$(git -C "$entry_path" log -1 --format=%ct HEAD 2>/dev/null || echo 0)
+
+				local max_mtime=0
+				while IFS= read -r -d '' file_status; do
+					local file="${file_status#??}"
+					if [[ -n "$file" && -e "$entry_path/$file" ]]; then
+						local mtime=$(stat -f%m "$entry_path/$file" 2>/dev/null || echo 0)
+						if (( mtime > max_mtime )); then
+							max_mtime=$mtime
+						fi
+					fi
+				done < <(git -C "$entry_path" status --porcelain -z 2>/dev/null)
+
+				local recency=$commit_time
+				if (( max_mtime > commit_time )); then
+					recency=$max_mtime
+				fi
+
+				entries+=("$recency:$branch")
+			fi
+		done < <(git worktree list --porcelain)
+
+		print -l "${(@On)entries[@]}" | sed 's/^[^:]*://'
+		return 0
+	fi
+
+	if [[ "$1" == "wt" && "$2" == "last" ]]; then
+		local recent_output
+		recent_output=$(g wt recent | head -1)
+		if [[ -n "$recent_output" ]]; then
+			echo "$recent_output"
+			return 0
+		fi
+		return 1
+	fi
+
+	git "$@"
+}
+
 wiki() {
 		local dir
 		local cmd cmd2

@@ -13,6 +13,7 @@
 		br = branch
 		ci = commit
 		st = status
+		wt = worktree
 		tg = tag --sort=-v:refname
 		unstage = reset HEAD --
 		last = log -1 HEAD

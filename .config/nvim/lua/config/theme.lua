@@ -102,6 +102,47 @@ local function reset_theme_modules()
   package.loaded["sunfly"] = nil
 end
 
+local mini_icon_links = {
+  Azure = "Function",
+  Blue = "DiagnosticInfo",
+  Cyan = "DiagnosticHint",
+  Green = "DiagnosticOk",
+  Orange = "DiagnosticWarn",
+  Purple = "Constant",
+  Red = "DiagnosticError",
+  Yellow = "DiagnosticWarn",
+}
+
+local function sync_mini_icons()
+  if type(_G.MiniIcons) ~= "table" then
+    return
+  end
+
+  for name, target in pairs(mini_icon_links) do
+    vim.api.nvim_set_hl(0, "MiniIcons" .. name, { link = target })
+  end
+end
+
+local function sync_sunfly_fallbacks(theme)
+  if not is_sunfly_theme(theme) then
+    return
+  end
+
+  local ok, sunfly = pcall(require, "sunfly")
+  if not ok then
+    return
+  end
+
+  for _, group in ipairs({
+    "Delimiter",
+    "@punctuation.bracket",
+    "@punctuation.delimiter",
+    "@punctuation.special",
+  }) do
+    vim.api.nvim_set_hl(0, group, { fg = sunfly.palette.grey62 })
+  end
+end
+
 local function sync_devicons()
   local ok, devicons = pcall(require, "nvim-web-devicons")
   if not ok or type(devicons.refresh) ~= "function" then
@@ -161,6 +202,8 @@ function M.apply()
     M._active_theme = "moonfly"
   end
 
+  sync_sunfly_fallbacks(theme)
+  sync_mini_icons()
   sync_devicons()
   sync_lualine()
   ensure_focus_sync()

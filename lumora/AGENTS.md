@@ -3,10 +3,20 @@
 - Invariant: agents may connect only to local databases on this machine for this repo's development workflows. Never connect to any non-local database, remote database, staging database, production database, or any database/service outside local development.
 - Invariant: agents may never connect to the aws prod environment. staging and sandbox environment are acceptable.
 - Invariant: agents making non-local changes (e.g., changing an aws resource) must ask permission before making any changes. reads are ok.
+- Invariant: agents may never run deployments unless explicitly instructed by the user. This includes `just deploy`, direct deploy equivalents such as `helm upgrade`, `kubectl apply`, CDK/Databricks deploy commands, frontend asset uploads, or any command whose purpose is to change deployed runtime state. Agents may inspect deployment state only with read-only commands.
+- Invariant: agents must confirm requests to deploy to prod, and receive an affirmation before deploying, after being explicitly instructed.
 - Invariant: agents must ask permission before editing files while on `main` branch.
 - Invariant: for DX tooling work, agents may read from AWS S3 (staging/sandbox only) but must never write to S3 or modify any AWS resources without explicit permission.
 - Invariant: agents must never connect to or reference production databases, production S3 buckets, or production API endpoints in any configuration files, scripts, or code they produce.
 - Invariant: tasks within a repo must not cross repo boundaries or compose horizontally. A repo may check for a dependency (e.g., "wattsonic jar exists") and error if missing, but must not build, fetch, or manage artifacts from peer repos. Cross-repo composition belongs in a parent directory (e.g., ~/lumora) via a top-level justfile or similar orchestrator.
 - Invariant: agents must use `just` commands (from justfile/justfile.local) for building, testing, running services, and other dev workflows instead of invoking Gradle, pnpm, or other tools directly. Run `just --list` to see available recipes.
-- Invariant: machine-local tool activation may wrap `just`, but `just` must never invoke machine-local tool activation. `justfile` / `justfile.local` recipes must call underlying tools directly and assume the required tools are already on `PATH`. If a workflow needs local tool activation or AWS credential wrapping, invoke that wrapper outside `just` and have it run the relevant `just` command.
+- Invariant: agents must never add, stage, or commit `AGENTS.md` or `CLAUDE.local.md` files to git.
+- Invariant: project workflow commands should call supported tools directly and assume required tools are already on `PATH`. DX remote commands may expose explicit environment flags (for example `--staging`/`--prod`) and own the repo-supported context selection needed for that command, while still prompting before non-dev writes.
 - Invariant: machine-local tool configuration is local-only and must not be committed to product repos or documented as a project requirement.
+- Invariant: written documentation for DX paths must present them as an additional supported path with its own semantics, never as a successor to existing tools or workflows.
+- Invariant: never mention machine-local environment managers by name in written documentation; document only project-supported setup paths and tools.
+- Invariant: prefer abstract methods over default methods with implementations. Subclasses should be forced to make explicit choices rather than silently inheriting behavior.
+- Invariant: agents must never commit and push without explicit approval from the user. Either the user's original prompt must have instructed the agent to commit/push, or the agent must ask for permission before doing so.
+- Invariant: all git branches must be named `bryan/$branch-name`. Do not use other prefixes.
+- Invariant: when agents set timeouts greater than 30 seconds, they must use a subagent/worker delegate
+- Backend-java CI note: `submit-gradle` flakes constantly; do not treat `submit-gradle` failures as blockers. Focus on Java/build/check gates instead.
