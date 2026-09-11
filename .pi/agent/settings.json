@@ -15,7 +15,9 @@
     "npm:@juicesharp/rpiv-btw",
     "npm:@tintinweb/pi-subagents",
     "git:github.com/bry-guy/pi-sync",
-    "npm:pi-openai-fast-mode"
+    "npm:pi-openai-fast-mode",
+    "npm:pi-lens",
+    "npm:pi-observational-memory"
   ],
   "defaultProvider": "openai-codex",
   "defaultModel": "gpt-5.6-sol",
@@ -39,5 +41,23 @@
   "followUpMode": "all",
   "httpIdleTimeoutMs": 60000,
   "showCacheMissNotices": true,
-  "tuiMode": "fullscreen"
+  "tuiMode": "fullscreen",
+  "observational-memory": {
+    "observeAfterTokens": 15000,
+    "reflectAfterTokens": 30000,
+    "compactAfterTokens": 100000,
+    "compactAfterTokensMode": "calibrated",
+    "compactAfterTokensRatio": 0.68,
+    "observationsPoolMaxTokens": 20000,
+    "observationsPoolTargetTokens": 10000,
+    "agentMaxTurns": 16,
+    "model": {
+      "provider": "openai-codex",
+      "id": "gpt-5.6-luna",
+      "thinking": "high"
+    },
+    "showWorkerNotifications": true,
+    "passive": false,
+    "debugLog": false
+  }
 }
