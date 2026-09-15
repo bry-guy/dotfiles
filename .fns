@@ -143,8 +143,8 @@ vim-serve() {
 }
 
 open-colima() {
-	local mem="${1:-1}"
-	colima start --cpu 4 --memory "$mem" --disk 32 --vm-type=vz --vz-rosetta --mount-type=virtiofs --network-address --ssh-agent --dns 8.8.8.8 --dns 192.168.0.1
+	local mem="${1:-2}"
+	colima start --arch aarch64 --cpu 4 --memory "$mem" --disk 32 --vm-type=vz --vz-rosetta --mount-type=virtiofs --network-address --ssh-agent --dns 8.8.8.8 --dns 192.168.0.1
 }
 
 vim-connect() {
