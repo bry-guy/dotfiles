@@ -26,3 +26,15 @@ vim.filetype.add({
 --   end,
 -- })
 
+vim.api.nvim_create_autocmd("BufWritePost", {
+  pattern = "*.ipynb",
+  callback = function()
+    local ok, status = pcall(function()
+      return require("molten.status").initialized()
+    end)
+    if ok and status == "Molten" then
+      vim.cmd("MoltenExportOutput!")
+    end
+  end,
+})
+

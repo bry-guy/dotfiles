@@ -1,6 +1,7 @@
 brew "duckdb"
 brew "glow"
 brew "httpie"
+brew "imagemagick"
 brew "hugo"
 brew "jj"
 brew "libpq"

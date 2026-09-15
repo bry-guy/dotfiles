@@ -85,3 +85,34 @@ A quick local review loop is:
 5. Use `<leader>gq` or `<leader>gQ`, then `:copen`, to collect hunks for navigation across files.
 
 Gitsigns reviews the current buffer and its hunks; it is not a whole-branch file-list UI. Fugitive remains available through `:Git` for broader Git operations, and no branch push is needed for any of these views.
+
+## ISLP notebooks
+
+The ISLP labs checkout at `~/dev/ISLP_labs` uses a local Python 3.12 tool selected by mise and a project-local `.venv` managed by uv. The local `.mise.local.toml` is intentionally untracked.
+
+From the checkout:
+
+```sh
+mise trust .mise.local.toml
+mise install
+uv venv --python "$(mise which python)" .venv
+uv pip install --python .venv/bin/python -r requirements.txt
+uv pip install --python .venv/bin/python \\
+  ipykernel jupyterlab jupytext pynvim jupyter_client
+.venv/bin/python -m ipykernel install --user \\
+  --name .venv \\
+  --display-name "ISLP labs (Python 3.12)"
+source .venv/bin/activate
+nvim Ch02-statlearn-lab.ipynb
+```
+
+The notebook buffer is a Jupytext Markdown view. Quarto runs cells through Molten, floating output opens automatically after execution, and saving exports Molten outputs back to the `.ipynb` file. Useful mappings use the `<leader>j` group:
+
+- `ja` / `jA` — attach to / deinitialize a notebook kernel
+- `jr` — run the current cell; visual `jr` runs the selection
+- `jra` / `jrA` — run cells above / run all cells
+- `jrl` — run the current line
+- `jo` / `jO` — enter / hide notebook output
+- `ji` — import saved notebook output
+
+Install the tracked ImageMagick dependency with `~/script/brew-apply-manifest dev.common`, then run `:Lazy sync` and `:checkhealth` in Neovim.
