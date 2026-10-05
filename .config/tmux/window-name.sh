@@ -4,7 +4,11 @@ set -euo pipefail
 pane_pid="${1:-}"
 current_command="${2:-shell}"
 pane_path="${3:-$PWD}"
-pane_title="${4:-}"
+pane_id="${4:-}"
+pane_title=""
+if [[ "$pane_id" =~ ^%[0-9]+$ ]]; then
+  pane_title="$(tmux display-message -p -t "$pane_id" '#{pane_title}' 2>/dev/null || true)"
+fi
 
 trim() {
   local value="$1"
@@ -126,9 +130,15 @@ resolve_command() {
   local title="$3"
   local candidate child_name resolved=""
   local -a children=()
+  command_pid=""
 
   if [[ "$pid" =~ ^[0-9]+$ ]]; then
     candidate="$pid"
+    if [[ "$(ps_command_name "$candidate")" == "just" ]]; then
+      command_pid="$candidate"
+      command_name="just"
+      return
+    fi
 
     mapfile -t children < <(pgrep -P "$candidate" 2>/dev/null || true)
     if (( ${#children[@]} == 1 )); then
@@ -151,7 +161,8 @@ resolve_command() {
   fi
 
   if [[ -n "$resolved" ]]; then
-    printf '%s' "$resolved"
+    command_pid="$candidate"
+    command_name="$resolved"
     return
   fi
 
@@ -159,11 +170,11 @@ resolve_command() {
   fallback="${fallback#-}"
 
   if [[ "$fallback" == "node" && "$title" == "π - "* ]]; then
-    printf 'pi'
+    command_name="pi"
     return
   fi
 
-  printf '%s' "$fallback"
+  command_name="$fallback"
 }
 
 location_name() {
@@ -178,5 +189,52 @@ location_name() {
   printf '%s' "$(shorten_path "$path")"
 }
 
-command_name="$(resolve_command "$pane_pid" "$current_command" "$pane_title")"
-printf '%s@%s\n' "$command_name" "$(location_name "$pane_path")"
+just_recipe() {
+  local args token
+  local -a words=()
+  args="$(ps -p "$1" -o args= 2>/dev/null || true)"
+  read -r -a words <<< "$args"
+  for token in "${words[@]:1}"; do
+    case "$token" in
+      -q|--quiet|-v|--verbose|--no-deps|--yes|--one|--) continue ;;
+      -*|*=*) return ;;
+    esac
+    if [[ "$token" =~ ^[[:alpha:]_][[:alnum:]_-]*(::[[:alpha:]_][[:alnum:]_-]*)*$ ]]; then
+      printf '%s' "$token"
+    fi
+    return
+  done
+}
+
+resolve_command "$pane_pid" "$current_command" "$pane_title"
+if [[ "$command_name" == "just" ]]; then
+  recipe="$(just_recipe "$command_pid")"
+  printf 'just:%s%s\n' "$(location_name "$pane_path")" "${recipe:+/$recipe}"
+  exit 0
+fi
+session_name=""
+case "$command_name" in
+  pi|node)
+    if [[ "$pane_title" == "π - "* ]]; then
+      command_name="pi"
+    fi
+    if [[ "$pane_title" == "π - "*" - ${pane_path##*/}" ]]; then
+      session_name="${pane_title#π - }"
+      session_name="${session_name%" - ${pane_path##*/}"}"
+    fi
+    ;;
+  claude|python*)
+    if [[ "$command_name" == "claude" || "$pane_title" == "✳ "* ]]; then
+      command_name="cc"
+    fi
+    if [[ "$pane_title" == "✳ "* ]]; then
+      session_name="${pane_title#✳ }"
+    fi
+    ;;
+esac
+session_name="$(trim "$session_name")"
+if [[ -n "$session_name" && ! "$session_name" =~ ^[[:xdigit:]]{8}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{12}$ ]]; then
+  printf '%s:%s\n' "$command_name" "$session_name"
+else
+  printf '%s:%s\n' "$command_name" "$(location_name "$pane_path")"
+fi
