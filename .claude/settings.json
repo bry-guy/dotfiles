@@ -15,7 +15,7 @@
     ],
     "defaultMode": "bypassPermissions"
   },
-  "model": "sonnet",
+  "model": "opus[1m]",
   "hooks": {
     "PreToolUse": [
       {
@@ -50,7 +50,8 @@
     "jdtls-lsp@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": true,
     "context-mode@context-mode": true,
-    "ponytail@ponytail": true
+    "ponytail@ponytail": true,
+    "whiteboard@devfast": true
   },
   "extraKnownMarketplaces": {
     "context-mode": {
@@ -64,12 +65,19 @@
         "source": "github",
         "repo": "DietrichGebert/ponytail"
       }
+    },
+    "devfast": {
+      "source": {
+        "source": "github",
+        "repo": "devdotfast/whiteboard"
+      }
     }
   },
   "syntaxHighlightingDisabled": false,
   "alwaysThinkingEnabled": true,
-  "effortLevel": "medium",
-  "advisorModel": "opus",
+  "effortLevel": "low",
+  "autoCompactWindow": 204000,
+  "advisorModel": "claude-opus-5-5",
   "tui": "fullscreen",
   "voice": {
     "enabled": true,
@@ -78,6 +86,9 @@
   "skipDangerousModePermissionPrompt": true,
   "theme": "custom:adaptive",
   "editorMode": "vim",
+  "autoCompactEnabled": true,
+  "remoteControlAtStartup": true,
+  "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
   "voiceEnabled": true
