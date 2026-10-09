@@ -26,7 +26,7 @@ Every main-thread tool call resends the full conversation, so main-thread tool c
 - Treat subagent output as evidence, not judgment; don't repeat an investigation unless it was incomplete or contradictory. Subagents stay read-only outside scratch space, never consult the advisor, and return uncertainty to the parent.
 - When you must do it yourself, batch several reads/greps/commands into one call and return only filtered results (pi: `codemode`). Don't dump large outputs into context; filter them (`rg -l`, `head`, ranged reads).
 
-Agent routing (same names in pi and Claude Code):
+Agent routing (same agent names in both; spawn via the subagent tool: `subagent` in pi, `Agent` in Claude Code):
 
 | Work | Agent |
 |---|---|

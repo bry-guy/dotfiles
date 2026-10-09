@@ -12,14 +12,14 @@
     "npm:@juicesharp/rpiv-todo",
     "npm:@juicesharp/rpiv-advisor",
     "npm:@juicesharp/rpiv-btw",
-    "npm:@tintinweb/pi-subagents",
     "git:github.com/bry-guy/pi-sync",
     "npm:pi-openai-fast-mode",
     "npm:pi-lens",
     "npm:pi-observational-memory",
     "npm:@gotgenes/pi-anthropic-auth",
     "npm:@luan.sh/pi-thinking-binding",
-    "npm:pi-worktree-include"
+    "npm:pi-worktree-include",
+    "npm:@gotgenes/pi-subagents"
   ],
   "defaultProvider": "anthropic",
   "defaultModel": "claude-opus-5-5",
