@@ -333,6 +333,8 @@ if [[ -n $WORK ]]; then
 		. $HOME/.zsh_work
 fi
 
-# pi-sync
-export PI_SYNC_SERVER_URL=https://pi-sync.bry-guy.net
+# pi-sync (personal machines only)
+if [[ -z $WORK ]]; then
+	export PI_SYNC_SERVER_URL=https://pi-sync.bry-guy.net
+fi
 
