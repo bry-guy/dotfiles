@@ -4,6 +4,9 @@ set -euo pipefail
 mode="${1:-unknown}"
 input="$(cat)"
 
+# Lumora work guard: off only on machines explicitly marked personal; a missing or unknown profile stays enforced.
+[ "$(cat "$HOME/.config/dotfiles/identity-profile" 2>/dev/null)" = personal ] && exit 0
+
 block() {
   echo "Blocked by Lumora subagent Bash guard: $*" >&2
   exit 2
@@ -36,6 +39,15 @@ fi
 # Global kubectl prohibition: no subagent may run kubectl. Claude is also instructed to avoid it (see CLAUDE.md).
 if printf '%s\n' "$cmd" | grep -Eiq '(^|[[:space:]])kubectl([[:space:]]|$)'; then
   block "kubectl is forbidden for all subagents. Claude must avoid it as well (see CLAUDE.md)."
+fi
+
+# explore: one agent for all evidence gathering; route each command to the matching guard below.
+if [ "$mode" = "explore" ]; then
+  case "$cmd" in
+    gh\ *|GH_HOST=*) mode=gh-fetcher ;;
+    aws-vault\ *|python3\ -c\ *|python\ -c\ *) mode=remoter ;;
+    *) mode=basher ;;
+  esac
 fi
 
 # gh-fetcher may run read-only GitHub/GHE commands only.
@@ -205,7 +217,14 @@ if [ "$mode" = "basher" ]; then
     fi
   fi
 
+  # git log/show can write files (--output) or run external diff/textconv programs.
+  if printf '%s\n' "$cmd" | grep -Eiq '(^|[[:space:]])git[[:space:]]' && \
+      printf '%s\n' "$cmd" | grep -Eiq '(^|[[:space:]])--(output|ext-diff|textconv)(=|[[:space:]]|$)'; then
+    block "basher git may not use --output, --ext-diff, or --textconv."
+  fi
+
   case "$cmd_head" in
+    git\ log|git\ log\ *|git\ show|git\ show\ *|git\ blame\ *) exit 0 ;;
     just\ --list|just\ status|just\ lint|just\ build|just\ build\ *|just\ test|just\ test\ *|just\ up|just\ up\ *|just\ down|just\ down\ *|just\ restart|just\ restart\ *) exit 0 ;;
     pnpm\ typecheck|pnpm\ typecheck\ *) exit 0 ;;
     pnpm\ exec\ biome\ check|pnpm\ exec\ biome\ check\ *) exit 0 ;;

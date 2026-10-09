@@ -61,7 +61,7 @@ For every unresolved thread capture:
 
 Include unresolved threads from all authors in the plan. General PR conversation comments that do not belong to resolvable review threads may inform context but are not resolution targets.
 
-A read-only evidence agent such as `gh-fetcher` may gather threads. It must never perform mutations.
+A read-only evidence agent such as `Explore` may gather threads. It must never perform mutations.
 
 ## 3. Review the current changes and build the plan
 
@@ -124,7 +124,7 @@ If any comment in the thread is from a login outside the verified set, leave the
 
 **Explicit-instruction path** — Bryan may, in the current turn, name a specific thread or a clearly bounded set of threads (e.g. "resolve all jordan's comments on this stack") for resolution regardless of author. This does not require the address/reject disposition to be "address" — a **reject** thread can be resolved this way too, since Bryan is directly authorizing the closure rather than the agent inferring it from code state. Still confirm current thread state (no new unaddressed comment appeared) before resolving, and never send a reply. A standing preference in durable instructions (not just a one-off ask) may also establish this path in advance; absent either, default to the identity-only path above.
 
-Perform eligible `resolveReviewThread` mutations from the parent agent or another explicitly mutation-authorized path. Never ask the read-only `gh-fetcher` agent to mutate GraphQL state. Do not include a reply before or after resolving.
+Perform eligible `resolveReviewThread` mutations from the parent agent or another explicitly mutation-authorized path. Never ask the read-only `Explore` agent to mutate GraphQL state. Do not include a reply before or after resolving.
 
 After mutations, query the threads again and verify the expected IDs are resolved. Report all other threads as intentionally left unresolved for their authors.
 

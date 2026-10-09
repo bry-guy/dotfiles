@@ -26,15 +26,15 @@ Every main-thread tool call resends the full conversation, so main-thread tool c
 - Treat subagent output as evidence, not judgment; don't repeat an investigation unless it was incomplete or contradictory. Subagents stay read-only outside scratch space, never consult the advisor, and return uncertainty to the parent.
 - When you must do it yourself, batch several reads/greps/commands into one call and return only filtered results (pi: `codemode`). Don't dump large outputs into context; filter them (`rg -l`, `head`, ranged reads).
 
-Agent routing:
+Agent routing (same names in pi and Claude Code):
 
-| Work | pi | Claude Code |
-|---|---|---|
-| Repo exploration, dependency tracing, public docs | `Explore` | `fetcher` |
-| Tests, builds, diagnostics, logs, command output | `general-purpose` | `basher` |
-| GitHub/GHE PRs, comments, diffs, checks | `general-purpose` | `gh-fetcher` |
-| Read-only AWS diagnostics | `general-purpose` | `remoter` |
-| Implementation planning | `Plan` | — |
+| Work | Agent |
+|---|---|
+| Evidence gathering: repo exploration, dependency tracing, tests/builds/logs, GitHub PR data, read-only AWS, public docs | `Explore` |
+| Multi-step research or command work needing judgment between steps | `general-purpose` |
+| Implementation planning for non-trivial changes | `Plan` |
+
+On work machines, Claude Code subagents' Bash is enforced by `~/.claude/hooks/lumora-subagent-bash-guard.sh` (Claude only; pi has no guard).
 
 For any GitHub PR or PR-stack review, load `pr-review` first so unresolved threads are gathered before applying the `change-review` rubric.
 
