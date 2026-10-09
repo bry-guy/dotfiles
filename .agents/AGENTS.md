@@ -5,8 +5,8 @@ Shared by pi (`~/.pi/agent/AGENTS.md` symlinks here) and Claude Code (`~/.claude
 ## General
 
 - Prefer project-local `AGENTS.md` / `CLAUDE.md` instructions closer to the working directory when they are more specific.
-- Use the repository's documented workflow commands instead of lower-level build/test tools. In Lumora repos, use `just` recipes; run `just --list` to discover them.
-- Never add, stage, or commit `AGENTS.md` / `CLAUDE.md` files to project repositories. (This global file is tracked in dotfiles via yadm; that is intended.)
+- Use the repository's documented workflow commands instead of lower-level build/test tools. Work machines (`~/.config/dotfiles/identity-profile` = `work`, which sets `WORK=1` in `~/.zshrc`) use `just` recipes (`just --list`); personal machines use `mise` tasks (`mise tasks`). A repo's own docs win over this default.
+- Confirm with the user before changing a project's `AGENTS.md` / `CLAUDE.md`.
 - Never add AI attribution to commits or PRs: no "Co-Authored-By: Claude", "Generated with …", or similar footers.
 - Machine-local tool activation may wrap project workflow commands, but project workflow commands must not invoke machine-local tool activation.
   - Local environment/tool managers may run `just`.
@@ -14,11 +14,7 @@ Shared by pi (`~/.pi/agent/AGENTS.md` symlinks here) and Claude Code (`~/.claude
   - AWS credential wrappers belong outside `just` unless the project documents otherwise.
 - Ask before installing tools or changing machine-global configuration. Keep machine-local tool config local-only unless asked to commit it.
 
-## Hard rules
-
-- Never run, or ask a subagent to run, anything with `--prod`, `--production`, or `--staging` without explicit user instruction in the current turn.
-- `kubectl` is forbidden for you and all subagents; use a documented `just` recipe or ask the user for output.
-- Never expose secrets, tokens, credentials, private keys, auth headers, or full environment dumps.
+On work machines, load the `work-policies` skill before touching remote environments, clusters, or credentials.
 
 ## Token economy and delegation
 
