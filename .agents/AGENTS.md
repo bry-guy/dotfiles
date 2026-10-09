@@ -32,7 +32,7 @@ Agent routing (same names in pi and Claude Code):
 |---|---|
 | Evidence gathering: repo exploration, dependency tracing, tests/builds/logs, GitHub PR data, read-only AWS, public docs | `Explore` |
 | Multi-step research or command work needing judgment between steps | `general-purpose` |
-| Implementation planning for non-trivial changes | `Plan` |
+| Plan-mode research (built-in, main model); plan review is the advisor's job | `Plan` |
 
 On work machines, Claude Code subagents' Bash is enforced by `~/.claude/hooks/lumora-subagent-bash-guard.sh` (Claude only; pi has no guard).
 
