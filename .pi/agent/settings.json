@@ -1,12 +1,11 @@
 {
-  "lastChangelogVersion": "0.85.1",
+  "lastChangelogVersion": "1.1.0",
   "theme": "dark",
   "packages": [
     "git:github.com/nicobailon/pi-mcp-adapter",
     "git:github.com/nicobailon/pi-web-access",
     "git:github.com/lajarre/pi-vim",
     "git:github.com/bry-guy/pi-ez-worktree",
-    "npm:context-mode",
     "npm:@juicesharp/rpiv-ask-user-question",
     "npm:@dietrichgebert/ponytail",
     "npm:@narumitw/pi-lsp",
@@ -17,13 +16,16 @@
     "git:github.com/bry-guy/pi-sync",
     "npm:pi-openai-fast-mode",
     "npm:pi-lens",
-    "npm:pi-observational-memory"
+    "npm:pi-observational-memory",
+    "npm:@gotgenes/pi-anthropic-auth",
+    "npm:@luan.sh/pi-thinking-binding",
+    "npm:pi-worktree-include"
   ],
-  "defaultProvider": "openai-codex",
-  "defaultModel": "gpt-5.6-sol",
-  "defaultThinkingLevel": "medium",
+  "defaultProvider": "anthropic",
+  "defaultModel": "claude-opus-5-5",
+  "defaultThinkingLevel": "low",
   "editorPaddingX": 2,
-  "hideThinkingBlock": false,
+  "hideThinkingBlock": true,
   "quietStartup": true,
   "treeFilterMode": "default",
   "compaction": {
@@ -32,10 +34,10 @@
     "keepRecentTokens": 16384
   },
   "enabledModels": [
-    "openai-codex/gpt-5.5",
-    "openai-codex/gpt-5.6-terra",
-    "openai-codex/gpt-5.6-sol",
-    "openai-codex/gpt-5.6-luna"
+    "anthropic/claude-opus-5-5",
+    "openai-codex/gpt-6.1-sol",
+    "openai-codex/gpt-6-astra",
+    "openai-codex/gpt-6-luna"
   ],
   "steeringMode": "all",
   "followUpMode": "all",
@@ -43,21 +45,17 @@
   "showCacheMissNotices": true,
   "tuiMode": "fullscreen",
   "observational-memory": {
-    "observeAfterTokens": 15000,
-    "reflectAfterTokens": 30000,
-    "compactAfterTokens": 100000,
-    "compactAfterTokensMode": "calibrated",
-    "compactAfterTokensRatio": 0.68,
-    "observationsPoolMaxTokens": 20000,
-    "observationsPoolTargetTokens": 10000,
-    "agentMaxTurns": 16,
     "model": {
-      "provider": "openai-codex",
-      "id": "gpt-5.6-luna",
-      "thinking": "high"
+      "provider": "anthropic",
+      "id": "claude-haiku-5-5",
+      "thinking": "low"
     },
-    "showWorkerNotifications": true,
-    "passive": false,
-    "debugLog": false
-  }
+    "showWorkerNotifications": true
+  },
+  "extensions": [
+    "-builtin:mcp"
+  ],
+  "defaultTools": [
+    "+codemode"
+  ]
 }

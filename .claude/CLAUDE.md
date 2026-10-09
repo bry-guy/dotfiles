@@ -29,12 +29,7 @@ Keep agents least-privileged and read-only outside throwaway scratchpads. Claude
 
 ### Review cadence
 
-Use the configured Opus advisor at phase boundaries, not continuously:
-
-- For non-trivial work, get one review of the investigation or implementation plan before execution. A design review can satisfy this review when the design is the unsettled part.
-- Get one review after substantive code changes and validation. Trivial or purely mechanical edits are exempt.
-- Reconsult only after a material plan change or repeated failed approaches. Skip trivial, reversible, already-settled work.
-- Keep advisor reviews focused on judgment and tradeoffs; the advisor does not run tools, edit files, or replace tests.
+Follow the `advisor-discipline` skill for when to consult the Opus advisor (load it when drafting a plan for multi-step work). Default: one review of the plan before execution; no completion reviews.
 
 Delegate evidence gathering to Haiku agents for repository exploration, dependency tracing, logs, tests, builds, lint, GitHub/AWS reads, and public documentation. Do not delegate a one-step read, an obvious edit, or work already in context.
 

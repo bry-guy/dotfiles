@@ -4,7 +4,7 @@ description: Fast read-only search agent for locating code. Use it to find files
 tools: read, bash, grep, find, ls
 extensions: true
 skills: true
-model: openai-codex/gpt-5.6-luna
+model: anthropic/claude-haiku-5-5
 thinking: high
 prompt_mode: replace
 ---

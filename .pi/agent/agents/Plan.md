@@ -4,8 +4,8 @@ description: Software architect agent for designing implementation plans.
 tools: read, bash, grep, find, ls
 extensions: true
 skills: true
-model: openai-codex/gpt-5.6-sol
-thinking: medium
+model: anthropic/claude-opus-5-5
+thinking: high
 prompt_mode: replace
 ---
 

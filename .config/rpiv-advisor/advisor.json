@@ -1,7 +1,19 @@
 {
-  "modelKey": "openai-codex/gpt-6-astra",
-  "effort": "medium",
+  "modelKey": "anthropic/claude-opus-5-5",
+  "effort": "high",
   "disabledForModels": [
-    "openai-codex/gpt-5.6-terra"
-  ]
+    "openai-codex/gpt-5.6-terra",
+    "openai-codex/gpt-6-astra",
+    {
+      "model": "anthropic/claude-opus-5-5",
+      "minEffort": "medium"
+    }
+  ],
+  "guidance": {
+    "promptSnippet": "advisor: costly stronger-model review that resends the whole conversation. Follow the advisor-discipline skill.",
+    "promptGuidelines": [
+      "Before calling advisor, and whenever drafting a plan for multi-step work, follow the advisor-discipline skill (load it if not already loaded).",
+      "Default: at most one advisor call per task, after the plan is drafted and before execution; never to confirm completion."
+    ]
+  }
 }

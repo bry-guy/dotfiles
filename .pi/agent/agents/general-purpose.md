@@ -5,7 +5,7 @@ description: General-purpose agent for researching complex questions, searching 
 tools: all
 extensions: true
 skills: true
-model: openai-codex/gpt-5.6-luna
-thinking: max
+model: anthropic/claude-haiku-5-5
+thinking: high
 prompt_mode: append
 ---
