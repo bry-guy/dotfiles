@@ -17,7 +17,6 @@
     "npm:pi-lens",
     "npm:pi-observational-memory",
     "npm:@gotgenes/pi-anthropic-auth",
-    "npm:@luan.sh/pi-thinking-binding",
     "npm:pi-worktree-include",
     "npm:@gotgenes/pi-subagents"
   ],
@@ -42,7 +41,7 @@
   "steeringMode": "all",
   "followUpMode": "all",
   "httpIdleTimeoutMs": 60000,
-  "showCacheMissNotices": true,
+  "showCacheMissNotices": false,
   "tuiMode": "fullscreen",
   "observational-memory": {
     "model": {
