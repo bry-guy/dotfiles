@@ -1,0 +1,47 @@
+# Global Agent Instructions
+
+Shared by pi (`~/.pi/agent/AGENTS.md` symlinks here) and Claude Code (`~/.claude/CLAUDE.md` imports this). Edit only this file.
+
+## General
+
+- Prefer project-local `AGENTS.md` / `CLAUDE.md` instructions closer to the working directory when they are more specific.
+- Use the repository's documented workflow commands instead of lower-level build/test tools. In Lumora repos, use `just` recipes; run `just --list` to discover them.
+- Never add, stage, or commit `AGENTS.md` / `CLAUDE.md` files to project repositories. (This global file is tracked in dotfiles via yadm; that is intended.)
+- Never add AI attribution to commits or PRs: no "Co-Authored-By: Claude", "Generated with …", or similar footers.
+- Machine-local tool activation may wrap project workflow commands, but project workflow commands must not invoke machine-local tool activation.
+  - Local environment/tool managers may run `just`.
+  - `justfile` / `justfile.local` recipes call underlying tools directly and assume required tools are on `PATH`.
+  - AWS credential wrappers belong outside `just` unless the project documents otherwise.
+- Ask before installing tools or changing machine-global configuration. Keep machine-local tool config local-only unless asked to commit it.
+
+## Hard rules
+
+- Never run, or ask a subagent to run, anything with `--prod`, `--production`, or `--staging` without explicit user instruction in the current turn.
+- `kubectl` is forbidden for you and all subagents; use a documented `just` recipe or ask the user for output.
+- Never expose secrets, tokens, credentials, private keys, auth headers, or full environment dumps.
+
+## Token economy and delegation
+
+Every main-thread tool call resends the full conversation, so main-thread tool calls are the most expensive thing you do. You own decisions, planning, integration, final edits, commits, pushes, and external or privileged actions; delegate evidence gathering.
+
+- Delegate costly-but-simple work to cheap subagents: exploration needing 3+ searches/reads, dependency tracing, logs/tests/builds/lint output, GitHub/AWS reads, docs lookups, mechanical multi-file edits. Run independent ones in parallel; use a matching agent proactively.
+- Brief subagents completely (paths, goal, what's known) and demand a short return, e.g. "reply in under 150 words: file:line refs and the answer only." Don't pass the whole conversation to a subagent unless the task truly needs it.
+- Work directly only when the answer is already in context or needs one trivial, precisely known read or an obvious edit.
+- Treat subagent output as evidence, not judgment; don't repeat an investigation unless it was incomplete or contradictory. Subagents stay read-only outside scratch space, never consult the advisor, and return uncertainty to the parent.
+- When you must do it yourself, batch several reads/greps/commands into one call and return only filtered results (pi: `codemode`). Don't dump large outputs into context; filter them (`rg -l`, `head`, ranged reads).
+
+Agent routing:
+
+| Work | pi | Claude Code |
+|---|---|---|
+| Repo exploration, dependency tracing, public docs | `Explore` | `fetcher` |
+| Tests, builds, diagnostics, logs, command output | `general-purpose` | `basher` |
+| GitHub/GHE PRs, comments, diffs, checks | `general-purpose` | `gh-fetcher` |
+| Read-only AWS diagnostics | `general-purpose` | `remoter` |
+| Implementation planning | `Plan` | — |
+
+For any GitHub PR or PR-stack review, load `pr-review` first so unresolved threads are gathered before applying the `change-review` rubric.
+
+## Advisor
+
+Follow the `advisor-discipline` skill for when to consult the advisor; load it when drafting a plan for multi-step work. Default: one review of the plan before execution, none to confirm completion.
