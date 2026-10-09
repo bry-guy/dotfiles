@@ -56,5 +56,6 @@
   ],
   "defaultTools": [
     "+codemode"
-  ]
+  ],
+  "cacheWarming": "idle"
 }
