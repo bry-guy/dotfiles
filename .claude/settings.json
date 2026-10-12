@@ -76,6 +76,11 @@
   "syntaxHighlightingDisabled": false,
   "alwaysThinkingEnabled": true,
   "effortLevel": "low",
+  "modelSettings": {
+    "claude-opus-5-5": {
+      "effortLevel": "medium"
+    }
+  },
   "autoCompactWindow": 204000,
   "advisorModel": "claude-opus-5-5",
   "tui": "fullscreen",

@@ -9,7 +9,7 @@ This is a standing user preference.
 
 Never compose, edit, populate, or publish user-facing prose in an external
 service. This includes comments, replies, reviews, messages, and
-issue or PR description/body fields. Do not generate private drafts, use
+issue or PR description/body fields. Do not create drafts inside the service, use
 templates or `--fill`, or derive prose from commits.
 
 **Once a body or comment field is non-empty — whether the user wrote it,
@@ -20,6 +20,12 @@ fact. Discovering unauthorized prose already sitting in a field (including
 prose this agent previously wrote there) is not license to modify that
 field — surface it to the user and let them act on it. The only exception
 is the empty-body case below, and only while the field is still empty.
+
+**Drafts in the conversation are allowed.** When the user asks, write the
+message/comment/description text in the chat (or a local file) for them to
+copy and post themselves. What stays forbidden is writing that prose into the
+external service — sending, posting, filling a body field, or creating a
+draft inside Slack/GitHub/Linear/Notion.
 
 Allowed: read and summarize existing external content; write a PR title; and
 create a draft PR with no authored description/body. If a client requires a
@@ -48,6 +54,16 @@ $action: $short_title
 ```
 
 This applies to external-service prose, not source-code comments.
+
+## Screenshots are not prose
+
+Adding image-only content to a PR body is allowed and is not covered by the
+"never touched again" rule above — it applies whether the body is currently
+empty or already holds a description. Embed each screenshot as bare
+markdown image syntax (`![](url)`), nothing else: no caption, no alt text,
+no heading, no surrounding sentence, no commentary on what the image shows.
+The moment any authored word goes into that body alongside or instead of an
+image, the ordinary no-prose rule applies in full.
 
 ## Resolving threads is not prose
 

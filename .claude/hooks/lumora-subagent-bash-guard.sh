@@ -87,7 +87,7 @@ if [ "$mode" = "gh-fetcher" ]; then
   esac
 
   case "$stripped" in
-    gh\ pr\ view\ *|gh\ pr\ diff\ *|gh\ pr\ checks\ *|gh\ api\ repos/*/pulls/*|gh\ api\ repos/*/issues/*/comments*|gh\ api\ repos/*/commits/*/status*|gh\ api\ repos/*/commits/*/check-runs*|gh\ api\ graphql\ *) exit 0 ;;
+    gh\ pr\ view\ *|gh\ pr\ diff\ *|gh\ pr\ checks\ *|gh\ pr\ list|gh\ pr\ list\ *|gh\ search\ *|gh\ api\ repos/*/pulls/*|gh\ api\ repos/*/issues/*/comments*|gh\ api\ repos/*/commits/*/status*|gh\ api\ repos/*/commits/*/check-runs*|gh\ api\ graphql\ *) exit 0 ;;
   esac
 
   block "gh-fetcher command is outside the read-only gh allowlist."

@@ -1,2 +1,12 @@
 export DOCKER_HOST="unix://${HOME}/.colima/default/docker.sock"
 export TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE=/var/run/docker.sock
+
+# Named dirs: `cd ~bj`, `ls ~api`, ...
+hash -d bj=~/lumora/backend-java
+hash -d api=~/lumora/backend-java/frontdoor-server
+hash -d runner=~/lumora/backend-java/model-runner-server
+hash -d frontend=~/lumora/backend-java/frontend
+hash -d janitor=~/lumora/backend-java/database-maintenance-server
+hash -d dp=~/lumora/data-pipelines
+hash -d di=~/lumora/data-ingestion
+hash -d neo=~/lumora/wattsonic-neo

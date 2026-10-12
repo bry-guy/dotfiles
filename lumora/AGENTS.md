@@ -1,6 +1,6 @@
 # Agent Notes
 
-- Invariant: agents may connect only to local databases on this machine for this repo's development workflows. Never connect to any non-local database, remote database, staging database, production database, or any database/service outside local development.
+- Invariant: agents may connect only to local databases on this machine for this repo's development workflows, except that agents may use the staging database when the user instructs them to or grants permission. Never connect to any other non-local database, remote database, production database, or any database/service outside local development.
 - Invariant: agents may never connect to the aws prod environment. staging and sandbox environment are acceptable.
 - Invariant: agents making non-local changes (e.g., changing an aws resource) must ask permission before making any changes. reads are ok.
 - Invariant: agents may never run deployments unless explicitly instructed by the user. This includes `just deploy`, direct deploy equivalents such as `helm upgrade`, `kubectl apply`, CDK/Databricks deploy commands, frontend asset uploads, or any command whose purpose is to change deployed runtime state. Agents may inspect deployment state only with read-only commands.
