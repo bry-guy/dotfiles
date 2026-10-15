@@ -2,6 +2,7 @@
 		ff = only
 [include]
 		path = ~/.gitconfig.identity.local
+		path = ~/.gitconfig.darwin
 [includeIf "hasconfig:remote.*.url:git@lumora.ghe.com:*/**"]
 		path = ~/.gitconfig.identity.work
 [includeIf "hasconfig:remote.*.url:ssh://git@lumora.ghe.com/**"]
@@ -32,8 +33,6 @@
 [init]
 		defaultBranch = main
 
-[url "ssh://git@github.com/"]                                                   
-		insteadOf = https://github.com/ 
 
 [merge]
   tool = vimdiff
@@ -48,9 +47,3 @@
   prompt = true
 [difftool "vimdiff"]
   cmd = nvim -d $BASE $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
-[credential "https://github.com"]
-	helper = 
-	helper = !/opt/homebrew/bin/gh auth git-credential
-[credential "https://gist.github.com"]
-	helper = 
-	helper = !/opt/homebrew/bin/gh auth git-credential
