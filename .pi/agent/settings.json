@@ -18,7 +18,8 @@
     "npm:pi-observational-memory",
     "npm:@gotgenes/pi-anthropic-auth",
     "npm:pi-worktree-include",
-    "npm:@gotgenes/pi-subagents"
+    "npm:@gotgenes/pi-subagents",
+    "git:github.com/bry-guy/pi-summarize"
   ],
   "defaultProvider": "anthropic",
   "defaultModel": "claude-opus-5-5",
@@ -57,5 +58,9 @@
   "defaultTools": [
     "+codemode"
   ],
-  "cacheWarming": "idle"
+  "cacheWarming": "idle",
+  "pi-summarize": {
+    "model": "anthropic/claude-haiku-5-5",
+    "thinking": "low"
+  }
 }
