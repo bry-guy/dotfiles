@@ -1,11 +1,10 @@
 {
-  "lastChangelogVersion": "1.1.0",
+  "lastChangelogVersion": "1.2.0",
   "theme": "dark",
   "packages": [
     "git:github.com/nicobailon/pi-mcp-adapter",
     "git:github.com/nicobailon/pi-web-access",
     "git:github.com/lajarre/pi-vim",
-    "git:github.com/bry-guy/pi-ez-worktree",
     "npm:@juicesharp/rpiv-ask-user-question",
     "npm:@dietrichgebert/ponytail",
     "npm:@narumitw/pi-lsp",
@@ -13,13 +12,13 @@
     "npm:@juicesharp/rpiv-advisor",
     "npm:@juicesharp/rpiv-btw",
     "git:github.com/bry-guy/pi-sync",
-    "npm:pi-openai-fast-mode",
     "npm:pi-lens",
     "npm:pi-observational-memory",
     "npm:@gotgenes/pi-anthropic-auth",
     "npm:pi-worktree-include",
     "npm:@gotgenes/pi-subagents",
-    "git:github.com/bry-guy/pi-summarize"
+    "git:github.com/bry-guy/pi-summarize",
+    "npm:@diegopetrucci/pi-fast"
   ],
   "defaultProvider": "anthropic",
   "defaultModel": "claude-opus-5-5",
