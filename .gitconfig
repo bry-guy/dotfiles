@@ -9,6 +9,10 @@
 		path = ~/.gitconfig.identity.work
 [includeIf "hasconfig:remote.*.url:lumora@lumora.ghe.com:*/**"]
 		path = ~/.gitconfig.identity.work
+[includeIf "hasconfig:remote.*.url:https://lumora.ghe.com/**"]
+		path = ~/.gitconfig.identity.work
+[includeIf "gitdir:~/lumora/"]
+		path = ~/.gitconfig.identity.work
 [alias]
 		co = checkout
 		br = branch
