@@ -160,7 +160,8 @@ Apply a full profile:
 ### Pi profiles
 
 The default Pi profile uses Ponytail in `lite` mode through `~/.config/ponytail/config.json`.
-Advisor uses `gpt-5.6-sol` at `high` effort and is disabled when `gpt-5.6-terra` is the executor.
+The default model is `anthropic/claude-opus-5-5` at `low` thinking.
+Advisor uses `anthropic/claude-opus-5-5` at `high` effort and is disabled when the executor is Opus 5.5 at `high` or above.
 The isolated RPIV profile lives at `~/.pi/profiles/rpiv`; run it with the `rpiv` shell alias.
 Only its declarative `settings.json` is tracked—credentials, installed packages, generated agents, and sessions remain machine-local.
 
