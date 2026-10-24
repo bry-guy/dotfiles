@@ -165,6 +165,7 @@ Advisor uses `anthropic/claude-opus-5-5` at `high` effort and is disabled when t
 The isolated RPIV profile lives at `~/.pi/profiles/rpiv`; run it with the `rpiv` shell alias.
 Only its declarative `settings.json` is tracked—credentials, installed packages, generated agents, and sessions remain machine-local.
 `~/.pi/agent/settings.json` goes through a `pi-settings` git clean filter (`.pi/agent/.gitattributes`, configured by `yadm bootstrap`) that drops the keys Pi rewrites itself: `lastChangelogVersion`, `defaultProvider`, `defaultModel`, `defaultThinkingLevel`. They stay in the file locally but never show up in `yadm status` or commits.
+`~/.claude/settings.json` uses a `claude-settings` filter the same way for `model` and `effortLevel` (written by `/model` and `/effort`); Claude's defaults (Opus 5.5, low effort) are pinned through `ANTHROPIC_MODEL` and `CLAUDE_CODE_EFFORT_LEVEL` in its `env` block.
 
 ### Automatic theme sync
 

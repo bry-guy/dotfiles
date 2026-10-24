@@ -1,6 +1,8 @@
 {
   "env": {
-    "CLAUDE_CODE_SUBAGENT_MODEL": "haiku"
+    "CLAUDE_CODE_SUBAGENT_MODEL": "haiku",
+    "ANTHROPIC_MODEL": "claude-opus-5-5",
+    "CLAUDE_CODE_EFFORT_LEVEL": "low"
   },
   "attribution": {
     "commit": "",
@@ -15,7 +17,6 @@
     ],
     "defaultMode": "bypassPermissions"
   },
-  "model": "opus[1m]",
   "hooks": {
     "PreToolUse": [
       {
@@ -75,7 +76,6 @@
   },
   "syntaxHighlightingDisabled": false,
   "alwaysThinkingEnabled": true,
-  "effortLevel": "low",
   "modelSettings": {
     "claude-opus-5-5": {
       "effortLevel": "medium"

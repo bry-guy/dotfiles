@@ -1,5 +1,4 @@
 {
-  "lastChangelogVersion": "1.2.0",
   "theme": "dark",
   "packages": [
     "git:github.com/nicobailon/pi-mcp-adapter",
@@ -18,11 +17,10 @@
     "npm:pi-worktree-include",
     "npm:@gotgenes/pi-subagents",
     "git:github.com/bry-guy/pi-summarize",
-    "npm:@diegopetrucci/pi-fast"
+    "npm:@diegopetrucci/pi-fast",
+    "git:github.com/bry-guy/pi-lab",
+    "../../dev/pi-projects"
   ],
-  "defaultProvider": "anthropic",
-  "defaultModel": "claude-opus-5-5",
-  "defaultThinkingLevel": "low",
   "editorPaddingX": 2,
   "hideThinkingBlock": true,
   "quietStartup": true,

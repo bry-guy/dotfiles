@@ -7,6 +7,9 @@ profile_dir="$HOME/script/brew/profiles"
 # Keep Pi's self-written state (changelog version, last model/thinking) out of the tracked settings.json.
 yadm gitconfig filter.pi-settings.clean "jq --indent 2 'del(.lastChangelogVersion, .defaultProvider, .defaultModel, .defaultThinkingLevel)'"
 yadm gitconfig filter.pi-settings.smudge cat
+# Same for Claude Code: /model and /effort write these; the defaults live in settings.json's env instead.
+yadm gitconfig filter.claude-settings.clean "jq --indent 2 'del(.model, .effortLevel)'"
+yadm gitconfig filter.claude-settings.smudge cat
 
 if [ ! -x "$setup_script" ]; then
   echo "Missing setup script: $setup_script" >&2
