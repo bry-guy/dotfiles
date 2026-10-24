@@ -17,6 +17,7 @@
     "npm:pi-worktree-include",
     "npm:@gotgenes/pi-subagents",
     "git:github.com/bry-guy/pi-summarize",
+    "git:github.com/bry-guy/pi-keepalive",
     "npm:@diegopetrucci/pi-fast",
     "git:github.com/bry-guy/pi-lab",
     "../../dev/pi-projects"
