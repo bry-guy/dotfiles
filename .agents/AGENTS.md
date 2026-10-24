@@ -16,6 +16,8 @@ Shared by pi (`~/.pi/agent/AGENTS.md` symlinks here) and Claude Code (`~/.claude
 
 On work machines, load the `work-policies` skill before touching remote environments, clusters, or credentials.
 
+Load the `least-access` skill before loading secrets, deploying, or touching databases, clusters, cloud accounts, or production data; repos declare roles in a `## Roles` section of `AGENTS.md`.
+
 ## Token economy and delegation
 
 Every main-thread tool call resends the full conversation, so main-thread tool calls are the most expensive thing you do. You own decisions, planning, integration, final edits, commits, pushes, and external or privileged actions; delegate evidence gathering.
