@@ -4,6 +4,10 @@ set -euo pipefail
 setup_script="$HOME/script/setup"
 profile_dir="$HOME/script/brew/profiles"
 
+# Keep Pi's self-written state (changelog version, last model/thinking) out of the tracked settings.json.
+yadm gitconfig filter.pi-settings.clean "jq --indent 2 'del(.lastChangelogVersion, .defaultProvider, .defaultModel, .defaultThinkingLevel)'"
+yadm gitconfig filter.pi-settings.smudge cat
+
 if [ ! -x "$setup_script" ]; then
   echo "Missing setup script: $setup_script" >&2
   exit 1

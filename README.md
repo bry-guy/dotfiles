@@ -164,6 +164,7 @@ The default model is `anthropic/claude-opus-5-5` at `low` thinking.
 Advisor uses `anthropic/claude-opus-5-5` at `high` effort and is disabled when the executor is Opus 5.5 at `high` or above.
 The isolated RPIV profile lives at `~/.pi/profiles/rpiv`; run it with the `rpiv` shell alias.
 Only its declarative `settings.json` is tracked—credentials, installed packages, generated agents, and sessions remain machine-local.
+`~/.pi/agent/settings.json` goes through a `pi-settings` git clean filter (`.pi/agent/.gitattributes`, configured by `yadm bootstrap`) that drops the keys Pi rewrites itself: `lastChangelogVersion`, `defaultProvider`, `defaultModel`, `defaultThinkingLevel`. They stay in the file locally but never show up in `yadm status` or commits.
 
 ### Automatic theme sync
 
