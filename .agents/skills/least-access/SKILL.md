@@ -19,6 +19,11 @@ role names, how a role is selected, and which tasks need which role.
   using them is a violation, not a workaround.
 - Admin tasks: stop, print the exact command with one line on why, and wait for the
   user's approval in the current turn. Approval covers that one command.
+- "Keep going", "clean up", or approving a plan is not approval of an admin action.
+  Admin actions include: deleting or rebuilding vaults/items, creating credentials or
+  service accounts, commands using an admin kubeconfig or context, `*:apply` tasks that
+  write Secrets/IAM/policy, `tofu apply` on admin stacks, and pushing to a protected branch.
+  A Touch ID or 1Password prompt is not approval: the user can't see what it's for.
 - If your role can't do something it should, stop and report the missing task,
   credential, or permission. Don't improvise a way around it with ad-hoc DB writes,
   `kubectl`, or raw API calls.
