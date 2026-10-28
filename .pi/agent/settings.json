@@ -20,7 +20,8 @@
     "git:github.com/bry-guy/pi-keepalive",
     "npm:@diegopetrucci/pi-fast",
     "git:github.com/bry-guy/pi-lab",
-    "../../dev/pi-projects"
+    "../../dev/pi-projects",
+    "pi-projects/pi-web-ecosystem/repos/pi-background"
   ],
   "editorPaddingX": 2,
   "hideThinkingBlock": true,
