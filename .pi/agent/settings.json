@@ -32,6 +32,9 @@
     "reserveTokens": 68000,
     "keepRecentTokens": 16384
   },
+  "defaultProvider": "anthropic",
+  "defaultModel": "claude-opus-5-5",
+  "defaultThinkingLevel": "medium",
   "enabledModels": [
     "anthropic/claude-opus-5-5",
     "openai-codex/gpt-6.1-sol",
