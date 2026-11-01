@@ -53,7 +53,8 @@
       "thinking": "low"
     },
     "showWorkerNotifications": true,
-    "observeThinking": false
+    "observeThinking": true,
+    "debugLog": true
   },
   "extensions": [
     "-builtin:mcp"
