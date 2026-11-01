@@ -12,7 +12,7 @@
     "npm:@juicesharp/rpiv-btw",
     "git:github.com/bry-guy/pi-sync",
     "npm:pi-lens",
-    "npm:pi-observational-memory",
+    "git:github.com/bry-guy/pi-observational-memory",
     "npm:@gotgenes/pi-anthropic-auth",
     "npm:pi-worktree-include",
     "npm:@gotgenes/pi-subagents",
@@ -52,7 +52,8 @@
       "id": "claude-haiku-5-5",
       "thinking": "low"
     },
-    "showWorkerNotifications": true
+    "showWorkerNotifications": true,
+    "observeThinking": false
   },
   "extensions": [
     "-builtin:mcp"
