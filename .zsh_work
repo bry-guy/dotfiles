@@ -10,3 +10,6 @@ hash -d janitor=~/lumora/backend-java/database-maintenance-server
 hash -d dp=~/lumora/data-pipelines
 hash -d di=~/lumora/data-ingestion
 hash -d neo=~/lumora/wattsonic-neo
+
+# Run a command on my Lumora box, in the folder matching this one (needs `uv run dev box sync` once; docs/boxes.md).
+alias bx='uv run --project ~/lumora/case-builder dev box exec --'
