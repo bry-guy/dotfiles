@@ -1,4 +1,5 @@
 {
-  "allSessions": "on",
+  "allSessions": "projects",
+  "remoteControl": "on",
   "code": "auto"
 }

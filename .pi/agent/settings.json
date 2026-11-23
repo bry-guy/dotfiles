@@ -1,5 +1,8 @@
 {
   "theme": "dark",
+  "terminal": {
+    "hyperlinks": true
+  },
   "packages": [
     "git:github.com/nicobailon/pi-mcp-adapter",
     "git:github.com/nicobailon/pi-web-access",
@@ -21,7 +24,10 @@
     "npm:@diegopetrucci/pi-fast",
     "git:github.com/bry-guy/pi-lab",
     "git:github.com/bry-guy/pi-background",
-    "git:github.com/bry-guy/pi-projects"
+    "git:github.com/bry-guy/pi-projects",
+    "git:github.com/bry-guy/pi-mounts",
+    "git:github.com/bry-guy/pi-secret-broker",
+    "npm:pi-antigravity"
   ],
   "editorPaddingX": 2,
   "hideThinkingBlock": true,
@@ -37,9 +43,12 @@
   "defaultThinkingLevel": "medium",
   "enabledModels": [
     "anthropic/claude-opus-5-5",
-    "openai-codex/gpt-6.1-sol",
-    "openai-codex/gpt-6-astra",
-    "openai-codex/gpt-6-luna"
+    "anthropic/claude-fable-5-2",
+    "openai-codex/gpt-6.2-sol",
+    "openai-codex/gpt-6.2-astra",
+    "antigravity/gemini-4-hydrogen",
+    "antigravity/gemini-4-neon",
+    "anthropic/claude-haiku-5-5"
   ],
   "steeringMode": "all",
   "followUpMode": "all",
@@ -52,7 +61,7 @@
       "id": "claude-haiku-5-5",
       "thinking": "low"
     },
-    "showWorkerNotifications": true,
+    "showWorkerNotifications": false,
     "observeThinking": true,
     "debugLog": true
   },
@@ -66,5 +75,20 @@
   "pi-summarize": {
     "model": "anthropic/claude-haiku-5-5",
     "thinking": "off"
+  },
+  "pi-keepalive": {
+    "linger": "30m"
+  },
+  "extensionChangelogVersions": {
+    "{\"source\":\"git:github.com/nicobailon/pi-mcp-adapter\",\"scope\":\"user\"}": "7.0.1",
+    "{\"source\":\"git:github.com/nicobailon/pi-web-access\",\"scope\":\"user\"}": "0.47.0",
+    "{\"source\":\"npm:@narumitw/pi-lsp\",\"scope\":\"user\"}": "0.49.12",
+    "{\"source\":\"npm:pi-lens\",\"scope\":\"user\"}": "4.4.11",
+    "{\"source\":\"npm:@gotgenes/pi-anthropic-auth\",\"scope\":\"user\"}": "3.4.4",
+    "{\"source\":\"npm:@gotgenes/pi-subagents\",\"scope\":\"user\"}": "25.0.5",
+    "{\"source\":\"git:github.com/bry-guy/pi-secret-broker\",\"scope\":\"user\"}": "0.3.0"
+  },
+  "warnings": {
+    "anthropicExtraUsage": false
   }
 }
