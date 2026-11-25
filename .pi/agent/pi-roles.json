@@ -1,0 +1,60 @@
+{
+	"projects": {
+		"61d39bab-85fe-4118-8f3b-33ab5a937562": {
+			"name": "pi-web-ecosystem",
+			"roles": [
+				"pi-web/pi-web-developer"
+			],
+			"sandbox": false,
+			"default": "pi-web/pi-web-developer"
+		},
+		"06eb0f6b-9bd4-4d19-918d-cb3268586127": {
+			"name": "homelab",
+			"roles": [
+				"infra/infra-developer",
+				"infra/infra-operator"
+			],
+			"default": "infra/infra-developer"
+		},
+		"810641e1-4ff6-401c-8865-bd9a122b6e1e": {
+			"name": "castaway",
+			"roles": [
+				"castaway/castaway-developer"
+			],
+			"default": "castaway/castaway-developer"
+		},
+		"6c6ad14c-2fc3-4561-8ab0-4d5189355bcf": {
+			"name": "personal-finances",
+			"roles": [
+				"personal-finances/finances-developer"
+			],
+			"default": "personal-finances/finances-developer"
+		}
+	},
+	"sources": {
+		"pi-web/pi-web-developer": {
+			"OP_SERVICE_ACCOUNT_TOKEN": "keychain:pi-web-developer",
+			"GH_TOKEN": "github-app:op://pi-web-developer/github-app"
+		},
+		"infra/infra-developer": {
+			"OP_SERVICE_ACCOUNT_TOKEN": "keychain:infra-developer",
+			"INFRA_OP_VAULT": "value:infra-developer",
+			"MISE_TRUSTED_CONFIG_PATHS": "value:/Users/brain/.pi/agent/pi-projects/homelab",
+			"GH_TOKEN": "github-app:op://infra-developer/github-app"
+		},
+		"castaway/castaway-developer": {
+			"OP_SERVICE_ACCOUNT_TOKEN": "keychain:castaway-developer",
+			"GH_TOKEN": "github-app:op://castaway-developer/github-app"
+		},
+		"personal-finances/finances-developer": {
+			"OP_SERVICE_ACCOUNT_TOKEN": "keychain:finances-developer",
+			"GH_TOKEN": "github-app:op://finances-developer/github-app"
+		},
+		"infra/infra-operator": {
+			"OP_SERVICE_ACCOUNT_TOKEN": "keychain:infra-developer",
+			"INFRA_OP_VAULT": "value:infra-developer",
+			"MISE_TRUSTED_CONFIG_PATHS": "value:/Users/brain/.pi/agent/pi-projects/homelab"
+		}
+	},
+	"signature": "-----BEGIN SSH SIGNATURE-----\nU1NIU0lHAAAAAQAAADMAAAALc3NoLWVkMjU1MTkAAAAghOjq2CIj4eAMxGGFyd95ZsLkqs\n6vUe0o9qqa5x5fx04AAAAIcGktcm9sZXMAAAAAAAAABnNoYTUxMgAAAFMAAAALc3NoLWVk\nMjU1MTkAAABAPon4gPdJmj3hG6/XIUhs3Bmypu98Zu1ZonRoYHxljOum3ykRcsO2rgBzUo\nvNyJ4DSzyGKzsxDrDfOf5EXjuYBw==\n-----END SSH SIGNATURE-----\n"
+}
